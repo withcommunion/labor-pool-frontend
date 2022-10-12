@@ -22,11 +22,7 @@ function getCookieStorage() {
   };
 
   if (isProd) {
-    return {
-      ...cookieStorageBase,
-      domain: 'https://labor-pool-frontend.vercel.app',
-      secure: true,
-    };
+    return { ...cookieStorageBase, domain: '*.vercel.app', secure: true };
   }
 
   if (isDev) {
@@ -40,7 +36,7 @@ function getCookieStorage() {
     // eslint-disable-next-line
     return {
       ...cookieStorageBase,
-      domain: `.vercel.app`,
+      domain: `.withcommunion.com`,
       secure: true,
     };
   }
