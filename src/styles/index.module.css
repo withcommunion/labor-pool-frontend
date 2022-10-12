@@ -1,0 +1,395 @@
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  background-color: #fd8900;
+  width: 100vw;
+  height: 100vh;
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 25px;
+}
+
+.logo {
+  display: block;
+  position: relative;
+  width: 120%;
+  height: 85px;
+}
+
+.mainButton {
+  width: 295px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  background-color: #0074fd;
+  border-radius: 23px;
+  box-shadow: rgb(0 0 0 / 19%) 0px 10px 20px, rgb(0 0 0 / 23%) 0px 6px 6px
+}
+
+.loginLink {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+
+  width: 100px;
+  padding: 5px 0;
+  font-family: 'Roboto', sans-serif;
+  color: #ffa740;
+  border-radius: 23px;
+  background-color: #ffffff;
+}
+
+.description {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+
+  color: #ffffff;
+}
+
+.burger {
+  position: absolute;
+  top: 5vh;
+  right: 10vw;
+  width: 110px;
+  height: 110px;
+
+  animation-name: BurgerSmall;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 25s;
+}
+
+.pizza {
+  position: absolute;
+  top: 18vh;
+  left: 18vw;
+  width: 180px;
+  height: 180px;
+  transform: rotate(35deg);
+
+  animation-name: PizzaSmall;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 25s;
+}
+
+.hotDog {
+  position: absolute;
+  bottom: -3vh;
+  left: 40vw;
+  width: 210px;
+  height: 210px;
+
+  animation-name: HotDogSmall;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 25s;
+}
+
+.prize {
+  position: absolute;
+  left: 5vw;
+  top: 70vh;
+  width: 150px;
+  height: 150px;
+
+  animation-name: PrizeSmall;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 25s;
+}
+
+.donut {
+  position: absolute;
+  z-index: -1;
+  right: -15vw;
+  top: 5vh;
+  width: 250px;
+  height: 250px;
+  filter: blur(5px);
+  transform: rotate(-36deg);
+
+  animation-name: DonutSmall;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 25s;
+}
+
+.hotDogBlur {
+  position: absolute;
+  z-index: -1;
+  left: -10vw;
+  top: -5vh;
+  width: 170px;
+  height: 170px;
+  filter: blur(5px);
+  transform: rotate(55deg);
+
+  animation-name: HotDogBlurSmall;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-duration: 25s;
+}
+
+@media (min-width: 640px) {
+  .content {
+    padding: 40px;
+  }
+
+  .logo {
+    height: 20vw;
+  }
+
+  .loginLink {
+    top: 25px;
+    right: 25px;
+    width: 100px;
+  }
+
+  .burger {
+    top: 5vh;
+    width: 160px;
+    height: 160px;
+  }
+
+  .pizza {
+    top: 10vh;
+    left: 18vw;
+    width: 280px;
+    height: 280px;
+  }
+
+  .hotDog {
+    bottom: -5vh;
+    left: 50vw;
+    width: 280px;
+    height: 280px;
+  }
+
+  .prize {
+    top: 60vh;
+    width: 220px;
+    height: 220px;
+  }
+
+  .donut {
+    right: -5vw;
+    top: 5vh;
+    width: 280px;
+    height: 280px;
+  }
+
+  .hotDogBlur {
+    left: -5vw;
+    top: -5vh;
+    width: 310px;
+    height: 310px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .loginLink {
+    top: 40px;
+    right: 40px;
+  }
+
+  .logo {
+    height: 12vw;
+  }
+
+  .burger {
+    top: 5vh;
+    right: 20vw;
+    width: 200px;
+    height: 200px;
+  }
+
+  .pizza {
+    top: 50vh;
+    left: 15vw;
+    width: 340px;
+    height: 340px;
+
+    animation-name: PizzaDesktop;
+    transform: rotate(0deg);
+  }
+
+  .hotDog {
+    width: 380px;
+    height: 380px;
+  }
+
+  .prize {
+    top: 50vh;
+    left: 8vw;
+    width: 250px;
+    height: 250px;
+  }
+
+  .donut {
+    right: -5vw;
+    top: 0;
+    width: 400px;
+    height: 400px;
+  }
+
+  .hotDogBlur {
+    left: -8vw;
+    top: -15vh;
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (min-width: 1500px) {
+  .loginLink {
+    top: 50px;
+    right: 60px;
+  }
+
+  .logo {
+    height: 190px;
+  }
+
+  .burger {
+    right: 25vw;
+    width: 220px;
+    height: 220px;
+  }
+
+  .pizza {
+    top: 50vh;
+    left: 20vw;
+    width: 400px;
+    height: 400px;
+  }
+
+  .prize {
+    top: 50vh;
+    left: 20vw;
+    width: 300px;
+    height: 250px;
+  }
+
+  .hotDogBlur {
+    left: -5vw;
+    top: -15vh;
+    width: 570px;
+    height: 570px;
+  }
+}
+
+@keyframes BurgerSmall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(20px, 100px) rotate(35deg);
+  }
+  66% {
+    transform: translate(-20px, 90px);
+  }
+}
+
+@keyframes PizzaSmall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-60px, -10px) rotate(-25deg);
+  }
+  66% {
+    transform: translate(-30px, -90px) rotate(-15deg);
+  }
+}
+
+@keyframes PizzaDesktop {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-90px, -100px) rotate(-40deg);
+  }
+  66% {
+    transform: translate(-30px, -280px) rotate(-20deg);
+  }
+}
+
+@keyframes HotDogSmall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(30px, 5px) rotate(5deg);
+  }
+  66% {
+    transform: translate(50px, -80px) rotate(-5deg);
+  }
+}
+
+@keyframes PrizeSmall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  15% {
+    transform: translate(10px, 30px) rotate(5deg);
+  }
+  50% {
+    transform: translate(120px, 80px) rotate(25deg);
+  }
+  60% {
+    transform: translate(110px, -20px) rotate(-5deg);
+  }
+}
+@keyframes DonutSmall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(35px, 10px) rotate(-30deg);
+  }
+  66% {
+    transform: translate(10px, -80px) rotate(-40deg);
+  }
+}
+
+@keyframes HotDogBlurSmall {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(100px, 15px) rotate(65deg);
+  }
+  66% {
+    transform: translate(30px, -40px) rotate(65deg);
+  }
+}
