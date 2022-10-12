@@ -22,7 +22,11 @@ function getCookieStorage() {
   };
 
   if (isProd) {
-    return { ...cookieStorageBase, domain: '*.vercel.app', secure: true };
+    return {
+      ...cookieStorageBase,
+      domain: 'labor-pool-frontend.vercel.app',
+      secure: true,
+    };
   }
 
   if (isDev) {
