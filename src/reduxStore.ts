@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '@/features/counter/counterSlice';
 import selfReducer from '@/features/selfSlice';
+import createOrgReducer from '@/features/createOrgSlice';
 
 const store = configureStore({
   reducer: {
     // These are just an example
     counter: counterReducer,
     self: selfReducer,
+    createdOrg: createOrgReducer,
   },
 });
 

@@ -58,17 +58,17 @@ export const AMPLIFY_CONFIG = {
   cookieStorage: getCookieStorage(),
 };
 
-export async function getUserJwtTokenOnServer(
+export async function getUserOnServer(
   serverSidePropsContext: GetServerSidePropsContext
 ) {
   const SSRContext = withSSRContext(serverSidePropsContext);
   const SsrAuth = SSRContext.Auth as typeof Auth;
 
-  let userJwt;
   try {
     const user = (await SsrAuth.currentAuthenticatedUser()) as CognitoUser;
-    userJwt = user.getSignInUserSession()?.getIdToken().getJwtToken();
-    return userJwt;
+    const userJwt = user.getSignInUserSession()?.getIdToken().getJwtToken();
+    const userId = user.getUsername();
+    return { userJwt, userId };
   } catch (error) {
     console.log(error);
     throw error;

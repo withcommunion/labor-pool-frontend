@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from '@/reduxHooks';
 
 import { selectSelf, selectSelfStatus, fetchSelf } from '@/features/selfSlice';
 
-function useFetchSelf(userJwt: string) {
+function useFetchSelf(userJwt: string | null) {
   const dispatch = useAppDispatch();
   const self = useAppSelector((state) => selectSelf(state));
   const selfStatus = useAppSelector((state) => selectSelfStatus(state));

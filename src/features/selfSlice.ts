@@ -5,22 +5,23 @@ import {
   createSlice,
   createAsyncThunk,
   createSelector,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 
 import { API_URL } from '@/util/walletApiUtil';
 
 // Define a type for the slice state
 export interface SelfState {
-  id: string;
   self: Record<string, unknown> | null;
+  selfUserId: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null | undefined;
 }
 
 // Define the initial state using that type
 const initialState: SelfState = {
-  id: '',
   self: null,
+  selfUserId: null,
   status: 'idle',
   error: null,
 };
@@ -32,6 +33,9 @@ export const userSlice = createSlice({
   reducers: {
     reset: () => {
       return initialState;
+    },
+    selfUserIdSet: (state, action: PayloadAction<string>) => {
+      state.selfUserId = action.payload;
     },
   },
   extraReducers(builder) {
@@ -50,13 +54,11 @@ export const userSlice = createSlice({
   },
 });
 
-export const { reset } = userSlice.actions;
-
 export const fetchSelf = createAsyncThunk(
   'self/fetchSelf',
   async (jwtToken: string) => {
     const rawSelf = await axios.get<Record<string, unknown>>(
-      `${API_URL}/user/self`,
+      `${API_URL}/user/`,
       {
         headers: {
           Authorization: jwtToken,
@@ -75,5 +77,10 @@ export const selectSelfStatus = createSelector(
   [selectRootSelf],
   (root) => root.status
 );
+export const selectSelfUserId = createSelector(
+  [selectRootSelf],
+  (root) => root.selfUserId
+);
 
+export const { reset, selfUserIdSet } = userSlice.actions;
 export default userSlice.reducer;
