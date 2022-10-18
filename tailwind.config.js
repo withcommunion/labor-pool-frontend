@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 const vwMap = {
   '10vw': '10vw',
   '15vw': '15vw',
@@ -155,7 +158,7 @@ module.exports = {
         '3px': '3px',
       },
       fontFamily: {
-        paytoneOne: ['Paytone One', 'sans-serif'],
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
