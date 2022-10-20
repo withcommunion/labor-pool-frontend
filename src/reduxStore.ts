@@ -3,6 +3,7 @@ import counterReducer from '@/features/counter/counterSlice';
 import selfReducer from '@/features/selfSlice';
 import createOrgReducer from '@/features/orgCreateSlice';
 import orgJoinReducer from '@/features/orgJoinSlice';
+import orgReducer from '@/features/orgSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     self: selfReducer,
     createdOrg: createOrgReducer,
     orgJoin: orgJoinReducer,
+    org: orgReducer,
   },
 });
 
