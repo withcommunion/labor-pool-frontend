@@ -37,7 +37,10 @@ const Index = ({ userJwt }: Props) => {
 
   useEffect(() => {
     if (createdOrgStatus === 'succeeded' && createdOrgResp) {
-      router.push(`/org/${createdOrgResp.id as string}/invite?members=true`);
+      router.push({
+        pathname: `/org/${createdOrgResp.id as string}/invite`,
+        query: router.query,
+      });
     }
   }, [createdOrgStatus, createdOrgResp, router]);
 

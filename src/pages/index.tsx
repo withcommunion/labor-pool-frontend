@@ -258,7 +258,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (userJwt) {
       return {
-        props: {},
+        props: { userJwt },
         redirect: {
           destination: queryString ? `/home${queryString}` : `/home`,
         },
