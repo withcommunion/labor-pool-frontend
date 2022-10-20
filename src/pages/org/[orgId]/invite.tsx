@@ -77,6 +77,11 @@ const OrgInvite = ({ userJwt }: Props) => {
                 onClick={() => {
                   if (currentStepIdx < steps.length - 1) {
                     setCurrentStepIdx(currentStepIdx + 1);
+                  } else {
+                    router.push({
+                      pathname: `/org/${queryOrgId}`,
+                      query: router.query,
+                    });
                   }
                 }}
               >
