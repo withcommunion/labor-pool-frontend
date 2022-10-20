@@ -67,10 +67,6 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
 
       <main className="min-h-100vh">
         <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
-          <div className="flex flex-col items-center justify-center">
-            <h2>Hi</h2>
-          </div>
-
           <div>
             {friendlyOrgJoinStatus !== 'idle' && (
               <JoinInProgress status={friendlyOrgJoinStatus} />
