@@ -79,15 +79,17 @@ export const fetchPostOrgMemberJoin = createAsyncThunk(
   async ({
     orgId,
     memberId,
+    role,
     jwtToken,
   }: {
     orgId: string;
     memberId: string;
+    role: string;
     jwtToken: string;
   }) => {
     const rawOrgResp = await axios.post<Record<string, unknown>>(
       `${API_URL}/org/${orgId}/member`,
-      { memberId },
+      { memberId, role },
       {
         headers: {
           Authorization: jwtToken,
