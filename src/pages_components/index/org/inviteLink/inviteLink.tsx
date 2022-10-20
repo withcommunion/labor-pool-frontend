@@ -20,7 +20,7 @@ const InviteLink = ({ orgId, orgJoinCode, action, role }: Props) => {
       const prodUrl = 'https://withcommunion.com';
       const devUrl = 'https://dev.withcommunion.com';
       const localUrl = 'http://localhost:3000';
-      const urlQueryParams = `?orgId=${orgId}&joinCode=${orgJoinCode}&action=${action}&role=${role}`;
+      const urlQueryParams = `?inviteeOrgId=${orgId}&joinCode=${orgJoinCode}&action=${action}&role=${role}`;
 
       if (isProd) {
         setOrgUrlWithJoinCode(`${prodUrl}${urlQueryParams}`);
@@ -82,7 +82,7 @@ You can sign up with this link ${orgUrlWithJoinCode}`);
       const prodUrl = 'https://withcommunion.com';
       const devUrl = 'https://dev.withcommunion.com';
       const localUrl = 'http://localhost:3000';
-      const urlQueryParams = `?orgId=${orgId}&joinCode=${orgJoinCode}&action=${action}`;
+      const urlQueryParams = `?inviteeOrgId=${orgId}&joinCode=${orgJoinCode}&action=${action}`;
 
       if (isProd) {
         setOrgUrlWithJoinCode(`${prodUrl}${urlQueryParams}`);
