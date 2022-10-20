@@ -10,9 +10,23 @@ import {
 
 import { API_URL } from '@/util/walletApiUtil';
 
+interface IUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  orgs: string[];
+  orgRoles: { orgId: string; role: string }[];
+  shiftHistory: string[];
+  phoneNumber: string;
+  allowSms: boolean;
+  email: string;
+  createdAtMs: number;
+  updatedAtMs: number;
+}
+
 // Define a type for the slice state
 export interface SelfState {
-  self: Record<string, unknown> | null;
+  self: IUser | null;
   selfUserId: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null | undefined;
@@ -57,14 +71,11 @@ export const userSlice = createSlice({
 export const fetchSelf = createAsyncThunk(
   'self/fetchSelf',
   async (jwtToken: string) => {
-    const rawSelf = await axios.get<Record<string, unknown>>(
-      `${API_URL}/user/`,
-      {
-        headers: {
-          Authorization: jwtToken,
-        },
-      }
-    );
+    const rawSelf = await axios.get<IUser>(`${API_URL}/user/`, {
+      headers: {
+        Authorization: jwtToken,
+      },
+    });
     const self = rawSelf.data;
 
     return self;

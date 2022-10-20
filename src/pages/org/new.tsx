@@ -14,7 +14,7 @@ import {
   fetchPostOrg,
   selectCreatedOrgStatus,
   selectCreatedOrgResp,
-} from '@/features/createOrgSlice';
+} from '@/features/orgCreateSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -37,7 +37,7 @@ const Index = ({ userJwt }: Props) => {
 
   useEffect(() => {
     if (createdOrgStatus === 'succeeded' && createdOrgResp) {
-      router.push(`/orgs/${createdOrgResp.id as string}`);
+      router.push(`/org/${createdOrgResp.id as string}/invite?members=true`);
     }
   }, [createdOrgStatus, createdOrgResp, router]);
 
