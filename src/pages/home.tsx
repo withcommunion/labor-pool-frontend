@@ -73,7 +73,7 @@ const Index = ({ userJwt }: Props) => {
                     <p>Would you like to make one?</p>
                   </div>
                   <div className="px-4 py-5 sm:p-6">
-                    <Link href="/org/new">
+                    <Link href={{ pathname: '/org/new', query: router.query }}>
                       <a>
                         <button
                           type="button"
