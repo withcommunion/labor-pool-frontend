@@ -43,7 +43,7 @@ const Index = ({ userJwt }: Props) => {
   const { signOut } = useAuthenticator((context) => [context.signOut]);
 
   useEffect(() => {
-    if (self && self.orgs.length === 0) {
+    if (self && self.orgs.length === 1) {
       router.push(`/org/${self.orgs[0]}`);
     }
   }, [self, router]);
@@ -165,10 +165,12 @@ function useHandleJoinOrgs(userJwt: string | null) {
     orgId: queryOrgId,
     joinCode: queryJoinCode,
     action: queryAction,
+    role: queryRole,
   } = router.query;
   const orgId = (queryOrgId as string) || '';
   const joinCode = (queryJoinCode as string) || '';
   const action = (queryAction as string) || '';
+  const role = (queryRole as string) || '';
 
   useEffect(() => {
     if (
@@ -183,6 +185,7 @@ function useHandleJoinOrgs(userJwt: string | null) {
           memberId: self.id,
           orgId,
           jwtToken: userJwt || '',
+          role,
         })
       );
     } else if (
@@ -210,6 +213,7 @@ function useHandleJoinOrgs(userJwt: string | null) {
     primarySelfOrg,
     self,
     userJwt,
+    role,
   ]);
 }
 

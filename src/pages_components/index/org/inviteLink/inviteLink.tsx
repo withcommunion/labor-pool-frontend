@@ -11,7 +11,7 @@ interface Props {
   action: 'memberJoin' | 'friendlyOrgJoin';
 }
 
-const InviteLink = ({ orgId, orgJoinCode, action }: Props) => {
+const InviteLink = ({ orgId, orgJoinCode, action, role }: Props) => {
   const [showCopySuccess, setShowCopySuccess] = useState(false);
   const [orgUrlWithJoinCode, setOrgUrlWithJoinCode] = useState('');
 
@@ -20,7 +20,7 @@ const InviteLink = ({ orgId, orgJoinCode, action }: Props) => {
       const prodUrl = 'https://withcommunion.com';
       const devUrl = 'https://dev.withcommunion.com';
       const localUrl = 'http://localhost:3000';
-      const urlQueryParams = `?orgId=${orgId}&joinCode=${orgJoinCode}&action=${action}`;
+      const urlQueryParams = `?orgId=${orgId}&joinCode=${orgJoinCode}&action=${action}&role=${role}`;
 
       if (isProd) {
         setOrgUrlWithJoinCode(`${prodUrl}${urlQueryParams}`);
@@ -30,7 +30,7 @@ const InviteLink = ({ orgId, orgJoinCode, action }: Props) => {
         setOrgUrlWithJoinCode(`${localUrl}${urlQueryParams}`);
       }
     }
-  }, [orgId, orgJoinCode, orgUrlWithJoinCode, action]);
+  }, [orgId, orgJoinCode, orgUrlWithJoinCode, action, role]);
 
   return (
     <div className="my-5 flex w-full flex-col text-start">
@@ -67,7 +67,7 @@ const InviteLink = ({ orgId, orgJoinCode, action }: Props) => {
   );
 };
 
-export const InviteTextArea = ({ orgId, orgJoinCode }: Props) => {
+export const InviteTextArea = ({ orgId, orgJoinCode, action }: Props) => {
   const [showCopySuccess, setShowCopySuccess] = useState(false);
   const [orgUrlWithJoinCode, setOrgUrlWithJoinCode] = useState('');
   const [message, setMessage] =
@@ -82,7 +82,7 @@ You can sign up with this link ${orgUrlWithJoinCode}`);
       const prodUrl = 'https://withcommunion.com';
       const devUrl = 'https://dev.withcommunion.com';
       const localUrl = 'http://localhost:3000';
-      const urlQueryParams = `?orgId=${orgId}&joinCode=${orgJoinCode}`;
+      const urlQueryParams = `?orgId=${orgId}&joinCode=${orgJoinCode}&action=${action}`;
 
       if (isProd) {
         setOrgUrlWithJoinCode(`${prodUrl}${urlQueryParams}`);
