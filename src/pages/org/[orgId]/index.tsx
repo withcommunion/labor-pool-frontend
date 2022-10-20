@@ -79,7 +79,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
           {org && (
             <div>
               <div>
-                <h2 className="text-xl">{org.name}</h2>
+                <h2 className="mt-4 text-2xl">{org.name}</h2>
               </div>
 
               <>
@@ -179,11 +179,35 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
               </>
             </div>
           )}
+
+          <>
+            {org && (
+              <div>
+                <Link href={{ pathname: `${org.id}/schedule` }}>
+                  <a className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    View Schedule
+                  </a>
+                </Link>
+              </div>
+            )}
+          </>
+
+          <>
+            {org && (
+              <div>
+                <Link href={{ pathname: `${org.id}/invite` }}>
+                  <a className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Invite links
+                  </a>
+                </Link>
+              </div>
+            )}
+          </>
         </div>
       </main>
-      <div>
+      <div className="flex flex-col items-center justify-center">
         <button
-          className="m-5 border p-2"
+          className="flex border p-2"
           onClick={() => {
             signOut();
             setTimeout(() => {
