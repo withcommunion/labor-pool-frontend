@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '@/features/counter/counterSlice';
 import selfReducer from '@/features/selfSlice';
-import createOrgReducer from '@/features/createOrgSlice';
+import createOrgReducer from '@/features/orgCreateSlice';
+import orgJoinReducer from '@/features/orgJoinSlice';
 
 const store = configureStore({
   reducer: {
@@ -9,6 +10,7 @@ const store = configureStore({
     counter: counterReducer,
     self: selfReducer,
     createdOrg: createOrgReducer,
+    orgJoin: orgJoinReducer,
   },
 });
 

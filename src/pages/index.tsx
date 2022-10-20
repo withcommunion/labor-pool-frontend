@@ -16,10 +16,10 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { Amplify } from 'aws-amplify';
-import { getUserOnServer } from '@/util/cognitoAuthUtil';
+import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
-import { AMPLIFY_CONFIG } from '../util/cognitoAuthUtil';
+import {} from '../util/cognitoAuthUtil';
 
 import Footer from '@/shared_components/footer/footer';
 import Image from 'next/image';
@@ -244,11 +244,18 @@ const Index = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { userJwt } = await getUserOnServer(context);
+    console.log(context.query);
+    const hasQueryStrings = Boolean(Object.keys(context.query).length);
+    const queryString = hasQueryStrings
+      ? // @ts-expect-error its okay - comes in as an object
+        `?${new URLSearchParams(context.query).toString()}`
+      : undefined;
+
     if (userJwt) {
       return {
         props: {},
         redirect: {
-          destination: '/home',
+          destination: queryString ? `/home${queryString}` : `/home`,
         },
       };
     }
