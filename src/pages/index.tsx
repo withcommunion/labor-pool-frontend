@@ -115,7 +115,12 @@ const Index = () => {
             width="220px"
             height="62px"
           />
-          <Link href="/login">
+          <Link
+            href={{
+              pathname: '/login',
+              query: router.query,
+            }}
+          >
             <a>
               <button
                 type="button"
