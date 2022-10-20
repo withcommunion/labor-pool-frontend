@@ -21,13 +21,18 @@ import {
 // import { selectSelf, selectSelfStatus } from '@/features/selfSlice';
 
 import Footer from '@/shared_components/footer/footer';
+import { fetchOrg, selectOrg, selectOrgStatus } from '@/features/orgSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 
 const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { signOut } = useAuthenticator((context) => [context.signOut]);
+
+  const org = useAppSelector((state) => selectOrg(state));
+  const orgStatus = useAppSelector((state) => selectOrgStatus(state));
 
   const friendlyOrgJoinStatus = useAppSelector((state) =>
     selectFriendlyOrgJoinStatus(state)
@@ -38,6 +43,13 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
 
   useFetchSelf(userJwt);
   useHandleJoinOrgs(userJwt);
+
+  useEffect(() => {
+    const orgId = router.query.orgId as string;
+    if (orgStatus === 'idle' && !org) {
+      dispatch(fetchOrg({ orgId, jwtToken: userJwt }));
+    }
+  });
 
   return (
     <div>
