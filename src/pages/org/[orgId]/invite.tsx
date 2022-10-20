@@ -34,7 +34,6 @@ const OrgInvite = ({ userJwt }: Props) => {
   const { orgId } = router.query;
   const queryOrgId = (orgId as string) || '';
 
-  console.log(currentStepIdx);
   useFetchSelf(userJwt);
 
   return (

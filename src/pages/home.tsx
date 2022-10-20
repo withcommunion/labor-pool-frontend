@@ -7,15 +7,9 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
-import { useAppDispatch, useAppSelector } from '@/reduxHooks';
+import { useAppSelector } from '@/reduxHooks';
 
 import { selectSelf } from '@/features/selfSlice';
-import {
-  fetchPostOrgFriendlyOrgJoin,
-  fetchPostOrgMemberJoin,
-  selectFriendlyOrgJoinStatus,
-  selectMemberJoinStatus,
-} from '@/features/orgJoinSlice';
 
 import Footer from '@/shared_components/footer/footer';
 import Link from 'next/link';
@@ -30,23 +24,32 @@ interface Props {
 const Index = ({ userJwt }: Props) => {
   const router = useRouter();
   useFetchSelf(userJwt);
-  useHandleJoinOrgs(userJwt);
+  // useHandleJoinOrgs(userJwt);
 
   const self = useAppSelector((state) => selectSelf(state));
-  const friendlyOrgJoinStatus = useAppSelector((state) =>
-    selectFriendlyOrgJoinStatus(state)
-  );
-  const memberJoinStatus = useAppSelector((state) =>
-    selectMemberJoinStatus(state)
-  );
 
   const { signOut } = useAuthenticator((context) => [context.signOut]);
 
   useEffect(() => {
-    if (self && self.orgs.length === 1) {
-      router.push(`/org/${self.orgs[0]}`);
+    if (self && self.orgs.length === 0) {
+      router.push({ pathname: `/org/${self.orgs[0]}`, query: router.query });
     }
   }, [self, router]);
+
+  useEffect(() => {
+    const { inviteeOrgId: queryInviteeOrgId, action: queryAction } =
+      router.query;
+    const inviteeOrgId = (queryInviteeOrgId as string) || '';
+    const action = (queryAction as string) || '';
+
+    const isJoinInvite = Boolean(
+      inviteeOrgId && (action === 'memberJoin' || action === 'friendlyOrgJoin')
+    );
+
+    if (self && isJoinInvite) {
+      router.push({ pathname: `/org/${inviteeOrgId}`, query: router.query });
+    }
+  }, [router, self]);
 
   return (
     <div>
@@ -65,29 +68,43 @@ const Index = ({ userJwt }: Props) => {
               </h2>
 
               {self && self.orgs.length === 0 && (
-                <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
-                  <div className="px-4 py-5 sm:px-6">
-                    <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                      You are not part of any organizations
-                    </p>
-                    <p>Would you like to make one?</p>
+                <>
+                  <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
+                    <div className="px-4 py-5 sm:px-6">
+                      <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                        You are not part of any organizations
+                      </p>
+                    </div>
+                    <div className="px-4 py-5 text-xl sm:p-6">
+                      <p>Would you like to make one?</p>
+                      <Link
+                        href={{ pathname: '/org/new', query: router.query }}
+                      >
+                        <a>
+                          <button
+                            type="button"
+                            className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            Create new org
+                          </button>
+                        </a>
+                      </Link>
+                    </div>
+
+                    <div className="px-4 py-5 sm:p-6">
+                      <p className="text-lg">
+                        Or are you trying to join an existing organization?
+                      </p>
+                      <p>
+                        If you have a join URL, enter it into your browser you
+                        will join that organization.
+                      </p>
+                    </div>
                   </div>
-                  <div className="px-4 py-5 sm:p-6">
-                    <Link href={{ pathname: '/org/new', query: router.query }}>
-                      <a>
-                        <button
-                          type="button"
-                          className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                          Create new org
-                        </button>
-                      </a>
-                    </Link>
-                  </div>
-                </div>
+                </>
               )}
 
-              {self && self.orgs.length > 1 && (
+              {self && self.orgs.length >= 1 && (
                 <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
                   <div className="px-4 py-5 sm:px-6">
                     <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
@@ -111,14 +128,6 @@ const Index = ({ userJwt }: Props) => {
                 </div>
               )}
             </div>
-            <div>
-              {friendlyOrgJoinStatus !== 'idle' && (
-                <JoinInProgress status={friendlyOrgJoinStatus} />
-              )}
-              {memberJoinStatus !== 'idle' && (
-                <JoinInProgress status={memberJoinStatus} />
-              )}
-            </div>
 
             <div className="">
               <button
@@ -140,96 +149,6 @@ const Index = ({ userJwt }: Props) => {
     </div>
   );
 };
-
-function useHandleJoinOrgs(userJwt: string | null) {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  useFetchSelf(userJwt);
-
-  const self = useAppSelector((state) => selectSelf(state));
-  const friendlyOrgJoinStatus = useAppSelector((state) =>
-    selectFriendlyOrgJoinStatus(state)
-  );
-  const memberJoinStatus = useAppSelector((state) =>
-    selectMemberJoinStatus(state)
-  );
-
-  /**
-   * Users will only have 1 primary org at a time.
-   * But to avoid what I had with v1 Communion, lets not fully assume that
-   * Who knows what the future holds
-   */
-  const primarySelfOrg = self && self.orgs[0];
-
-  const {
-    orgId: queryOrgId,
-    joinCode: queryJoinCode,
-    action: queryAction,
-    role: queryRole,
-  } = router.query;
-  const orgId = (queryOrgId as string) || '';
-  const joinCode = (queryJoinCode as string) || '';
-  const action = (queryAction as string) || '';
-  const role = (queryRole as string) || '';
-
-  useEffect(() => {
-    if (
-      action === 'memberJoin' &&
-      self &&
-      orgId &&
-      joinCode &&
-      memberJoinStatus === 'idle'
-    ) {
-      dispatch(
-        fetchPostOrgMemberJoin({
-          memberId: self.id,
-          orgId,
-          jwtToken: userJwt || '',
-          role,
-        })
-      );
-    } else if (
-      action === 'friendlyOrgJoin' &&
-      orgId &&
-      joinCode &&
-      primarySelfOrg &&
-      friendlyOrgJoinStatus === 'idle'
-    ) {
-      dispatch(
-        fetchPostOrgFriendlyOrgJoin({
-          orgId,
-          friendlyOrgId: primarySelfOrg,
-          jwtToken: userJwt || '',
-        })
-      );
-    }
-  }, [
-    action,
-    dispatch,
-    friendlyOrgJoinStatus,
-    joinCode,
-    memberJoinStatus,
-    orgId,
-    primarySelfOrg,
-    self,
-    userJwt,
-    role,
-  ]);
-}
-
-function JoinInProgress({
-  status,
-}: {
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-}) {
-  return (
-    <>
-      {status === 'loading' && <p>Joining org...</p>}
-      {status === 'succeeded' && <p>Joined org! Routing you</p>}
-      {status === 'failed' && <p>Something went wrong, please try again</p>}
-    </>
-  );
-}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {

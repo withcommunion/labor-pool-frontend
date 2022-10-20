@@ -26,9 +26,16 @@ import Footer from '@/shared_components/footer/footer';
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 
 const OrgIndex = ({ userJwt }: { userJwt: string }) => {
-  console.log('here yea?', userJwt);
   const router = useRouter();
   const { signOut } = useAuthenticator((context) => [context.signOut]);
+
+  const friendlyOrgJoinStatus = useAppSelector((state) =>
+    selectFriendlyOrgJoinStatus(state)
+  );
+  const memberJoinStatus = useAppSelector((state) =>
+    selectMemberJoinStatus(state)
+  );
+
   useFetchSelf(userJwt);
   useHandleJoinOrgs(userJwt);
 
@@ -44,6 +51,15 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
         <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
           <div className="flex flex-col items-center justify-center">
             <h2>Hi</h2>
+          </div>
+
+          <div>
+            {friendlyOrgJoinStatus !== 'idle' && (
+              <JoinInProgress status={friendlyOrgJoinStatus} />
+            )}
+            {memberJoinStatus !== 'idle' && (
+              <JoinInProgress status={memberJoinStatus} />
+            )}
           </div>
         </div>
       </main>
@@ -65,7 +81,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   );
 };
 
-function useHandleJoinOrgs(userJwt: string | null) {
+function useHandleJoinOrgs(userJwt: string) {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -77,52 +93,43 @@ function useHandleJoinOrgs(userJwt: string | null) {
     selectMemberJoinStatus(state)
   );
 
-  /**
-   * Users will only have 1 primary org at a time.
-   * But to avoid what I had with v1 Communion, lets not fully assume that
-   * Who knows what the future holds
-   */
-  const primarySelfOrg = self && self.orgs[0];
-
   const {
     orgId: queryOrgId,
+    inviteeOrgId: inviteeQueryOrgId,
     joinCode: queryJoinCode,
     action: queryAction,
     role: queryRole,
   } = router.query;
   const orgId = (queryOrgId as string) || '';
+  const inviteeOrgId = (inviteeQueryOrgId as string) || '';
   const joinCode = (queryJoinCode as string) || '';
   const action = (queryAction as string) || '';
   const role = (queryRole as string) || '';
 
   useEffect(() => {
-    if (
-      action === 'memberJoin' &&
-      self &&
-      orgId &&
-      joinCode &&
-      memberJoinStatus === 'idle'
-    ) {
+    const isMemberJoinAction = action === 'memberJoin';
+    const hasAllJoinComponents =
+      self && orgId && joinCode && memberJoinStatus === 'idle';
+
+    const isFriendlyOrgJoinAction = action === 'friendlyOrgJoin';
+    const hasAllFriendlyJoinComponents =
+      orgId && joinCode && inviteeOrgId && friendlyOrgJoinStatus === 'idle';
+
+    if (isMemberJoinAction && hasAllJoinComponents) {
       dispatch(
         fetchPostOrgMemberJoin({
           memberId: self.id,
-          orgId,
-          jwtToken: userJwt || '',
+          orgId: inviteeOrgId,
+          jwtToken: userJwt,
           role,
         })
       );
-    } else if (
-      action === 'friendlyOrgJoin' &&
-      orgId &&
-      joinCode &&
-      primarySelfOrg &&
-      friendlyOrgJoinStatus === 'idle'
-    ) {
+    } else if (isFriendlyOrgJoinAction && hasAllFriendlyJoinComponents) {
       dispatch(
         fetchPostOrgFriendlyOrgJoin({
           orgId,
-          friendlyOrgId: primarySelfOrg,
-          jwtToken: userJwt || '',
+          friendlyOrgId: inviteeOrgId,
+          jwtToken: userJwt,
         })
       );
     }
@@ -132,12 +139,26 @@ function useHandleJoinOrgs(userJwt: string | null) {
     friendlyOrgJoinStatus,
     joinCode,
     memberJoinStatus,
+    inviteeOrgId,
     orgId,
-    primarySelfOrg,
     self,
     userJwt,
     role,
   ]);
+}
+
+function JoinInProgress({
+  status,
+}: {
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+}) {
+  return (
+    <>
+      {status === 'loading' && <p>Joining org...</p>}
+      {status === 'succeeded' && <p>Joined org! Routing you</p>}
+      {status === 'failed' && <p>Something went wrong, please try again</p>}
+    </>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -149,7 +170,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.log(error);
     return {
-      props: { userJwt: null, user: null },
+      props: { userJwt: '', user: null },
+      redirect: {
+        destination: '/',
+      },
     };
   }
 };
