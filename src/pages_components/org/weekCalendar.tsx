@@ -12,6 +12,9 @@ import {
   endOfWeek,
   format,
   isToday,
+  startOfDay,
+  eachHourOfInterval,
+  endOfDay,
 } from 'date-fns';
 import cx from 'classnames';
 
@@ -109,10 +112,13 @@ function CalendarTypeSelector() {
 }
 
 function CalendarHeader() {
+  const today = Date.now();
   return (
     <header className="flex flex-none items-center justify-between border-b border-gray-200 py-4 px-6">
       <h1 className="text-lg font-semibold text-gray-900">
-        <time dateTime="2022-01">January 2022</time>
+        <time dateTime={format(today, 'yyyy-MM')}>
+          {format(today, 'MMMM yyyy')}
+        </time>
       </h1>
       <div className="flex items-center">
         <div className="flex items-center rounded-md shadow-sm md:items-stretch">
@@ -221,32 +227,6 @@ function CalendarHeader() {
                     </a>
                   )}
                 </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )}
-                    >
-                      Month view
-                    </a>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      href="#"
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )}
-                    >
-                      Year view
-                    </a>
-                  )}
-                </Menu.Item>
               </div>
             </Menu.Items>
           </Transition>
@@ -336,156 +316,30 @@ function TimesOfDayHeader({
 }: {
   containerOffset: React.RefObject<HTMLDivElement>;
 }) {
+  const today = Date.now();
+  const eachHourOfDay = eachHourOfInterval({
+    start: startOfDay(today),
+    end: endOfDay(today),
+  });
   return (
     <div
       className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-100"
       style={{ gridTemplateRows: 'repeat(48, minmax(3.5rem, 1fr))' }}
     >
       <div ref={containerOffset} className="row-end-1 h-7"></div>
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          12AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          1AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          2AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          3AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          4AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          5AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          6AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          7AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          8AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          9AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          10AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          11AM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          12PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          1PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          2PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          3PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          4PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          5PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          6PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          7PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          8PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          9PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          10PM
-        </div>
-      </div>
-      <div />
-      <div>
-        <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
-          11PM
-        </div>
-      </div>
-      <div />
+      {eachHourOfDay.map((day) => {
+        const time = format(day, 'ha');
+        return (
+          <>
+            <div>
+              <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
+                {time}
+              </div>
+            </div>
+            <div />
+          </>
+        );
+      })}
     </div>
   );
 }
