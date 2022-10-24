@@ -146,7 +146,10 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                         key={org}
                         className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                       >
-                        <Link href={`${org}`} passHref>
+                        <Link
+                          href={{ pathname: `[orgId]`, query: { orgId: org } }}
+                          passHref
+                        >
                           <a className="focus:outline-none">
                             <div className="flex-shrink-0">
                               <BuildingOfficeIcon className="h-10 w-10 rounded-full" />
@@ -176,7 +179,12 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
           <>
             {org && (
               <div>
-                <Link href={{ pathname: `${org.id}/schedule` }}>
+                <Link
+                  href={{
+                    pathname: `[orgId]/schedule`,
+                    query: { orgId: org.id },
+                  }}
+                >
                   <a className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     View Schedule
                   </a>
@@ -188,7 +196,12 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
           <>
             {org && (
               <div>
-                <Link href={{ pathname: `${org.id}/invite` }}>
+                <Link
+                  href={{
+                    pathname: `[orgId]/invite`,
+                    query: { orgId: org.id },
+                  }}
+                >
                   <a className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     Invite links
                   </a>
