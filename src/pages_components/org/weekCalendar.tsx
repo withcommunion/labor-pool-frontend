@@ -151,7 +151,7 @@ function CalendarHeader({
             }}
             className="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
-            <span className="sr-only">Previous month</span>
+            <span className="sr-only">Previous week</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
           <button
@@ -171,7 +171,7 @@ function CalendarHeader({
             }}
             className="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
-            <span className="sr-only">Next month</span>
+            <span className="sr-only">Next week</span>
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
