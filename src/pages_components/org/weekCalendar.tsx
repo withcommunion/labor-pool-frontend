@@ -17,6 +17,7 @@ import {
   endOfDay,
   addWeeks,
   subWeeks,
+  differenceInMinutes,
 } from 'date-fns';
 import cx from 'classnames';
 
@@ -379,19 +380,52 @@ function VerticalLines() {
   );
 }
 
+function calculateEventPosition(eventStart: Date, eventEnd: Date) {
+  /**
+   * Total Cells = 48
+   * 1 full cell = 6
+   * Thiry min = 1 cell
+   */
+  const thiryMinOnGrid = 6;
+  const gridStart = 2;
+
+  const minutesFromMidnight = differenceInMinutes(
+    eventStart,
+    startOfDay(eventStart)
+  );
+
+  const eventDurationInMinutes = differenceInMinutes(eventEnd, eventStart);
+
+  const eventStartInGrid = Math.floor(
+    (minutesFromMidnight / 30) * thiryMinOnGrid + gridStart
+  );
+  const eventEndInGrid = Math.floor(
+    (eventDurationInMinutes / 30) * thiryMinOnGrid
+  );
+
+  return { eventStartInGrid, eventEndInGrid };
+}
+
 function DynamicEvent() {
-  const eventStart = 74;
-  const eventEnd = 12;
   const numDayOfWeek = 3;
+
+  const eventStart = new Date('2022-01-12T12:00');
+  const eventEnd = new Date('2022-01-12T13:00');
+  const { eventStartInGrid, eventEndInGrid } = calculateEventPosition(
+    eventStart,
+    eventEnd
+  );
   return (
     <li
       className={`relative mt-px flex sm:col-start-${numDayOfWeek}`}
-      style={{ gridRow: `${eventStart} / span ${eventEnd}` }}
+      style={{ gridRow: `${eventStartInGrid} / span ${eventEndInGrid}` }}
     >
       <a className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100">
         <p className="order-1 font-semibold text-blue-700">Breakfast</p>
         <p className="text-blue-500 group-hover:text-blue-700">
-          <time dateTime="2022-01-12T06:00">6:00 AM</time>
+          <time dateTime="2022-01-12T06:00">
+            {format(eventStart, 'h:mm b')}
+          </time>
         </p>
       </a>
     </li>
