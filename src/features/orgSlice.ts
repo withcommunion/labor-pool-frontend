@@ -5,6 +5,7 @@ import {
   createSlice,
   createAsyncThunk,
   createSelector,
+  PayloadAction,
   //   PayloadAction,
 } from '@reduxjs/toolkit';
 
@@ -22,9 +23,10 @@ interface IOrg {
 }
 
 // Define a type for the slice state
+export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 export interface OrgState {
   org: IOrg | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: RequestStatus;
   error: string | null | undefined;
 }
 
@@ -42,6 +44,9 @@ export const orgSlice = createSlice({
   reducers: {
     reset: () => {
       return initialState;
+    },
+    setOrgStatus: (state, action: PayloadAction<RequestStatus>) => {
+      state.status = action.payload;
     },
   },
   extraReducers(builder) {
@@ -81,5 +86,5 @@ export const selectOrgStatus = createSelector(
   (root) => root.status
 );
 
-export const { reset } = orgSlice.actions;
+export const { reset, setOrgStatus } = orgSlice.actions;
 export default orgSlice.reducer;
