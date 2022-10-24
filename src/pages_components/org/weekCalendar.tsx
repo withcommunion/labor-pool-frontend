@@ -34,6 +34,8 @@ export default function WeekCalendar() {
   return (
     <div className="flex h-full flex-col px-5">
       <CalendarHeader
+        startDate={startDay}
+        onTodayClick={() => setStartDay(new Date(Date.now()))}
         onNextWeekClick={() => {
           setStartDay(addWeeks(startDay, 1));
         }}
@@ -123,18 +125,21 @@ function CalendarTypeSelector() {
 }
 
 function CalendarHeader({
+  startDate,
+  onTodayClick,
   onNextWeekClick,
   onPrevWeekClick,
 }: {
+  startDate: Date;
+  onTodayClick: () => void;
   onNextWeekClick: () => void;
   onPrevWeekClick: () => void;
 }) {
-  const today = Date.now();
   return (
     <header className="flex flex-none items-center justify-between border-b border-gray-200 py-4 px-6">
       <h1 className="text-lg font-semibold text-gray-900">
-        <time dateTime={format(today, 'yyyy-MM')}>
-          {format(today, 'MMMM yyyy')}
+        <time dateTime={format(startDate, 'yyyy-MM')}>
+          {format(startDate, 'MMMM yyyy')}
         </time>
       </h1>
       <div className="flex items-center">
@@ -151,6 +156,9 @@ function CalendarHeader({
           </button>
           <button
             type="button"
+            onClick={() => {
+              onTodayClick();
+            }}
             className="hidden border-t border-b border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:relative md:block"
           >
             Today
