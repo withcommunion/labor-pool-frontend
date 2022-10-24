@@ -146,9 +146,7 @@ function CalendarHeader({
         <div className="flex items-center rounded-md shadow-sm md:items-stretch">
           <button
             type="button"
-            onClick={() => {
-              onPrevWeekClick();
-            }}
+            onClick={onPrevWeekClick}
             className="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
             <span className="sr-only">Previous week</span>
@@ -156,9 +154,7 @@ function CalendarHeader({
           </button>
           <button
             type="button"
-            onClick={() => {
-              onTodayClick();
-            }}
+            onClick={onTodayClick}
             className="hidden border-t border-b border-gray-300 bg-white px-3.5 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:relative md:block"
           >
             Today
@@ -166,9 +162,7 @@ function CalendarHeader({
           <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
           <button
             type="button"
-            onClick={() => {
-              onNextWeekClick();
-            }}
+            onClick={onNextWeekClick}
             className="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
             <span className="sr-only">Next week</span>
@@ -220,7 +214,7 @@ function CalendarHeader({
                 <Menu.Item>
                   {({ active }) => (
                     <a
-                      href="#"
+                      onClick={onTodayClick}
                       className={classNames(
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'block px-4 py-2 text-sm'
