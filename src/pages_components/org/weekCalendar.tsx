@@ -1,4 +1,4 @@
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
   ChevronDownIcon,
@@ -15,6 +15,8 @@ import {
   startOfDay,
   eachHourOfInterval,
   endOfDay,
+  addWeeks,
+  subWeeks,
 } from 'date-fns';
 import cx from 'classnames';
 
@@ -23,18 +25,27 @@ function classNames(...classes: string[]) {
 }
 
 export default function WeekCalendar() {
+  const [startDay, setStartDay] = useState(new Date(Date.now()));
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
+  console.log(startDay);
 
   return (
     <div className="flex h-full flex-col px-5">
-      <CalendarHeader />
+      <CalendarHeader
+        onNextWeekClick={() => {
+          setStartDay(addWeeks(startDay, 1));
+        }}
+        onPrevWeekClick={() => {
+          setStartDay(subWeeks(startDay, 1));
+        }}
+      />
       <div
         ref={container}
         className="isolate flex flex-auto flex-col overflow-auto bg-white"
       >
-        <DaysOfWeekHeader containerNav={containerNav} />
+        <DaysOfWeekHeader dayToStartOn={startDay} containerNav={containerNav} />
         <div
           style={{ width: '165%' }}
           className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
@@ -111,7 +122,13 @@ function CalendarTypeSelector() {
   );
 }
 
-function CalendarHeader() {
+function CalendarHeader({
+  onNextWeekClick,
+  onPrevWeekClick,
+}: {
+  onNextWeekClick: () => void;
+  onPrevWeekClick: () => void;
+}) {
   const today = Date.now();
   return (
     <header className="flex flex-none items-center justify-between border-b border-gray-200 py-4 px-6">
@@ -124,6 +141,9 @@ function CalendarHeader() {
         <div className="flex items-center rounded-md shadow-sm md:items-stretch">
           <button
             type="button"
+            onClick={() => {
+              onPrevWeekClick();
+            }}
             className="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-white py-2 pl-3 pr-4 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
             <span className="sr-only">Previous month</span>
@@ -138,6 +158,9 @@ function CalendarHeader() {
           <span className="relative -mx-px h-5 w-px bg-gray-300 md:hidden" />
           <button
             type="button"
+            onClick={() => {
+              onNextWeekClick();
+            }}
             className="flex items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-white py-2 pl-4 pr-3 text-gray-400 hover:text-gray-500 focus:relative md:w-9 md:px-2 md:hover:bg-gray-50"
           >
             <span className="sr-only">Next month</span>
@@ -237,14 +260,15 @@ function CalendarHeader() {
 }
 
 function DaysOfWeekHeader({
+  dayToStartOn,
   containerNav,
 }: {
   containerNav: React.RefObject<HTMLDivElement>;
+  dayToStartOn: Date;
 }) {
-  const today = Date.now();
   const thisWeek = eachDayOfInterval({
-    start: startOfWeek(today),
-    end: endOfWeek(today),
+    start: startOfWeek(dayToStartOn),
+    end: endOfWeek(dayToStartOn),
   });
 
   return (
