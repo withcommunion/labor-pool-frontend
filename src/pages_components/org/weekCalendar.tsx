@@ -6,6 +6,7 @@ import {
   ChevronRightIcon,
   EllipsisHorizontalIcon,
 } from '@heroicons/react/20/solid';
+import { eachDayOfInterval, startOfWeek, endOfWeek } from 'date-fns';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -17,7 +18,7 @@ export default function WeekCalendar() {
   const containerOffset = useRef(null);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col px-5">
       <CalendarHeader />
       <div
         ref={container}
@@ -253,6 +254,13 @@ function DaysOfWeekHeader({
 }: {
   containerNav: React.RefObject<HTMLDivElement>;
 }) {
+  const today = Date.now();
+  const thisWeek = eachDayOfInterval({
+    start: startOfWeek(today),
+    end: endOfWeek(today),
+  });
+
+  console.log(thisWeek);
   return (
     <div
       ref={containerNav}
@@ -305,6 +313,7 @@ function DaysOfWeekHeader({
 
       <div className="-mr-px hidden grid-cols-7 divide-x divide-gray-100 border-r border-gray-100 text-sm leading-6 text-gray-500 sm:grid">
         <div className="col-end-1 w-14" />
+
         <div className="flex items-center justify-center py-3">
           <span>
             Mon{' '}
@@ -540,6 +549,28 @@ function VerticalLines() {
   );
 }
 
+function DynamicEvent() {
+  const eventStart = 74;
+  const eventEnd = 12;
+  const numDayOfWeek = 3;
+  return (
+    <li
+      className={`relative mt-px flex sm:col-start-${numDayOfWeek}`}
+      style={{ gridRow: `${eventStart} / span ${eventEnd}` }}
+    >
+      <a
+        href="#"
+        className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100"
+      >
+        <p className="order-1 font-semibold text-blue-700">Breakfast</p>
+        <p className="text-blue-500 group-hover:text-blue-700">
+          <time dateTime="2022-01-12T06:00">6:00 AM</time>
+        </p>
+      </a>
+    </li>
+  );
+}
+
 function EventsList() {
   return (
     <ol
@@ -548,20 +579,8 @@ function EventsList() {
         gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto',
       }}
     >
-      <li
-        className="relative mt-px flex sm:col-start-3"
-        style={{ gridRow: '74 / span 12' }}
-      >
-        <a
-          href="#"
-          className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100"
-        >
-          <p className="order-1 font-semibold text-blue-700">Breakfast</p>
-          <p className="text-blue-500 group-hover:text-blue-700">
-            <time dateTime="2022-01-12T06:00">6:00 AM</time>
-          </p>
-        </a>
-      </li>
+      <DynamicEvent />
+
       <li
         className="relative mt-px flex sm:col-start-3"
         style={{ gridRow: '92 / span 30' }}
