@@ -460,8 +460,6 @@ function DynamicEvent({
   const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
     calculateEventPosition(eventStart, eventEnd);
 
-  console.log(dayPositionInGrid);
-
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
