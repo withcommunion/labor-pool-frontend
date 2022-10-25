@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef, useState, useEffect } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
   ChevronDownIcon,
@@ -23,8 +23,11 @@ import {
   addDays,
   isSameWeek,
   subHours,
+  isSameDay,
 } from 'date-fns';
 import cx from 'classnames';
+
+import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -55,9 +58,19 @@ const events = [
 
 export default function WeekCalendar() {
   const [startDay, setStartDay] = useState(new Date(Date.now()));
+  const [isInWeekView, setIsInWeekView] = useState(true);
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
+  const { isMd } = useBreakpoint('md');
+
+  useEffect(() => {
+    if (isMd && !isInWeekView) {
+      setIsInWeekView(true);
+    } else if (!isMd && isInWeekView) {
+      setIsInWeekView(false);
+    }
+  }, [isMd, isInWeekView]);
 
   return (
     <div className="flex h-full flex-col px-5">
@@ -75,7 +88,11 @@ export default function WeekCalendar() {
         ref={container}
         className="isolate flex flex-auto flex-col overflow-auto bg-white"
       >
-        <DaysOfWeekHeader dayToStartOn={startDay} containerNav={containerNav} />
+        <DaysOfWeekHeader
+          dayToStartOn={startDay}
+          containerNav={containerNav}
+          onDayClick={(day) => setStartDay(day)}
+        />
         <div
           style={{ width: '165%' }}
           className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
@@ -86,9 +103,13 @@ export default function WeekCalendar() {
               <TimesOfDayHeader containerOffset={containerOffset} />
               <VerticalLines />
               <EventsList
-                events={events.filter((event) =>
-                  isSameWeek(event.start, startDay)
-                )}
+                events={
+                  isInWeekView
+                    ? events.filter((event) =>
+                        isSameWeek(event.start, startDay)
+                      )
+                    : events.filter((event) => isSameDay(event.start, startDay))
+                }
               />
             </div>
           </div>
@@ -291,14 +312,18 @@ function CalendarHeader({
 function DaysOfWeekHeader({
   dayToStartOn,
   containerNav,
+  onDayClick,
 }: {
   containerNav: React.RefObject<HTMLDivElement>;
   dayToStartOn: Date;
+  onDayClick: (date: Date) => void;
 }) {
   const thisWeek = eachDayOfInterval({
     start: startOfWeek(dayToStartOn),
     end: endOfWeek(dayToStartOn),
   });
+
+  console.log(dayToStartOn);
 
   return (
     <div
@@ -312,6 +337,7 @@ function DaysOfWeekHeader({
               key={day.getDay()}
               type="button"
               className="flex flex-col items-center pt-2 pb-3"
+              onClick={() => onDayClick(day)}
             >
               {format(day, 'EEE')}{' '}
               <span
@@ -319,7 +345,7 @@ function DaysOfWeekHeader({
                   'mt-1 flex h-8 w-8 items-center justify-center font-semibold text-gray-900',
                   {
                     'mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 font-semibold text-white':
-                      isToday(day),
+                      isSameDay(dayToStartOn, day),
                   }
                 )}
               >
@@ -475,7 +501,6 @@ interface Event {
   name: string;
 }
 function EventsList({ events }: { events: Event[] }) {
-  console.log('rendering');
   return (
     <ol
       className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
