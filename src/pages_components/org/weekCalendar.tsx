@@ -19,12 +19,39 @@ import {
   subWeeks,
   differenceInMinutes,
   addHours,
+  formatISO,
+  addDays,
+  isSameWeek,
+  subHours,
 } from 'date-fns';
 import cx from 'classnames';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
+
+const events = [
+  {
+    start: subHours(addDays(Date.now(), 3), 8),
+    end: subHours(addDays(Date.now(), 3), 6),
+    name: 'Flight To Paris',
+  },
+  {
+    start: new Date(Date.now()),
+    end: addHours(Date.now(), 2),
+    name: 'Breakfast',
+  },
+  {
+    start: addDays(Date.now(), 1),
+    end: addHours(addDays(Date.now(), 1), 2),
+    name: 'Breakfast tmw',
+  },
+  {
+    start: subHours(addDays(Date.now(), 8), 8),
+    end: subHours(addDays(Date.now(), 8), 6),
+    name: 'Flight To NY',
+  },
+];
 
 export default function WeekCalendar() {
   const [startDay, setStartDay] = useState(new Date(Date.now()));
@@ -58,7 +85,11 @@ export default function WeekCalendar() {
             <div className="grid flex-auto grid-cols-1 grid-rows-1">
               <TimesOfDayHeader containerOffset={containerOffset} />
               <VerticalLines />
-              <EventsList />
+              <EventsList
+                events={events.filter((event) =>
+                  isSameWeek(event.start, startDay)
+                )}
+              />
             </div>
           </div>
         </div>
@@ -352,14 +383,14 @@ function TimesOfDayHeader({
       {eachHourOfDay.map((day) => {
         const time = format(day, 'ha');
         return (
-          <div key={time}>
-            <div>
+          <>
+            <div key={time}>
               <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
                 {time}
               </div>
             </div>
             <div />
-          </div>
+          </>
         );
       })}
     </div>
@@ -383,8 +414,8 @@ function VerticalLines() {
 
 function calculateEventPosition(eventStart: Date, eventEnd: Date) {
   /**
-   * Total Cells = 48
-   * 1 full cell = 6
+   * Total Cells = 48 (24 hrs in day, 2 cells per hour)
+   * 1 cell = 6
    * Thiry min = 1 cell
    */
   const thiryMinOnGrid = 6;
@@ -401,30 +432,35 @@ function calculateEventPosition(eventStart: Date, eventEnd: Date) {
     (minutesFromMidnight / 30) * thiryMinOnGrid + gridStart
   );
   const eventEndInGrid = Math.floor(
-    (eventDurationInMinutes / 30) * thiryMinOnGrid
+    (eventDurationInMinutes / 30) * thiryMinOnGrid + gridStart
   );
 
-  return { eventStartInGrid, eventEndInGrid };
+  const dayPositionInGrid = eventStart.getDay() + 1; // Grid index starts at 1
+
+  return { eventStartInGrid, eventEndInGrid, dayPositionInGrid };
 }
 
-function DynamicEvent() {
-  const numDayOfWeek = 3;
+function DynamicEvent({
+  eventStart,
+  eventEnd,
+  eventName,
+}: {
+  eventStart: Date;
+  eventEnd: Date;
+  eventName: string;
+}) {
+  const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
+    calculateEventPosition(eventStart, eventEnd);
 
-  const eventStart = new Date(Date.now());
-  const eventEnd = addHours(Date.now(), 2);
-  const { eventStartInGrid, eventEndInGrid } = calculateEventPosition(
-    eventStart,
-    eventEnd
-  );
   return (
     <li
-      className={`relative mt-px flex sm:col-start-${numDayOfWeek}`}
+      className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
       style={{ gridRow: `${eventStartInGrid} / span ${eventEndInGrid}` }}
     >
       <a className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100">
-        <p className="order-1 font-semibold text-blue-700">Breakfast!</p>
+        <p className="order-1 font-semibold text-blue-700">{eventName}</p>
         <p className="text-blue-500 group-hover:text-blue-700">
-          <time dateTime="2022-01-12T06:00">
+          <time dateTime={formatISO(eventStart)}>
             {format(eventStart, 'h:mm b')}
           </time>
         </p>
@@ -433,7 +469,13 @@ function DynamicEvent() {
   );
 }
 
-function EventsList() {
+interface Event {
+  start: Date;
+  end: Date;
+  name: string;
+}
+function EventsList({ events }: { events: Event[] }) {
+  console.log('rendering');
   return (
     <ol
       className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
@@ -441,7 +483,19 @@ function EventsList() {
         gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto',
       }}
     >
-      <DynamicEvent />
+      {events.map((event) => {
+        return (
+          <DynamicEvent
+            key={event.name}
+            eventStart={event.start}
+            eventEnd={event.end}
+            eventName={event.name}
+          />
+        );
+      })}
+
+      {/* 
+      * Keeping so we have the way they did the colors :)
 
       <li
         className="relative mt-px flex sm:col-start-3"
@@ -466,7 +520,7 @@ function EventsList() {
             <time dateTime="2022-01-15T10:00">10:00 AM</time>
           </p>
         </a>
-      </li>
+      </li> */}
     </ol>
   );
 }
