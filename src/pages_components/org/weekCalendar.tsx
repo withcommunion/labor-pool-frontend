@@ -323,8 +323,6 @@ function DaysOfWeekHeader({
     end: endOfWeek(dayToStartOn),
   });
 
-  console.log(dayToStartOn);
-
   return (
     <div
       ref={containerNav}

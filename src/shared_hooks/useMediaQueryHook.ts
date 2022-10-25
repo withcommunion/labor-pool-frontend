@@ -6,8 +6,6 @@ const fullConfig = resolveConfig(tailwindConfig);
 
 const breakpoints = fullConfig.theme?.screens as Record<string, string>;
 
-console.log(breakpoints);
-
 type BreakpointKey = keyof typeof breakpoints;
 
 export function useBreakpoint<K extends BreakpointKey>(breakpointKey: K) {
