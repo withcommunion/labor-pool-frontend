@@ -18,6 +18,7 @@ import {
   addWeeks,
   subWeeks,
   differenceInMinutes,
+  addHours,
 } from 'date-fns';
 import cx from 'classnames';
 
@@ -351,14 +352,14 @@ function TimesOfDayHeader({
       {eachHourOfDay.map((day) => {
         const time = format(day, 'ha');
         return (
-          <>
+          <div key={time}>
             <div>
               <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
                 {time}
               </div>
             </div>
             <div />
-          </>
+          </div>
         );
       })}
     </div>
@@ -409,8 +410,8 @@ function calculateEventPosition(eventStart: Date, eventEnd: Date) {
 function DynamicEvent() {
   const numDayOfWeek = 3;
 
-  const eventStart = new Date('2022-01-12T12:00');
-  const eventEnd = new Date('2022-01-12T13:00');
+  const eventStart = new Date(Date.now());
+  const eventEnd = addHours(Date.now(), 2);
   const { eventStartInGrid, eventEndInGrid } = calculateEventPosition(
     eventStart,
     eventEnd
@@ -421,7 +422,7 @@ function DynamicEvent() {
       style={{ gridRow: `${eventStartInGrid} / span ${eventEndInGrid}` }}
     >
       <a className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100">
-        <p className="order-1 font-semibold text-blue-700">Breakfast</p>
+        <p className="order-1 font-semibold text-blue-700">Breakfast!</p>
         <p className="text-blue-500 group-hover:text-blue-700">
           <time dateTime="2022-01-12T06:00">
             {format(eventStart, 'h:mm b')}
