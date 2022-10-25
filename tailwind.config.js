@@ -48,6 +48,12 @@ module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      screens: {
+        // adding xs to the rest
+        xs: '100px',
+        // if you did not add this, you would have only "xs"
+        ...defaultTheme.screens,
+      },
       height: vhMap,
       maxHeight: vhMap,
       minHeight: vhMap,
