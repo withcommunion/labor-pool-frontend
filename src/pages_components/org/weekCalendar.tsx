@@ -18,45 +18,23 @@ import {
   addWeeks,
   subWeeks,
   differenceInMinutes,
-  addHours,
   formatISO,
-  addDays,
   isSameWeek,
-  subHours,
   isSameDay,
 } from 'date-fns';
 import cx from 'classnames';
 
 import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
+import { IShift } from '@/features/orgShiftsSlice';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
+interface Props {
+  orgShifts: IShift[];
+}
 
-const events = [
-  {
-    start: subHours(addDays(Date.now(), 3), 8),
-    end: subHours(addDays(Date.now(), 3), 6),
-    name: 'Flight To Paris',
-  },
-  {
-    start: new Date(Date.now()),
-    end: addHours(Date.now(), 2),
-    name: 'Breakfast',
-  },
-  {
-    start: addDays(Date.now(), 1),
-    end: addHours(addDays(Date.now(), 1), 2),
-    name: 'Breakfast tmw',
-  },
-  {
-    start: subHours(addDays(Date.now(), 8), 8),
-    end: subHours(addDays(Date.now(), 8), 6),
-    name: 'Flight To NY',
-  },
-];
-
-export default function WeekCalendar() {
+export default function WeekCalendar({ orgShifts }: Props) {
   const [startDay, setStartDay] = useState(new Date(Date.now()));
   const [isInWeekView, setIsInWeekView] = useState(true);
   const container = useRef(null);
@@ -71,6 +49,10 @@ export default function WeekCalendar() {
       setIsInWeekView(false);
     }
   }, [isMd, isInWeekView]);
+
+  if (!orgShifts) {
+    return null;
+  }
 
   return (
     <div className="flex h-full flex-col px-5">
@@ -105,10 +87,12 @@ export default function WeekCalendar() {
               <EventsList
                 events={
                   isInWeekView
-                    ? events.filter((event) =>
-                        isSameWeek(event.start, startDay)
+                    ? orgShifts.filter((shift) =>
+                        isSameWeek(new Date(shift.startTimeMs), startDay)
                       )
-                    : events.filter((event) => isSameDay(event.start, startDay))
+                    : orgShifts.filter((shift) =>
+                        isSameDay(new Date(shift.endTimeMs), startDay)
+                      )
                 }
               />
             </div>
@@ -407,14 +391,14 @@ function TimesOfDayHeader({
       {eachHourOfDay.map((day) => {
         const time = format(day, 'ha');
         return (
-          <>
-            <div key={time}>
+          <Fragment key={time}>
+            <div>
               <div className="sticky left-0 z-20 -mt-2.5 -ml-14 w-14 pr-2 text-right text-xs leading-5 text-gray-400">
                 {time}
               </div>
             </div>
             <div />
-          </>
+          </Fragment>
         );
       })}
     </div>
@@ -476,6 +460,8 @@ function DynamicEvent({
   const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
     calculateEventPosition(eventStart, eventEnd);
 
+  console.log(dayPositionInGrid);
+
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
@@ -493,12 +479,7 @@ function DynamicEvent({
   );
 }
 
-interface Event {
-  start: Date;
-  end: Date;
-  name: string;
-}
-function EventsList({ events }: { events: Event[] }) {
+function EventsList({ events }: { events: IShift[] }) {
   return (
     <ol
       className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
@@ -509,9 +490,9 @@ function EventsList({ events }: { events: Event[] }) {
       {events.map((event) => {
         return (
           <DynamicEvent
-            key={event.name}
-            eventStart={event.start}
-            eventEnd={event.end}
+            key={event.id}
+            eventStart={new Date(event.startTimeMs)}
+            eventEnd={new Date(event.endTimeMs)}
             eventName={event.name}
           />
         );

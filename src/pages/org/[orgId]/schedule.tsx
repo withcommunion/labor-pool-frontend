@@ -18,6 +18,8 @@ import { selectOrg } from '@/features/orgSlice';
 import useFetchOrg from '@/shared_hooks/useFetchOrgHook';
 
 import WeekCalendar from '@/pages_components/org/weekCalendar';
+import useFetchOrgShifts from '@/shared_hooks/useFetchOrgShifts';
+import { selectOrgShifts } from '@/features/orgShiftsSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -27,9 +29,11 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
   const { signOut } = useAuthenticator((context) => [context.signOut]);
 
   const org = useAppSelector((state) => selectOrg(state));
+  const orgShifts = useAppSelector((state) => selectOrgShifts(state));
 
   useFetchSelf(userJwt);
   useFetchOrg(router.query.orgId as string, userJwt);
+  useFetchOrgShifts(router.query.orgId as string, userJwt);
 
   return (
     <div>
@@ -50,7 +54,7 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
           )}
         </div>
 
-        <WeekCalendar />
+        <WeekCalendar orgShifts={orgShifts} />
       </main>
       <div className="flex flex-col items-center justify-center">
         <button
