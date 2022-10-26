@@ -101,9 +101,9 @@ export default function WeekCalendar({ orgShifts }: Props) {
             <div className="grid flex-auto grid-cols-1 grid-rows-1">
               <TimesOfDayHeader containerOffset={containerOffset} />
               <VerticalLines />
-              <EventsList
+              <ShiftsList
                 listRef={listRef}
-                events={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
+                shifts={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
               />
             </div>
           </div>
@@ -430,7 +430,7 @@ function VerticalLines() {
   );
 }
 
-function calculateEventPosition(eventStart: Date, eventEnd: Date) {
+function calculateShiftPosition(shiftStart: Date, shiftEnd: Date) {
   /**
    * Total Cells = 48 (24 hrs in day, 2 cells per hour)
    * 1 cell = 6
@@ -440,35 +440,35 @@ function calculateEventPosition(eventStart: Date, eventEnd: Date) {
   const gridStart = 2;
 
   const minutesFromMidnight = differenceInMinutes(
-    eventStart,
-    startOfDay(eventStart)
+    shiftStart,
+    startOfDay(shiftStart)
   );
 
-  const eventDurationInMinutes = differenceInMinutes(eventEnd, eventStart);
+  const shiftDurationInMinutes = differenceInMinutes(shiftEnd, shiftStart);
 
-  const eventStartInGrid = Math.floor(
+  const shiftStartInGrid = Math.floor(
     (minutesFromMidnight / 30) * thiryMinOnGrid + gridStart
   );
-  const eventEndInGrid = Math.floor(
-    (eventDurationInMinutes / 30) * thiryMinOnGrid + gridStart
+  const shiftEndInGrid = Math.floor(
+    (shiftDurationInMinutes / 30) * thiryMinOnGrid + gridStart
   );
 
-  const dayPositionInGrid = eventStart.getDay() + 1; // Grid index starts at 1
+  const dayPositionInGrid = shiftStart.getDay() + 1; // Grid index starts at 1
 
-  return { eventStartInGrid, eventEndInGrid, dayPositionInGrid };
+  return { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid };
 }
 
-function DynamicEvent({
-  eventStart,
-  eventEnd,
-  eventName,
+function Shift({
+  shiftStart,
+  shiftEnd,
+  shiftName,
 }: {
-  eventStart: Date;
-  eventEnd: Date;
-  eventName: string;
+  shiftStart: Date;
+  shiftEnd: Date;
+  shiftName: string;
 }) {
-  const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
-    calculateEventPosition(eventStart, eventEnd);
+  const { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid } =
+    calculateShiftPosition(shiftStart, shiftEnd);
 
   /**
    * TODO: There is a bug here.
@@ -483,13 +483,13 @@ function DynamicEvent({
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
-      style={{ gridRow: `${eventStartInGrid} / span ${eventEndInGrid}` }}
+      style={{ gridRow: `${shiftStartInGrid} / span ${shiftEndInGrid}` }}
     >
       <a className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100">
-        <p className="order-1 font-semibold text-blue-700">{eventName}</p>
+        <p className="order-1 font-semibold text-blue-700">{shiftName}</p>
         <p className="text-blue-500 group-hover:text-blue-700">
-          <time dateTime={formatISO(eventStart)}>
-            {format(eventStart, 'h:mm b')}
+          <time dateTime={formatISO(shiftStart)}>
+            {format(shiftStart, 'h:mm b')}
           </time>
         </p>
       </a>
@@ -497,11 +497,11 @@ function DynamicEvent({
   );
 }
 
-function EventsList({
-  events,
+function ShiftsList({
+  shifts,
   listRef,
 }: {
-  events: IShift[];
+  shifts: IShift[];
   listRef: React.RefObject<HTMLOListElement>;
 }) {
   return (
@@ -512,13 +512,13 @@ function EventsList({
         gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto',
       }}
     >
-      {events.map((event) => {
+      {shifts.map((shift) => {
         return (
-          <DynamicEvent
-            key={event.id}
-            eventStart={new Date(event.startTimeMs)}
-            eventEnd={new Date(event.endTimeMs)}
-            eventName={event.name}
+          <Shift
+            key={shift.id}
+            shiftStart={new Date(shift.startTimeMs)}
+            shiftEnd={new Date(shift.endTimeMs)}
+            shiftName={shift.name}
           />
         );
       })}
