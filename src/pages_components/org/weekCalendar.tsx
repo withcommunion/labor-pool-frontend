@@ -55,6 +55,8 @@ export default function WeekCalendar({ orgShifts }: Props) {
     selectOrgShiftsInDay(state, startDay)
   );
 
+  console.log(orgShiftsInDay);
+
   useEffect(() => {
     if (isMd && !isInWeekView) {
       setIsInWeekView(true);
@@ -73,13 +75,6 @@ export default function WeekCalendar({ orgShifts }: Props) {
 
   return (
     <div className="flex h-full flex-col px-5">
-      <button
-        onClick={() => {
-          listRef.current?.lastElementChild?.scrollIntoView();
-        }}
-      >
-        Scroll to first element
-      </button>
       <CalendarHeader
         startDate={startDay}
         onTodayClick={() => setStartDay(new Date(Date.now()))}
@@ -476,6 +471,9 @@ function DynamicEvent({
 }) {
   const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
     calculateEventPosition(eventStart, eventEnd);
+
+  console.log(eventStart);
+  console.log(dayPositionInGrid);
 
   /**
    * TODO: There is a bug here.
