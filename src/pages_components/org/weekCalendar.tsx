@@ -460,6 +460,16 @@ function DynamicEvent({
   const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
     calculateEventPosition(eventStart, eventEnd);
 
+  /**
+   * TODO: There is a bug here.
+   * Unclear how to repro accurately...add a new shift and see if it happens?
+   * Date that it happening with
+   *   "startDate": "2022-10-24T13:00:28-04:00",
+   *   "endDate": "2022-10-24T17:00:28-04:00",
+   * But Essentially the shift will render in the first comlumn and ignore the dayPositionInGrid in week view.
+   * In Day view it works fine.
+   * And somehow it fixes itself
+   */
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
