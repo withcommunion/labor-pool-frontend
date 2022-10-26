@@ -113,7 +113,13 @@ const Index = ({ userJwt }: Props) => {
                   </div>
                   <div className="flex flex-col px-4 py-5 sm:p-6">
                     {self.orgs.map((orgId) => (
-                      <Link href={`/org/${orgId}`} key={orgId}>
+                      <Link
+                        key={orgId}
+                        href={{
+                          pathname: `/org/[orgId]`,
+                          query: { orgId },
+                        }}
+                      >
                         <a className="my-2">
                           <button
                             type="button"

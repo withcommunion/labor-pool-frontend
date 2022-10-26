@@ -11,7 +11,7 @@ import { useFetchSelf } from '@/shared_hooks/sharedHooks';
 
 import InviteLink, {
   InviteTextArea,
-} from '@/pages_components/index/org/inviteLink/inviteLink';
+} from '@/pages_components/org/inviteLink/inviteLink';
 import Footer from '@/shared_components/footer/footer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration

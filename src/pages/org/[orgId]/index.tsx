@@ -26,19 +26,18 @@ import {
 // import { selectSelf, selectSelfStatus } from '@/features/selfSlice';
 
 import Footer from '@/shared_components/footer/footer';
-import { fetchOrg, selectOrg, selectOrgStatus } from '@/features/orgSlice';
+import { selectOrg } from '@/features/orgSlice';
 import Link from 'next/link';
+import useFetchOrg from '@/shared_hooks/useFetchOrgHook';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 
 const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const { signOut } = useAuthenticator((context) => [context.signOut]);
 
   const org = useAppSelector((state) => selectOrg(state));
-  const orgStatus = useAppSelector((state) => selectOrgStatus(state));
 
   const friendlyOrgJoinStatus = useAppSelector((state) =>
     selectFriendlyOrgJoinStatus(state)
@@ -49,13 +48,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
 
   useFetchSelf(userJwt);
   useHandleJoinOrg(userJwt);
-
-  useEffect(() => {
-    const orgId = router.query.orgId as string;
-    if (orgStatus === 'idle' && !org) {
-      dispatch(fetchOrg({ orgId, jwtToken: userJwt }));
-    }
-  });
+  useFetchOrg(router.query.orgId as string, userJwt);
 
   return (
     <div>
@@ -153,7 +146,10 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                         key={org}
                         className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
                       >
-                        <Link href={`${org}`}>
+                        <Link
+                          href={{ pathname: `[orgId]`, query: { orgId: org } }}
+                          passHref
+                        >
                           <a className="focus:outline-none">
                             <div className="flex-shrink-0">
                               <BuildingOfficeIcon className="h-10 w-10 rounded-full" />
@@ -183,7 +179,12 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
           <>
             {org && (
               <div>
-                <Link href={{ pathname: `${org.id}/schedule` }}>
+                <Link
+                  href={{
+                    pathname: `[orgId]/schedule`,
+                    query: { orgId: org.id },
+                  }}
+                >
                   <a className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     View Schedule
                   </a>
@@ -195,7 +196,12 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
           <>
             {org && (
               <div>
-                <Link href={{ pathname: `${org.id}/invite` }}>
+                <Link
+                  href={{
+                    pathname: `[orgId]/invite`,
+                    query: { orgId: org.id },
+                  }}
+                >
                   <a className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     Invite links
                   </a>

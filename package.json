@@ -21,12 +21,14 @@
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.2",
+    "date-fns": "^2.29.3",
     "next": "12.2.2",
     "postcss": "^8.4.13",
     "react": "18.2.0",
     "react-dom": "18.1.0",
     "react-phone-number-input": "^3.2.10",
     "react-redux": "^8.0.2",
+    "react-responsive": "^9.0.0",
     "sharp": "^0.30.7"
   },
   "devDependencies": {
