@@ -55,8 +55,6 @@ export default function WeekCalendar({ orgShifts }: Props) {
     selectOrgShiftsInDay(state, startDay)
   );
 
-  console.log(orgShiftsInDay);
-
   useEffect(() => {
     if (isMd && !isInWeekView) {
       setIsInWeekView(true);
