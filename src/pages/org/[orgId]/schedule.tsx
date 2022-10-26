@@ -17,7 +17,7 @@ import { selectOrg } from '@/features/orgSlice';
 // import Link from 'next/link';
 import useFetchOrg from '@/shared_hooks/useFetchOrgHook';
 
-import WeekCalendar from '@/pages_components/org/weekCalendar';
+import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import useFetchOrgShifts from '@/shared_hooks/useFetchOrgShifts';
 import { selectOrgShifts } from '@/features/orgShiftsSlice';
 
