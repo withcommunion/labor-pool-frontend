@@ -19,13 +19,18 @@ import {
   subWeeks,
   differenceInMinutes,
   formatISO,
-  isSameWeek,
   isSameDay,
 } from 'date-fns';
 import cx from 'classnames';
 
+import { useAppSelector } from '@/reduxHooks';
+
 import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
-import { IShift } from '@/features/orgShiftsSlice';
+import {
+  IShift,
+  selectOrgShiftsInDay,
+  selectOrgShiftsInWeek,
+} from '@/features/orgShiftsSlice';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -40,7 +45,15 @@ export default function WeekCalendar({ orgShifts }: Props) {
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
+  const listRef = useRef<HTMLOListElement | null>(null);
   const { isMd } = useBreakpoint('md');
+
+  const orgShiftsInWeek = useAppSelector((state) =>
+    selectOrgShiftsInWeek(state, startDay)
+  );
+  const orgShiftsInDay = useAppSelector((state) =>
+    selectOrgShiftsInDay(state, startDay)
+  );
 
   useEffect(() => {
     if (isMd && !isInWeekView) {
@@ -50,12 +63,23 @@ export default function WeekCalendar({ orgShifts }: Props) {
     }
   }, [isMd, isInWeekView]);
 
+  useEffect(() => {
+    listRef.current?.firstElementChild?.scrollIntoView();
+  }, [orgShiftsInWeek]);
+
   if (!orgShifts) {
     return null;
   }
 
   return (
     <div className="flex h-full flex-col px-5">
+      <button
+        onClick={() => {
+          listRef.current?.lastElementChild?.scrollIntoView();
+        }}
+      >
+        Scroll to first element
+      </button>
       <CalendarHeader
         startDate={startDay}
         onTodayClick={() => setStartDay(new Date(Date.now()))}
@@ -85,15 +109,8 @@ export default function WeekCalendar({ orgShifts }: Props) {
               <TimesOfDayHeader containerOffset={containerOffset} />
               <VerticalLines />
               <EventsList
-                events={
-                  isInWeekView
-                    ? orgShifts.filter((shift) =>
-                        isSameWeek(new Date(shift.startTimeMs), startDay)
-                      )
-                    : orgShifts.filter((shift) =>
-                        isSameDay(new Date(shift.endTimeMs), startDay)
-                      )
-                }
+                listRef={listRef}
+                events={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
               />
             </div>
           </div>
@@ -487,9 +504,16 @@ function DynamicEvent({
   );
 }
 
-function EventsList({ events }: { events: IShift[] }) {
+function EventsList({
+  events,
+  listRef,
+}: {
+  events: IShift[];
+  listRef: React.RefObject<HTMLOListElement>;
+}) {
   return (
     <ol
+      ref={listRef}
       className="col-start-1 col-end-2 row-start-1 grid grid-cols-1 sm:grid-cols-7 sm:pr-8"
       style={{
         gridTemplateRows: '1.75rem repeat(288, minmax(0, 1fr)) auto',

@@ -10,6 +10,7 @@ import {
 } from '@reduxjs/toolkit';
 
 import { API_URL } from '@/util/walletApiUtil';
+import { isSameDay, isSameWeek } from 'date-fns';
 
 export interface IShift {
   id: string;
@@ -91,6 +92,44 @@ export const selectOrgShifts = createSelector(
 export const selectOrgShiftsStatus = createSelector(
   [selectRootOrgShifts],
   (root) => root.status
+);
+
+export const selectOrgShiftsOrderedByEarliestStartTime = createSelector(
+  [selectOrgShifts],
+  (shifts) => {
+    return [...shifts].sort((a, b) => {
+      const aStart = new Date(a.startTimeMs);
+      const aHour = aStart.getHours();
+      const bStart = new Date(b.startTimeMs);
+      const bHour = bStart.getHours();
+
+      return aHour - bHour;
+    });
+  }
+);
+
+export const selectOrgShiftsInWeek = createSelector(
+  [
+    selectOrgShiftsOrderedByEarliestStartTime,
+    (state, startDay: Date) => startDay,
+  ],
+  (shifts, startDay) => {
+    return shifts.filter((shift) =>
+      isSameWeek(new Date(shift.startTimeMs), startDay)
+    );
+  }
+);
+
+export const selectOrgShiftsInDay = createSelector(
+  [
+    selectOrgShiftsOrderedByEarliestStartTime,
+    (state, startDay: Date) => startDay,
+  ],
+  (shifts, startDay) => {
+    return shifts.filter((shift) =>
+      isSameDay(new Date(shift.startTimeMs), startDay)
+    );
+  }
 );
 
 export const { reset, setOrgShiftsStatus } = orgShiftsSlice.actions;
