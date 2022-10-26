@@ -470,9 +470,6 @@ function DynamicEvent({
   const { eventStartInGrid, eventEndInGrid, dayPositionInGrid } =
     calculateEventPosition(eventStart, eventEnd);
 
-  console.log(eventStart);
-  console.log(dayPositionInGrid);
-
   /**
    * TODO: There is a bug here.
    * Unclear how to repro accurately...add a new shift and see if it happens?
