@@ -104,7 +104,7 @@ export default function WeekCalendar({
           />
         </div>
       </SimpleModal>
-      <div className="flex h-full flex-col px-5 sm:max-h-85vh md:max-h-75vh">
+      <div className="flex h-full flex-col px-5 sm:max-h-85vh md:max-h-80vh">
         <CalendarHeader
           startDate={startDay}
           onAddShiftClick={() => setIsNewShiftModalOpen(!isNewShiftModalOpen)}
