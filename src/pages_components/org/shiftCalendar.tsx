@@ -133,6 +133,7 @@ export default function WeekCalendar({
               <div className="sticky left-0 z-10 w-14 flex-none bg-white ring-1 ring-gray-100" />
               <div className="grid flex-auto grid-cols-1 grid-rows-1">
                 <TimesOfDayHeader containerOffset={containerOffset} />
+
                 <VerticalLines />
                 <ShiftsList
                   listRef={listRef}
@@ -433,7 +434,7 @@ function TimesOfDayHeader({
   return (
     <div
       className="col-start-1 col-end-2 row-start-1 grid divide-y divide-gray-100"
-      style={{ gridTemplateRows: 'repeat(48, minmax(3.5rem, 1fr))' }}
+      style={{ gridTemplateRows: 'repeat(48, minmax(1.75rem, 1fr))' }}
     >
       <div ref={containerOffset} className="row-end-1 h-7"></div>
       {eachHourOfDay.map((day) => {
@@ -531,8 +532,9 @@ function Shift({ shift }: { shift: IShift }) {
         <p className="order-1 font-semibold text-blue-700">{shift.name}</p>
         <p className="text-blue-500 group-hover:text-blue-700">
           <time dateTime={formatISO(shiftStart)}>
-            {format(shiftStart, 'M/dd h:mm b')}
+            {format(shiftStart, 'M/dd h:mm b')} - {format(shiftEnd, 'h:mm b')}
           </time>
+          <br />
         </p>
       </a>
     </li>
