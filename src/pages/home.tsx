@@ -31,7 +31,7 @@ const Index = ({ userJwt }: Props) => {
   const { signOut } = useAuthenticator((context) => [context.signOut]);
 
   useEffect(() => {
-    if (self && self.orgs.length === 0) {
+    if (self && self.orgs.length === 0 && self.orgs[0]) {
       router.push({ pathname: `/org/${self.orgs[0]}`, query: router.query });
     }
   }, [self, router]);
