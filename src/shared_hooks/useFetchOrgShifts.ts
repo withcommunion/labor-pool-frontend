@@ -12,11 +12,17 @@ function useFetchOrgShifts(orgId: string, userJwt: string) {
     selectOrgShiftsStatus(state)
   );
 
+  const fetchShifts = () => {
+    dispatch(fetchOrgShifts({ orgId, jwtToken: userJwt }));
+  };
+
   useEffect(() => {
     if (orgShiftsStatus === 'idle') {
-      dispatch(fetchOrgShifts({ orgId, jwtToken: userJwt }));
+      fetchShifts();
     }
   });
+
+  return [fetchShifts];
 }
 
 export default useFetchOrgShifts;
