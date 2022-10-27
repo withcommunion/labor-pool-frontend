@@ -54,7 +54,7 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
           )}
         </div>
 
-        <WeekCalendar orgShifts={orgShifts} />
+        <WeekCalendar orgShifts={orgShifts} userJwt={userJwt} />
       </main>
       <div className="flex flex-col items-center justify-center">
         <button
