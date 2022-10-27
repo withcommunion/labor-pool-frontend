@@ -140,7 +140,7 @@ export default function WeekCalendar({
                   }}
                 >
                   <div ref={containerOffset} className="row-end-1 h-7"></div>
-                  <TimesOfDayHeader />
+                  <TimesOfDayColumn />
                 </div>
 
                 <VerticalLines />
@@ -430,7 +430,7 @@ function DaysOfWeekHeader({
   );
 }
 
-function TimesOfDayHeader() {
+function TimesOfDayColumn() {
   const today = Date.now();
   const eachHourOfDay = eachHourOfInterval({
     start: startOfDay(today),
