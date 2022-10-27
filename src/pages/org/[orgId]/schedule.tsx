@@ -46,7 +46,7 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="min-h-100vh">
+      <main className="max-h-100vh min-h-100vh ">
         <div className="my-0 w-full px-6 text-start md:max-w-50vw">
           {org && (
             <div className="w-full">
@@ -60,21 +60,21 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
           userJwt={userJwt}
           refreshShifts={fetchShifts}
         />
+        <div className="flex flex-col items-center justify-center py-2">
+          <button
+            className="mb-4 flex border p-2"
+            onClick={() => {
+              signOut();
+              setTimeout(() => {
+                router.push('/');
+              }, 500);
+            }}
+          >
+            Signout
+          </button>
+          <Footer />
+        </div>
       </main>
-      <div className="flex flex-col items-center justify-center">
-        <button
-          className="flex border p-2"
-          onClick={() => {
-            signOut();
-            setTimeout(() => {
-              router.push('/');
-            }, 500);
-          }}
-        >
-          Signout
-        </button>
-        <Footer />
-      </div>
     </div>
   );
 };
