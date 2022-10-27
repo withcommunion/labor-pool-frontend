@@ -25,7 +25,6 @@ const Index = ({ userJwt }: Props) => {
   const router = useRouter();
   useFetchSelf(userJwt);
   // useHandleJoinOrgs(userJwt);
-
   const self = useAppSelector((state) => selectSelf(state));
 
   const { signOut } = useAuthenticator((context) => [context.signOut]);

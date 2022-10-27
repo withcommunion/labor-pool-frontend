@@ -105,7 +105,6 @@ const Index = ({ userJwt }: Props) => {
                         autoComplete="email"
                         value={orgToCreate?.email}
                         onChange={(e) => {
-                          console.log('fired');
                           dispatch(
                             setOrgToCreateAttributes({ email: e.target.value })
                           );

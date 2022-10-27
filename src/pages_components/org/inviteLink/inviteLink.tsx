@@ -79,8 +79,8 @@ You can sign up with this link ${orgUrlWithJoinCode}`);
 
   useEffect(() => {
     if (orgId && orgJoinCode && !orgUrlWithJoinCode) {
-      const prodUrl = 'https://withcommunion.com';
-      const devUrl = 'https://dev.withcommunion.com';
+      const prodUrl = 'https://labor-pool-frontend.vercel.app';
+      const devUrl = 'https://labor-pool-frontend.vercel.app';
       const localUrl = 'http://localhost:3000';
       const urlQueryParams = `?inviteeOrgId=${orgId}&joinCode=${orgJoinCode}&action=${action}`;
 
