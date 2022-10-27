@@ -133,7 +133,6 @@ export default function WeekCalendar({
               <div className="sticky left-0 z-10 w-14 flex-none bg-white ring-1 ring-gray-100" />
               <div className="grid flex-auto grid-cols-1 grid-rows-1">
                 <TimesOfDayHeader containerOffset={containerOffset} />
-
                 <VerticalLines />
                 <ShiftsList
                   listRef={listRef}
