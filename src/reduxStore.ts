@@ -5,6 +5,7 @@ import createOrgReducer from '@/features/orgCreateSlice';
 import orgJoinReducer from '@/features/orgJoinSlice';
 import orgReducer from '@/features/orgSlice';
 import orgShiftsReducer from '@/features/orgShiftsSlice';
+import orgNewShiftReducer from '@/features/orgNewShiftSlice';
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     orgJoin: orgJoinReducer,
     org: orgReducer,
     orgShifts: orgShiftsReducer,
+    orgNewShift: orgNewShiftReducer,
   },
 });
 
