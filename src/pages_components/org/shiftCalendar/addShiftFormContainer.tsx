@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import UserSelect from './userSelect';
 import { format, addHours } from 'date-fns';
+import { Switch } from '@headlessui/react';
+import cx from 'classnames';
 
 import { selectOrg } from '@/features/orgSlice';
 import {
@@ -30,6 +32,8 @@ export default function AddShiftFormContainer({
   );
   const [description, setDescription] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
+  const [isShiftBroadcasting, setIsShiftBroadcasting] = useState(false);
+  console.log(selectedUser);
 
   useEffect(() => {
     if (newShiftStatus === 'succeeded') {
@@ -43,6 +47,12 @@ export default function AddShiftFormContainer({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only want to run on unmount
   }, []);
+
+  useEffect(() => {
+    if (isShiftBroadcasting) {
+      setSelectedUser('');
+    }
+  }, [isShiftBroadcasting, setSelectedUser]);
 
   return (
     <div className="">
@@ -64,10 +74,40 @@ export default function AddShiftFormContainer({
                 users={org?.primaryMembers || []}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
+                disabled={isShiftBroadcasting}
               />
             </div>
 
             <div className="sm:col-span-3">
+              <Switch.Group
+                as="div"
+                className="flex h-full items-center md:pt-4"
+              >
+                <Switch
+                  checked={isShiftBroadcasting}
+                  onChange={setIsShiftBroadcasting}
+                  className={cx(
+                    isShiftBroadcasting ? 'bg-indigo-600' : 'bg-gray-200',
+                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+                  )}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cx(
+                      isShiftBroadcasting ? 'translate-x-5' : 'translate-x-0',
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                    )}
+                  />
+                </Switch>
+                <Switch.Label as="span" className="ml-3">
+                  <span className="text-sm font-medium text-gray-900">
+                    Broadcast Shift
+                  </span>
+                </Switch.Label>
+              </Switch.Group>
+            </div>
+
+            <div className="sm:col-span-6">
               <label
                 htmlFor="role-info"
                 className="block text-sm font-medium text-gray-700"
@@ -165,7 +205,7 @@ export default function AddShiftFormContainer({
                       startDate: shiftStart,
                       endDate: shiftEnd,
                       description: description,
-                      status: selectedUser ? 'filled' : 'open',
+                      status: isShiftBroadcasting ? 'broadcasting' : 'filled',
                       assignedTo: selectedUser,
                     },
                   })

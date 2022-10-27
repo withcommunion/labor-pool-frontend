@@ -44,6 +44,12 @@ interface Props {
   refreshShifts: () => void;
 }
 
+/**
+ *
+ * TODO: Make grid half scale
+ * TODO 30 min increments shifts
+ */
+
 export default function WeekCalendar({
   orgShifts,
   userJwt,
