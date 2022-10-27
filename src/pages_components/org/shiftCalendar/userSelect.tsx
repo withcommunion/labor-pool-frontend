@@ -64,8 +64,8 @@ export default function UserSelect({
                     <div className="flex items-center">
                       <span
                         className={cx(
-                          'inline-block h-2 w-2 flex-shrink-0 rounded-full',
-                          true ? 'bg-green-400' : 'bg-gray-200'
+                          'inline-block h-2 w-2 flex-shrink-0 rounded-full bg-green-400'
+                          // true ? 'bg-green-400' : 'bg-gray-200'
                         )}
                         aria-hidden="true"
                       />
@@ -78,7 +78,8 @@ export default function UserSelect({
                         {user}
                         <span className="sr-only">
                           {' '}
-                          is {true ? 'online' : 'offline'}
+                          {/* is {true ? 'online' : 'offline'} */}
+                          is online
                         </span>
                       </span>
                     </div>
