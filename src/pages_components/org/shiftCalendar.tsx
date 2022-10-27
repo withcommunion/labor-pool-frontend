@@ -496,15 +496,9 @@ function calculateShiftPosition(shiftStart: Date, shiftEnd: Date) {
   return { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid };
 }
 
-function Shift({
-  shiftStart,
-  shiftEnd,
-  shiftName,
-}: {
-  shiftStart: Date;
-  shiftEnd: Date;
-  shiftName: string;
-}) {
+function Shift({ shift }: { shift: IShift }) {
+  const shiftStart = new Date(shift.startTimeMs);
+  const shiftEnd = new Date(shift.endTimeMs);
   const { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid } =
     calculateShiftPosition(shiftStart, shiftEnd);
 
@@ -524,11 +518,20 @@ function Shift({
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
       style={{ gridRow: `${shiftStartInGrid} / span ${shiftEndInGrid}` }}
     >
-      <a className="group absolute inset-1 flex flex-col overflow-y-auto rounded-lg bg-blue-50 p-2 text-xs leading-5 hover:bg-blue-100">
-        <p className="order-1 font-semibold text-blue-700">{shiftName}</p>
+      <a
+        className={cx(
+          'group absolute inset-1 flex flex-col overflow-y-auto rounded-lg  p-2 text-xs leading-5 hover:bg-blue-100',
+          {
+            'animate-pulse bg-blue-50': shift.status === 'broadcasting',
+            'bg-orange-100': shift.status === 'filled',
+            'bg-orange-50': shift.status === 'open',
+          }
+        )}
+      >
+        <p className="order-1 font-semibold text-blue-700">{shift.name}</p>
         <p className="text-blue-500 group-hover:text-blue-700">
           <time dateTime={formatISO(shiftStart)}>
-            {format(shiftStart, 'h:mm b')}
+            {format(shiftStart, 'M/dd h:mm b')}
           </time>
         </p>
       </a>
@@ -552,14 +555,7 @@ function ShiftsList({
       }}
     >
       {shifts.map((shift) => {
-        return (
-          <Shift
-            key={shift.id}
-            shiftStart={new Date(shift.startTimeMs)}
-            shiftEnd={new Date(shift.endTimeMs)}
-            shiftName={shift.name}
-          />
-        );
+        return <Shift key={shift.id} shift={shift} />;
       })}
 
       {/* 
