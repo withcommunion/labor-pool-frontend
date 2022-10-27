@@ -32,16 +32,32 @@ import {
   selectOrgShiftsInWeek,
 } from '@/features/orgShiftsSlice';
 
+import SimpleModal from '@/shared_components/simpleModal';
+import AddShiftFormContainer from './shiftCalendar/addShiftFormContainer';
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 interface Props {
   orgShifts: IShift[];
+  userJwt: string;
+  refreshShifts: () => void;
 }
 
-export default function WeekCalendar({ orgShifts }: Props) {
+/**
+ *
+ * TODO: Make grid half scale
+ * TODO 30 min increments shifts
+ */
+
+export default function WeekCalendar({
+  orgShifts,
+  userJwt,
+  refreshShifts,
+}: Props) {
   const [startDay, setStartDay] = useState(new Date(Date.now()));
   const [isInWeekView, setIsInWeekView] = useState(true);
+  const [isNewShiftModalOpen, setIsNewShiftModalOpen] = useState(false);
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
@@ -72,44 +88,62 @@ export default function WeekCalendar({ orgShifts }: Props) {
   }
 
   return (
-    <div className="flex h-full flex-col px-5">
-      <CalendarHeader
-        startDate={startDay}
-        onTodayClick={() => setStartDay(new Date(Date.now()))}
-        onNextWeekClick={() => {
-          setStartDay(addWeeks(startDay, 1));
-        }}
-        onPrevWeekClick={() => {
-          setStartDay(subWeeks(startDay, 1));
-        }}
-      />
-      <div
-        ref={container}
-        className="isolate flex flex-auto flex-col overflow-auto bg-white"
+    <>
+      <SimpleModal
+        isOpen={isNewShiftModalOpen}
+        toggleIsOpen={() => setIsNewShiftModalOpen(!isNewShiftModalOpen)}
+        title={'Add Shift'}
       >
-        <DaysOfWeekHeader
-          dayToStartOn={startDay}
-          containerNav={containerNav}
-          onDayClick={(day) => setStartDay(day)}
+        <div>
+          <AddShiftFormContainer
+            userJwt={userJwt}
+            cleanup={() => {
+              setIsNewShiftModalOpen(false);
+              refreshShifts();
+            }}
+          />
+        </div>
+      </SimpleModal>
+      <div className="flex h-full flex-col px-5">
+        <CalendarHeader
+          startDate={startDay}
+          onAddShiftClick={() => setIsNewShiftModalOpen(!isNewShiftModalOpen)}
+          onTodayClick={() => setStartDay(new Date(Date.now()))}
+          onNextWeekClick={() => {
+            setStartDay(addWeeks(startDay, 1));
+          }}
+          onPrevWeekClick={() => {
+            setStartDay(subWeeks(startDay, 1));
+          }}
         />
         <div
-          style={{ width: '165%' }}
-          className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
+          ref={container}
+          className="isolate flex flex-auto flex-col overflow-auto bg-white"
         >
-          <div className="flex flex-auto">
-            <div className="sticky left-0 z-10 w-14 flex-none bg-white ring-1 ring-gray-100" />
-            <div className="grid flex-auto grid-cols-1 grid-rows-1">
-              <TimesOfDayHeader containerOffset={containerOffset} />
-              <VerticalLines />
-              <ShiftsList
-                listRef={listRef}
-                shifts={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
-              />
+          <DaysOfWeekHeader
+            dayToStartOn={startDay}
+            containerNav={containerNav}
+            onDayClick={(day) => setStartDay(day)}
+          />
+          <div
+            style={{ width: '165%' }}
+            className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
+          >
+            <div className="flex flex-auto">
+              <div className="sticky left-0 z-10 w-14 flex-none bg-white ring-1 ring-gray-100" />
+              <div className="grid flex-auto grid-cols-1 grid-rows-1">
+                <TimesOfDayHeader containerOffset={containerOffset} />
+                <VerticalLines />
+                <ShiftsList
+                  listRef={listRef}
+                  shifts={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -174,11 +208,13 @@ function CalendarHeader({
   onTodayClick,
   onNextWeekClick,
   onPrevWeekClick,
+  onAddShiftClick,
 }: {
   startDate: Date;
   onTodayClick: () => void;
   onNextWeekClick: () => void;
   onPrevWeekClick: () => void;
+  onAddShiftClick: () => void;
 }) {
   return (
     <header className="flex flex-none items-center justify-between border-b border-gray-200 py-4 px-6">
@@ -220,8 +256,9 @@ function CalendarHeader({
           <button
             type="button"
             className="ml-6 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            onClick={onAddShiftClick}
           >
-            Add event
+            Add Shift
           </button>
         </div>
         <Menu as="div" className="relative ml-6 md:hidden">
@@ -244,12 +281,13 @@ function CalendarHeader({
                 <Menu.Item>
                   {({ active }) => (
                     <a
+                      onClick={onAddShiftClick}
                       className={classNames(
                         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                         'block px-4 py-2 text-sm'
                       )}
                     >
-                      Create event
+                      Add Shift
                     </a>
                   )}
                 </Menu.Item>
@@ -480,6 +518,7 @@ function Shift({
    * In Day view it works fine.
    * And somehow it fixes itself
    */
+
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}

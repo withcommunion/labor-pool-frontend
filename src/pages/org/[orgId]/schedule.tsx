@@ -33,7 +33,10 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
 
   useFetchSelf(userJwt);
   useFetchOrg(router.query.orgId as string, userJwt);
-  useFetchOrgShifts(router.query.orgId as string, userJwt);
+  const [fetchShifts] = useFetchOrgShifts(
+    router.query.orgId as string,
+    userJwt
+  );
 
   return (
     <div>
@@ -44,17 +47,19 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
+        <div className="my-0 w-full px-6 text-start md:max-w-50vw">
           {org && (
-            <div>
-              <div>
-                <h2 className="mt-4 text-2xl">{org.name}</h2>
-              </div>
+            <div className="w-full">
+              <h2 className="mt-4 text-2xl">{org.name}</h2>
             </div>
           )}
         </div>
 
-        <WeekCalendar orgShifts={orgShifts} />
+        <WeekCalendar
+          orgShifts={orgShifts}
+          userJwt={userJwt}
+          refreshShifts={fetchShifts}
+        />
       </main>
       <div className="flex flex-col items-center justify-center">
         <button
