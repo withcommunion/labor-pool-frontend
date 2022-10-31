@@ -55,14 +55,15 @@ export default function WeekCalendar({
   userJwt,
   refreshShifts,
 }: Props) {
-  const [startDay, setStartDay] = useState(new Date(Date.now()));
-  const [isInWeekView, setIsInWeekView] = useState(true);
-  const [isNewShiftModalOpen, setIsNewShiftModalOpen] = useState(false);
   const container = useRef(null);
   const containerNav = useRef(null);
   const containerOffset = useRef(null);
   const listRef = useRef<HTMLOListElement | null>(null);
   const { isMd } = useBreakpoint('md');
+
+  const [startDay, setStartDay] = useState(new Date(Date.now()));
+  const [isInWeekView, setIsInWeekView] = useState(true);
+  const [isNewShiftModalOpen, setIsNewShiftModalOpen] = useState(false);
 
   const orgShiftsInWeek = useAppSelector((state) =>
     selectOrgShiftsInWeek(state, startDay)
@@ -499,8 +500,11 @@ function calculateShiftPosition(shiftStart: Date, shiftEnd: Date) {
 }
 
 function Shift({ shift }: { shift: IShift }) {
+  const [isViewShiftModalOpen, setIsViewShiftModalOpen] = useState(false);
+
   const shiftStart = new Date(shift.startTimeMs);
   const shiftEnd = new Date(shift.endTimeMs);
+
   const { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid } =
     calculateShiftPosition(shiftStart, shiftEnd);
 
@@ -515,11 +519,26 @@ function Shift({ shift }: { shift: IShift }) {
    * And somehow it fixes itself
    */
 
+  console.log(isViewShiftModalOpen);
+
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
       style={{ gridRow: `${shiftStartInGrid} / span ${shiftEndInGrid}` }}
+      onClick={() => {
+        setIsViewShiftModalOpen(!isViewShiftModalOpen);
+      }}
     >
+      <SimpleModal
+        isOpen={isViewShiftModalOpen}
+        toggleIsOpen={() => setIsViewShiftModalOpen(!isViewShiftModalOpen)}
+        title={'Shift details'}
+      >
+        <div>
+          <p>Hi</p>
+          <button>Click</button>
+        </div>
+      </SimpleModal>
       <a
         className={cx(
           'group absolute inset-1 flex flex-col overflow-y-auto rounded-lg  p-2 text-xs leading-5 hover:bg-blue-100',
