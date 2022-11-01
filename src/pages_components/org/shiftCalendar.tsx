@@ -34,6 +34,7 @@ import {
 
 import SimpleModal from '@/shared_components/simpleModal';
 import AddShiftFormContainer from './shiftCalendar/addShiftFormContainer';
+import ShiftDetailsContainer from './shiftCalendar/shiftDetailsContainer';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -64,6 +65,7 @@ export default function WeekCalendar({
   const [startDay, setStartDay] = useState(new Date(Date.now()));
   const [isInWeekView, setIsInWeekView] = useState(true);
   const [isNewShiftModalOpen, setIsNewShiftModalOpen] = useState(false);
+  const [selectedShift, setSelectedShift] = useState<IShift | null>(null);
 
   const orgShiftsInWeek = useAppSelector((state) =>
     selectOrgShiftsInWeek(state, startDay)
@@ -87,7 +89,6 @@ export default function WeekCalendar({
   if (!orgShifts) {
     return null;
   }
-
   return (
     <>
       <SimpleModal
@@ -100,6 +101,23 @@ export default function WeekCalendar({
             userJwt={userJwt}
             cleanup={() => {
               setIsNewShiftModalOpen(false);
+              refreshShifts();
+            }}
+          />
+        </div>
+      </SimpleModal>
+
+      <SimpleModal
+        isOpen={Boolean(selectedShift)}
+        toggleIsOpen={() => setSelectedShift(null)}
+        title={'Shift Details'}
+      >
+        <div>
+          <ShiftDetailsContainer
+            shift={selectedShift}
+            userJwt={userJwt}
+            cleanup={() => {
+              setSelectedShift(null);
               refreshShifts();
             }}
           />
@@ -148,6 +166,7 @@ export default function WeekCalendar({
                 <ShiftsList
                   listRef={listRef}
                   shifts={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
+                  setSelectedShift={setSelectedShift}
                 />
               </div>
             </div>
@@ -499,9 +518,13 @@ function calculateShiftPosition(shiftStart: Date, shiftEnd: Date) {
   return { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid };
 }
 
-function Shift({ shift }: { shift: IShift }) {
-  const [isViewShiftModalOpen, setIsViewShiftModalOpen] = useState(false);
-
+function Shift({
+  shift,
+  onClick,
+}: {
+  shift: IShift;
+  onClick: React.Dispatch<React.SetStateAction<IShift | null>>;
+}) {
   const shiftStart = new Date(shift.startTimeMs);
   const shiftEnd = new Date(shift.endTimeMs);
 
@@ -519,26 +542,14 @@ function Shift({ shift }: { shift: IShift }) {
    * And somehow it fixes itself
    */
 
-  console.log(isViewShiftModalOpen);
-
   return (
     <li
       className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
       style={{ gridRow: `${shiftStartInGrid} / span ${shiftEndInGrid}` }}
       onClick={() => {
-        setIsViewShiftModalOpen(!isViewShiftModalOpen);
+        onClick(shift);
       }}
     >
-      <SimpleModal
-        isOpen={isViewShiftModalOpen}
-        toggleIsOpen={() => setIsViewShiftModalOpen(!isViewShiftModalOpen)}
-        title={'Shift details'}
-      >
-        <div>
-          <p>Hi</p>
-          <button>Click</button>
-        </div>
-      </SimpleModal>
       <a
         className={cx(
           'group absolute inset-1 flex flex-col overflow-y-auto rounded-lg  p-2 text-xs leading-5 hover:bg-blue-100',
@@ -564,9 +575,11 @@ function Shift({ shift }: { shift: IShift }) {
 function ShiftsList({
   shifts,
   listRef,
+  setSelectedShift,
 }: {
   shifts: IShift[];
   listRef: React.RefObject<HTMLOListElement>;
+  setSelectedShift: React.Dispatch<React.SetStateAction<IShift | null>>;
 }) {
   return (
     <ol
@@ -577,7 +590,9 @@ function ShiftsList({
       }}
     >
       {shifts.map((shift) => {
-        return <Shift key={shift.id} shift={shift} />;
+        return (
+          <Shift key={shift.id} shift={shift} onClick={setSelectedShift} />
+        );
       })}
 
       {/* 
