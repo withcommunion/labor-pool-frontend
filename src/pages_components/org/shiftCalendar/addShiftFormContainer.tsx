@@ -12,28 +12,40 @@ import {
 } from '@/features/orgNewShiftSlice';
 import { useAppSelector, useAppDispatch } from '@/reduxHooks';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { IShift } from '@/features/orgShiftsSlice';
 
 export default function AddShiftFormContainer({
   userJwt,
   cleanup,
+  existingShift,
 }: {
   userJwt: string;
   cleanup: () => void;
+  existingShift?: IShift | null;
 }) {
   const dispatch = useAppDispatch();
   const org = useAppSelector(selectOrg);
   const newShiftStatus = useAppSelector(selectOrgNewShiftStatus);
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState(existingShift?.name || '');
   const [shiftStart, setShiftStart] = useState(
-    format(Date.now(), `yyyy-MM-dd'T'HH:mm`)
+    (existingShift?.startTimeMs &&
+      format(existingShift?.startTimeMs, `yyyy-MM-dd'T'HH:mm`)) ||
+      format(Date.now(), `yyyy-MM-dd'T'HH:mm`)
   );
   const [shiftEnd, setShiftEnd] = useState(
-    format(addHours(Date.now(), 2), `yyyy-MM-dd'T'HH:mm`)
+    (existingShift?.endTimeMs &&
+      format(existingShift?.endTimeMs, `yyyy-MM-dd'T'HH:mm`)) ||
+      format(addHours(Date.now(), 2), `yyyy-MM-dd'T'HH:mm`)
   );
-  const [description, setDescription] = useState('');
-  const [selectedUser, setSelectedUser] = useState('');
-  const [isShiftBroadcasting, setIsShiftBroadcasting] = useState(false);
-  console.log(selectedUser);
+  const [description, setDescription] = useState(
+    existingShift?.description || ''
+  );
+  const [selectedUser, setSelectedUser] = useState(
+    existingShift?.assignedTo || ''
+  );
+  const [isShiftBroadcasting, setIsShiftBroadcasting] = useState(
+    existingShift?.status === 'broadcasting' || false
+  );
 
   useEffect(() => {
     if (newShiftStatus === 'succeeded') {
