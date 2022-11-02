@@ -9,7 +9,7 @@ import { selectSelf } from '@/features/selfSlice';
 import {
   fetchPostShiftApplication,
   fetchGetShiftApplications,
-  selectShiftApplications,
+  selectPendingShiftApplications,
   ShiftApplication,
   fetchPatchShiftAcceptRejectApplication,
 } from '@/features/shiftApplicationActionsSlice';
@@ -29,7 +29,7 @@ export default function ShiftDetailsContainer({
   const [editShift, setEditShift] = useState(false);
   const dispatch = useAppDispatch();
   const self = useAppSelector(selectSelf);
-  const shiftApplications = useAppSelector(selectShiftApplications);
+  const shiftApplications = useAppSelector(selectPendingShiftApplications);
 
   useEffect(() => {
     dispatch(
@@ -144,78 +144,68 @@ function ShiftDetailCard({
             </dt>
             <dd className="mt-1 text-sm text-gray-900">{shift.description}</dd>
           </div>
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Actions</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              <button
-                className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => {
-                  console.log('apply');
-                  applyToShift();
-                }}
-              >
-                Apply
-              </button>
-            </dd>
-            <dd className="mt-1 text-sm text-gray-900">
-              <button
-                className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => console.log('apply')}
-              >
-                Withdraw Application
-              </button>
-            </dd>
-            <dd className="mt-1 text-sm text-gray-900">
-              <button
-                className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={() => console.log('apply')}
-              >
-                Delete Shift
-              </button>
-            </dd>
-          </div>
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Applicants</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 rounded-md border border-gray-200"
-              >
-                {shiftApplications.map((application) => {
-                  return (
-                    <li
-                      className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
-                      key={application.id}
-                    >
-                      <div className="flex w-0 flex-1 items-center">
-                        <UserIcon
-                          className="h-5 w-5 flex-shrink-0 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-2 w-0 flex-1 truncate">
-                          {application.userId}
-                        </span>
-                      </div>
-                      <div className="ml-4 flex gap-x-2">
-                        <a
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                          onClick={() => acceptApplicant(application)}
+
+          {shift.status !== 'filled' && (
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">Actions</dt>
+              <dd className="mt-1 text-sm text-gray-900">
+                <button
+                  className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => {
+                    applyToShift();
+                  }}
+                >
+                  Apply
+                </button>
+              </dd>
+            </div>
+          )}
+          {shiftApplications.length > 0 && (
+            <div className="sm:col-span-2">
+              <dt className="text-sm font-medium text-gray-500">Applicants</dt>
+              <dd className="mt-1 text-sm text-gray-900">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-200 rounded-md border border-gray-200"
+                >
+                  {shiftApplications
+                    .filter((application) => application.status === 'pending')
+                    .map((application) => {
+                      return (
+                        <li
+                          className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                          key={application.id}
                         >
-                          Accept
-                        </a>
-                        <a
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                          onClick={() => rejectApplicant(application)}
-                        >
-                          Reject
-                        </a>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </dd>
-          </div>
+                          <div className="flex w-0 flex-1 items-center">
+                            <UserIcon
+                              className="h-5 w-5 flex-shrink-0 text-gray-400"
+                              aria-hidden="true"
+                            />
+                            <span className="ml-2 w-0 flex-1 truncate">
+                              {application.userId}
+                            </span>
+                          </div>
+                          <div className="ml-4 flex gap-x-2">
+                            <a
+                              className="font-medium text-indigo-600 hover:text-indigo-500"
+                              onClick={() => acceptApplicant(application)}
+                            >
+                              Accept
+                            </a>
+                            <a
+                              className="font-medium text-indigo-600 hover:text-indigo-500"
+                              onClick={() => rejectApplicant(application)}
+                            >
+                              Reject
+                            </a>
+                          </div>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </dd>
+            </div>
+          )}
         </dl>
       </div>
     </div>
