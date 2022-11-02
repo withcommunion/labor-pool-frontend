@@ -109,7 +109,10 @@ export default function WeekCalendar({
 
       <SimpleModal
         isOpen={Boolean(selectedShift)}
-        toggleIsOpen={() => setSelectedShift(null)}
+        toggleIsOpen={() => {
+          setSelectedShift(null);
+          refreshShifts();
+        }}
         title={'Shift Details'}
       >
         <div>
