@@ -528,6 +528,7 @@ function Shift({
   shift: IShift;
   onClick: React.Dispatch<React.SetStateAction<IShift | null>>;
 }) {
+  const { isMd } = useBreakpoint('md');
   const shiftStart = new Date(shift.startTimeMs);
   const shiftEnd = new Date(shift.endTimeMs);
 
@@ -547,7 +548,9 @@ function Shift({
 
   return (
     <li
-      className={`relative mt-px flex sm:col-start-${dayPositionInGrid}`}
+      className={cx(`relative mt-px flex sm:col-start-${dayPositionInGrid}`, {
+        [`col-start-${dayPositionInGrid}`]: isMd,
+      })}
       style={{ gridRow: `${shiftStartInGrid} / span ${shiftEndInGrid}` }}
       onClick={() => {
         onClick(shift);
