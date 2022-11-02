@@ -37,6 +37,11 @@ export interface ShiftActionsState {
     status: RequestStatus;
     error: string | null | undefined;
   };
+  deleteShiftApplication: {
+    deleteResponse: boolean;
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
 }
 
 const initialState: ShiftActionsState = {
@@ -52,6 +57,11 @@ const initialState: ShiftActionsState = {
   },
   shiftApplications: {
     shiftApplications: [],
+    status: 'idle',
+    error: null,
+  },
+  deleteShiftApplication: {
+    deleteResponse: false,
     status: 'idle',
     error: null,
   },
@@ -88,6 +98,17 @@ export const shiftActionsSlice = createSlice({
       .addCase(fetchGetShiftApplications.rejected, (state, action) => {
         state.shiftApplications.status = 'failed';
         state.shiftApplications.error = action.error.message;
+      })
+      .addCase(fetchDeleteShiftApplication.pending, (state) => {
+        state.deleteShiftApplication.status = 'loading';
+      })
+      .addCase(fetchDeleteShiftApplication.fulfilled, (state, action) => {
+        state.deleteShiftApplication.status = 'succeeded';
+        state.deleteShiftApplication.deleteResponse = action.payload;
+      })
+      .addCase(fetchDeleteShiftApplication.rejected, (state, action) => {
+        state.deleteShiftApplication.status = 'failed';
+        state.deleteShiftApplication.error = action.error.message;
       });
   },
 });
@@ -165,6 +186,29 @@ export const fetchGetShiftApplications = createAsyncThunk(
   }
 );
 
+export const fetchDeleteShiftApplication = createAsyncThunk(
+  'shiftActions/fetchDeleteShiftApplication',
+  async ({
+    jwtToken,
+    applicationId,
+  }: {
+    jwtToken: string;
+    applicationId: string;
+  }) => {
+    const rawRequest = await axios.delete<boolean>(
+      `${API_URL}/application/${applicationId}`,
+      {
+        headers: {
+          Authorization: jwtToken,
+        },
+      }
+    );
+    const deletedShiftApplication = rawRequest.data;
+
+    return deletedShiftApplication;
+  }
+);
+
 export const selectRootShiftActions = (state: RootState) => state.shiftActions;
 
 export const selectRootShiftApplication = createSelector(
@@ -191,6 +235,10 @@ export const selectRootShiftApplications = createSelector(
 export const selectShiftApplications = createSelector(
   [selectRootShiftApplications],
   (root) => root.shiftApplications
+);
+export const selectPendingShiftApplications = createSelector(
+  [selectShiftApplications],
+  (applications) => applications.filter((app) => app.status === 'pending')
 );
 export const selectShiftApplicationsStatus = createSelector(
   [selectRootShiftApplications],
