@@ -73,17 +73,27 @@ export default function ShiftDetailsContainer({
                 })
               );
             }}
-            applyToShift={() => {
+            applyToShift={async () => {
               if (self) {
-                dispatch(
+                await dispatch(
                   fetchPostShiftApplication({
                     jwtToken: userJwt,
                     shiftApplication: {
                       shiftId: shift.id,
                       orgId: shift.orgId,
                       userId: self.id,
+                      /**
+                       * TODO: add a message field to the application
+                       */
                       description: 'I am a great worker I swear',
                     },
+                  })
+                );
+
+                dispatch(
+                  fetchGetShiftApplications({
+                    jwtToken: userJwt,
+                    shiftId: shift?.id || '',
                   })
                 );
               }
