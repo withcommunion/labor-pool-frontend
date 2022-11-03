@@ -208,6 +208,15 @@ export default function AddShiftFormContainer({
             className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-indigo-200 sm:col-start-2 sm:text-sm"
             onClick={() => {
               if (org?.id) {
+                let status = '';
+                if (selectedUser) {
+                  status = 'filled';
+                } else if (isShiftBroadcasting) {
+                  status = 'broadcasting';
+                } else {
+                  status = 'open';
+                }
+
                 dispatch(
                   fetchPostOrgShift({
                     jwtToken: userJwt,
@@ -217,7 +226,7 @@ export default function AddShiftFormContainer({
                       startDate: shiftStart,
                       endDate: shiftEnd,
                       description: description,
-                      status: isShiftBroadcasting ? 'broadcasting' : 'filled',
+                      status: status,
                       assignedTo: selectedUser,
                     },
                   })
