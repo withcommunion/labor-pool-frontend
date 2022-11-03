@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
@@ -36,6 +36,17 @@ Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const router = useRouter();
   const { signOut } = useAuthenticator((context) => [context.signOut]);
+  const [orgId, setOrgId] = useState<string | null>(null);
+
+  const routerOrgId = router.query.orgId as string;
+
+  useEffect(() => {
+    setOrgId(routerOrgId);
+  }, [routerOrgId]);
+
+  useFetchSelf(userJwt);
+  useHandleJoinOrg(userJwt);
+  useFetchOrg(orgId, userJwt);
 
   const org = useAppSelector((state) => selectOrg(state));
 
@@ -45,10 +56,6 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const memberJoinStatus = useAppSelector((state) =>
     selectMemberJoinStatus(state)
   );
-
-  useFetchSelf(userJwt);
-  useHandleJoinOrg(userJwt);
-  useFetchOrg(router.query.orgId as string, userJwt);
 
   return (
     <div>

@@ -1,17 +1,15 @@
 import { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '@/reduxHooks';
+import { useAppDispatch } from '@/reduxHooks';
 
-import { fetchOrg, selectOrgStatus } from '@/features/orgSlice';
+import { fetchOrg } from '@/features/orgSlice';
 
-function useFetchOrg(orgId: string, userJwt: string) {
+function useFetchOrg(orgId: string | null, userJwt: string) {
   const dispatch = useAppDispatch();
-  const orgStatus = useAppSelector((state) => selectOrgStatus(state));
-
   useEffect(() => {
-    if (orgStatus === 'idle') {
+    if (orgId) {
       dispatch(fetchOrg({ orgId, jwtToken: userJwt }));
     }
-  });
+  }, [orgId, dispatch, userJwt]);
 }
 
 export default useFetchOrg;
