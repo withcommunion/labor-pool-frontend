@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
+import cx from 'classnames';
 
 const navigation = [
   { name: 'Home', icon: HomeIcon, href: '/home', current: true },
@@ -27,26 +28,25 @@ const navigation = [
   },
   { name: 'Settings', icon: Cog6ToothIcon, href: '/settings', current: false },
 ];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-
 interface Props {
   signOut: () => void;
 }
-export default function Example({ signOut }: Props) {
+export default function DesktopNav({ signOut }: Props) {
   return (
     <div className="float-left flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
       <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
         <div className="flex flex-shrink-0 items-center px-4">
-          <Image
-            className="h-8 w-auto"
-            height={40}
-            width={140}
-            src="/images/logo-black.svg"
-            alt="Communion"
-          />
+          <Link href="/home">
+            <a>
+              <Image
+                className="h-8 w-auto"
+                height={40}
+                width={140}
+                src="/images/logo-black.svg"
+                alt="Communion"
+              />
+            </a>
+          </Link>
         </div>
         <nav
           className="mt-5 flex-1 space-y-1 bg-white px-2"
@@ -55,7 +55,7 @@ export default function Example({ signOut }: Props) {
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
               <div
-                className={classNames(
+                className={cx(
                   item.current
                     ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
@@ -63,7 +63,7 @@ export default function Example({ signOut }: Props) {
                 )}
               >
                 <item.icon
-                  className={classNames(
+                  className={cx(
                     item.current
                       ? 'text-gray-500'
                       : 'text-gray-400 group-hover:text-gray-500',
@@ -74,7 +74,7 @@ export default function Example({ signOut }: Props) {
                 <span className="flex-1">{item.name}</span>
                 {item.count ? (
                   <span
-                    className={classNames(
+                    className={cx(
                       item.current
                         ? 'bg-white'
                         : 'bg-gray-100 group-hover:bg-gray-200',

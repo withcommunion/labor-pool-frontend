@@ -12,7 +12,7 @@ export default function NavContainer() {
   const path = router.pathname;
 
   useEffect(() => {
-    const pathsToNotRenderNav = ['/', '/login'];
+    const pathsToNotRenderNav = ['/', '/login', '/404'];
     if (pathsToNotRenderNav.includes(path)) {
       setShouldRenderNav(false);
     } else {
