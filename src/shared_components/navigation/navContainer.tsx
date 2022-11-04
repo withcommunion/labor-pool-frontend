@@ -1,5 +1,6 @@
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import DesktopNav from './desktopNav';
 import MobileNav from './mobileNav';
@@ -7,6 +8,17 @@ import MobileNav from './mobileNav';
 export default function NavContainer() {
   const { signOut } = useAuthenticator((context) => [context.signOut]);
   const router = useRouter();
+  const [shouldRenderNav, setShouldRenderNav] = useState(false);
+  const path = router.pathname;
+
+  useEffect(() => {
+    const pathsToNotRenderNav = ['/', '/login'];
+    if (pathsToNotRenderNav.includes(path)) {
+      setShouldRenderNav(false);
+    } else {
+      setShouldRenderNav(true);
+    }
+  }, [path]);
 
   const onSignOut = () => {
     signOut();
@@ -14,7 +26,8 @@ export default function NavContainer() {
       router.push('/');
     }, 500);
   };
-  return (
+
+  return shouldRenderNav ? (
     <>
       <div className="hidden md:contents">
         {<DesktopNav signOut={onSignOut} />}
@@ -23,5 +36,5 @@ export default function NavContainer() {
         {<MobileNav signOut={onSignOut} />}
       </div>
     </>
-  );
+  ) : null;
 }
