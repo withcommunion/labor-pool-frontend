@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import UserSelect from './userSelect';
+// import UserSelect from './userSelect';
 import { format, addHours } from 'date-fns';
 import { Switch } from '@headlessui/react';
 import cx from 'classnames';
@@ -81,16 +81,36 @@ export default function AddShiftFormContainer({
             </h3>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <div className="sm:col-span-3">
+            {/* <div className="sm:col-span-3">
               <UserSelect
                 users={org?.primaryMembers || []}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
                 disabled={isShiftBroadcasting}
               />
+            </div> */}
+
+            <div className="sm:col-span-6">
+              <label
+                htmlFor="role-info"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Role
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  name="role-info"
+                  id="role-info"
+                  autoComplete="role-info"
+                  className="block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div className="sm:col-span-3">
+            <div className="sm:col-span-6">
               <Switch.Group
                 as="div"
                 className="flex h-full items-center md:pt-4"
@@ -117,26 +137,6 @@ export default function AddShiftFormContainer({
                   </span>
                 </Switch.Label>
               </Switch.Group>
-            </div>
-
-            <div className="sm:col-span-6">
-              <label
-                htmlFor="role-info"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Role
-              </label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  name="role-info"
-                  id="role-info"
-                  autoComplete="role-info"
-                  className="block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-              </div>
             </div>
 
             <div className="sm:col-span-3">
@@ -227,7 +227,6 @@ export default function AddShiftFormContainer({
                       endDate: shiftEnd,
                       description: description,
                       status: status,
-                      assignedTo: selectedUser,
                     },
                   })
                 );
