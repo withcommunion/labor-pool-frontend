@@ -249,7 +249,6 @@ const Index = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const { userJwt } = await getUserOnServer(context);
-    console.log(context.query);
     const hasQueryStrings = Boolean(Object.keys(context.query).length);
     const queryString = hasQueryStrings
       ? // @ts-expect-error its okay - comes in as an object
