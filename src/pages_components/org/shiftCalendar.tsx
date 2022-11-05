@@ -49,6 +49,7 @@ interface Props {
   orgShifts: IShift[];
   userJwt: string;
   refreshShifts: () => void;
+  autoScroll: boolean;
 }
 
 /**
@@ -61,6 +62,7 @@ export default function WeekCalendar({
   orgShifts,
   userJwt,
   refreshShifts,
+  autoScroll,
 }: Props) {
   const container = useRef(null);
   const containerNav = useRef(null);
@@ -102,8 +104,10 @@ export default function WeekCalendar({
   }, [isMd, isInWeekView]);
 
   useEffect(() => {
-    listRef.current?.firstElementChild?.scrollIntoView();
-  }, [shiftsInWeek]);
+    if (autoScroll) {
+      listRef.current?.firstElementChild?.scrollIntoView();
+    }
+  }, [shiftsInWeek, autoScroll]);
 
   if (!orgShifts) {
     return null;
