@@ -20,17 +20,12 @@ import {
   differenceInMinutes,
   formatISO,
   isSameDay,
+  isSameWeek,
 } from 'date-fns';
 import cx from 'classnames';
 
-import { useAppSelector } from '@/reduxHooks';
-
 import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
-import {
-  IShift,
-  selectOrgShiftsInDay,
-  selectOrgShiftsInWeek,
-} from '@/features/orgShiftsSlice';
+import { IShift } from '@/features/orgShiftsSlice';
 
 import SimpleModal from '@/shared_components/simpleModal';
 import AddShiftFormContainer from './shiftCalendar/addShiftFormContainer';
@@ -39,10 +34,22 @@ import ShiftDetailsContainer from './shiftCalendar/shiftDetailsContainer';
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
+
+function sortShiftsByEarliestTimeInDay(shifts: IShift[]) {
+  return [...shifts].sort((a, b) => {
+    const aStart = new Date(a.startTimeMs);
+    const aHour = aStart.getHours();
+    const bStart = new Date(b.startTimeMs);
+    const bHour = bStart.getHours();
+
+    return aHour - bHour;
+  });
+}
 interface Props {
   orgShifts: IShift[];
   userJwt: string;
   refreshShifts: () => void;
+  autoScroll: boolean;
 }
 
 /**
@@ -55,6 +62,7 @@ export default function WeekCalendar({
   orgShifts,
   userJwt,
   refreshShifts,
+  autoScroll,
 }: Props) {
   const container = useRef(null);
   const containerNav = useRef(null);
@@ -67,12 +75,25 @@ export default function WeekCalendar({
   const [isNewShiftModalOpen, setIsNewShiftModalOpen] = useState(false);
   const [selectedShift, setSelectedShift] = useState<IShift | null>(null);
 
-  const orgShiftsInWeek = useAppSelector((state) =>
-    selectOrgShiftsInWeek(state, startDay)
-  );
-  const orgShiftsInDay = useAppSelector((state) =>
-    selectOrgShiftsInDay(state, startDay)
-  );
+  const [shiftsInWeek, setShiftsInWeek] = useState<IShift[]>([]);
+  const [shiftsinDay, setShiftsinDay] = useState<IShift[]>([]);
+
+  useEffect(() => {
+    const shiftsSorted = sortShiftsByEarliestTimeInDay(orgShifts);
+    if (isInWeekView) {
+      const shiftsInWeek = shiftsSorted.filter((shift) =>
+        isSameWeek(new Date(shift.startTimeMs), startDay)
+      );
+
+      setShiftsInWeek(shiftsInWeek);
+    } else if (!isInWeekView) {
+      const shiftsInWeek = shiftsSorted.filter((shift) =>
+        isSameDay(new Date(shift.startTimeMs), startDay)
+      );
+
+      setShiftsinDay(shiftsInWeek);
+    }
+  }, [isInWeekView, startDay, orgShifts]);
 
   useEffect(() => {
     if (isMd && !isInWeekView) {
@@ -83,12 +104,15 @@ export default function WeekCalendar({
   }, [isMd, isInWeekView]);
 
   useEffect(() => {
-    listRef.current?.firstElementChild?.scrollIntoView();
-  }, [orgShiftsInWeek]);
+    if (autoScroll) {
+      listRef.current?.firstElementChild?.scrollIntoView();
+    }
+  }, [shiftsInWeek, autoScroll]);
 
   if (!orgShifts) {
     return null;
   }
+
   return (
     <>
       <SimpleModal
@@ -168,7 +192,7 @@ export default function WeekCalendar({
                 <VerticalLines />
                 <ShiftsList
                   listRef={listRef}
-                  shifts={isInWeekView ? orgShiftsInWeek : orgShiftsInDay}
+                  shifts={isInWeekView ? shiftsInWeek : shiftsinDay}
                   setSelectedShift={setSelectedShift}
                 />
               </div>
@@ -587,6 +611,7 @@ function ShiftsList({
   listRef: React.RefObject<HTMLOListElement>;
   setSelectedShift: React.Dispatch<React.SetStateAction<IShift | null>>;
 }) {
+  console.log(shifts);
   return (
     <ol
       ref={listRef}

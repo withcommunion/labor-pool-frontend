@@ -7,6 +7,7 @@ import orgReducer from '@/features/orgSlice';
 import orgShiftsReducer from '@/features/orgShiftsSlice';
 import orgNewShiftReducer from '@/features/orgNewShiftSlice';
 import shiftActionsReducer from '@/features/shiftApplicationActionsSlice';
+import allShiftsReducer from '@/features/allShiftsSlice';
 
 const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ const store = configureStore({
     orgShifts: orgShiftsReducer,
     orgNewShift: orgNewShiftReducer,
     shiftActions: shiftActionsReducer,
+    allShifts: allShiftsReducer,
   },
 });
 

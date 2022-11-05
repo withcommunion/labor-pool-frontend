@@ -56,6 +56,7 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
         </div>
 
         <WeekCalendar
+          autoScroll={true}
           orgShifts={orgShifts}
           userJwt={userJwt}
           refreshShifts={fetchShifts}

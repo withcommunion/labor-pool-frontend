@@ -4,15 +4,20 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import Link from 'next/link';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
-import { useAppSelector } from '@/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 
 import { selectSelf } from '@/features/selfSlice';
+import {
+  fetchAllShifts,
+  selectAllShiftsOrderedByEarliestStartTime,
+} from '@/features/allShiftsSlice';
 
 import Footer from '@/shared_components/footer/footer';
-import Link from 'next/link';
+import WeekCalendar from '@/pages_components/org/shiftCalendar';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -23,9 +28,11 @@ interface Props {
 
 const Index = ({ userJwt }: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   useFetchSelf(userJwt);
-  // useHandleJoinOrgs(userJwt);
+
   const self = useAppSelector((state) => selectSelf(state));
+  const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
 
   const { signOut } = useAuthenticator((context) => [context.signOut]);
 
@@ -50,6 +57,12 @@ const Index = ({ userJwt }: Props) => {
     }
   }, [router, self]);
 
+  useEffect(() => {
+    if (userJwt) {
+      dispatch(fetchAllShifts({ jwtToken: userJwt }));
+    }
+  }, [userJwt, dispatch]);
+
   return (
     <div>
       <Head>
@@ -59,13 +72,23 @@ const Index = ({ userJwt }: Props) => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
+        <div className="container my-0 mx-auto w-full px-6 ">
           <div className="flex flex-col items-center justify-center">
             <div>
               <h2 className="my-4 text-lg font-semibold text-indigo-600">
                 Hey {self?.firstName},
               </h2>
 
+              <div className="my-10 w-full">
+                <WeekCalendar
+                  autoScroll={false}
+                  orgShifts={allShifts}
+                  userJwt={userJwt || ''}
+                  refreshShifts={() => {
+                    dispatch(fetchAllShifts({ jwtToken: userJwt || '' }));
+                  }}
+                />
+              </div>
               {self && self.orgs.length === 0 && (
                 <>
                   <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
