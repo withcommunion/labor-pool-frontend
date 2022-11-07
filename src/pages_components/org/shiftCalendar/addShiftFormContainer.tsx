@@ -227,7 +227,6 @@ export default function AddShiftFormContainer({
               };
 
               if (existingShift) {
-                console.log('we here');
                 dispatch(
                   fetchPatchOrgShift({
                     jwtToken: userJwt,
