@@ -19,6 +19,7 @@ export interface ShiftApplication {
   userId: string;
   description: string;
   status: 'pending' | 'accepted' | 'rejected';
+  createdAtMs: number;
 }
 
 export interface ShiftActionsState {

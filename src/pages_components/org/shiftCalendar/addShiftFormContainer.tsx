@@ -208,41 +208,40 @@ export default function AddShiftFormContainer({
             type="button"
             className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-indigo-200 sm:col-start-2 sm:text-sm"
             onClick={() => {
-              if (org?.id) {
-                let status = '';
-                if (selectedUser) {
-                  status = 'filled';
-                } else if (isShiftBroadcasting) {
-                  status = 'broadcasting';
-                } else {
-                  status = 'open';
-                }
+              let status = '';
+              if (selectedUser) {
+                status = 'filled';
+              } else if (isShiftBroadcasting) {
+                status = 'broadcasting';
+              } else {
+                status = 'open';
+              }
 
-                const shift = {
-                  name: role,
-                  orgId: org.id,
-                  startDate: shiftStart,
-                  endDate: shiftEnd,
-                  description: description,
-                  status: status,
-                };
+              const shift = {
+                name: role,
+                orgId: org ? org.id : '',
+                startDate: shiftStart,
+                endDate: shiftEnd,
+                description: description,
+                status: status,
+              };
 
-                if (existingShift) {
-                  dispatch(
-                    fetchPatchOrgShift({
-                      jwtToken: userJwt,
-                      shift,
-                      shiftId: existingShift.id,
-                    })
-                  );
-                } else {
-                  dispatch(
-                    fetchPostOrgShift({
-                      jwtToken: userJwt,
-                      shift,
-                    })
-                  );
-                }
+              if (existingShift) {
+                console.log('we here');
+                dispatch(
+                  fetchPatchOrgShift({
+                    jwtToken: userJwt,
+                    shift,
+                    shiftId: existingShift.id,
+                  })
+                );
+              } else {
+                dispatch(
+                  fetchPostOrgShift({
+                    jwtToken: userJwt,
+                    shift,
+                  })
+                );
               }
             }}
           >
