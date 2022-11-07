@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
-// import UserSelect from './userSelect';
 import { format, addHours } from 'date-fns';
 import { Switch } from '@headlessui/react';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import cx from 'classnames';
 
+import { useAppSelector, useAppDispatch } from '@/reduxHooks';
+
+import { IShift } from '@/features/orgShiftsSlice';
 import { selectOrg } from '@/features/orgSlice';
 import {
   fetchPostOrgShift,
+  fetchPatchOrgShift,
   reset,
   selectOrgNewShiftStatus,
 } from '@/features/orgNewShiftSlice';
-import { useAppSelector, useAppDispatch } from '@/reduxHooks';
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import { IShift } from '@/features/orgShiftsSlice';
 
 export default function AddShiftFormContainer({
   userJwt,
@@ -217,19 +218,31 @@ export default function AddShiftFormContainer({
                   status = 'open';
                 }
 
-                dispatch(
-                  fetchPostOrgShift({
-                    jwtToken: userJwt,
-                    shift: {
-                      name: role,
-                      orgId: org.id,
-                      startDate: shiftStart,
-                      endDate: shiftEnd,
-                      description: description,
-                      status: status,
-                    },
-                  })
-                );
+                const shift = {
+                  name: role,
+                  orgId: org.id,
+                  startDate: shiftStart,
+                  endDate: shiftEnd,
+                  description: description,
+                  status: status,
+                };
+
+                if (existingShift) {
+                  dispatch(
+                    fetchPatchOrgShift({
+                      jwtToken: userJwt,
+                      shift,
+                      shiftId: existingShift.id,
+                    })
+                  );
+                } else {
+                  dispatch(
+                    fetchPostOrgShift({
+                      jwtToken: userJwt,
+                      shift,
+                    })
+                  );
+                }
               }
             }}
           >
