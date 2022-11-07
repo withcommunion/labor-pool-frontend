@@ -59,6 +59,17 @@ export const orgNewShiftSlice = createSlice({
       .addCase(fetchPostOrgShift.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(fetchPatchOrgShift.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPatchOrgShift.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.newShift = action.payload;
+      })
+      .addCase(fetchPatchOrgShift.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });
@@ -71,6 +82,35 @@ export const fetchPostOrgShift = createAsyncThunk(
 
     const rawShift = await axios.post<IShift>(
       `${API_URL}/shift`,
+      { ...shift, startDate, endDate },
+      {
+        headers: {
+          Authorization: jwtToken,
+        },
+      }
+    );
+    const parsedShift = rawShift.data;
+
+    return parsedShift;
+  }
+);
+
+export const fetchPatchOrgShift = createAsyncThunk(
+  'orgNewShift/fetchPatchOrgShift',
+  async ({
+    jwtToken,
+    shift,
+    shiftId,
+  }: {
+    jwtToken: string;
+    shift: INewShiftParams;
+    shiftId: string;
+  }) => {
+    const startDate = formatISO(new Date(shift.startDate));
+    const endDate = formatISO(new Date(shift.endDate));
+
+    const rawShift = await axios.patch<IShift>(
+      `${API_URL}/shift/${shiftId}`,
       { ...shift, startDate, endDate },
       {
         headers: {
