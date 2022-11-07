@@ -16,14 +16,15 @@ export default function ApplicationList({
     <div className="flow-root">
       <ul role="list" className="-mb-8">
         {applications.map((application, idx) => {
+          const { status } = application;
           const statusIcon = {
             bgColor: 'bg-gray-500',
             icon: WifiIcon,
           };
-          if (application.status === 'accepted') {
+          if (status === 'accepted') {
             statusIcon.bgColor = 'bg-green-500';
             statusIcon.icon = CheckIcon;
-          } else if (application.status === 'rejected') {
+          } else if (status === 'rejected') {
             statusIcon.bgColor = 'bg-red-500';
             statusIcon.icon = XMarkIcon;
           }
@@ -70,15 +71,17 @@ export default function ApplicationList({
                         {application.createdAtMs}
                       </time>
                     </div>
-                    <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                      <button
-                        className="flex"
-                        onClick={() => onDeleteClick(application.id)}
-                      >
-                        <TrashIcon className="h-5 w-5 text-red-400" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
+                    {status === 'pending' && (
+                      <div className="whitespace-nowrap text-right text-sm text-gray-500">
+                        <button
+                          className="flex"
+                          onClick={() => onDeleteClick(application.id)}
+                        >
+                          <TrashIcon className="h-5 w-5 text-red-400" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
