@@ -18,12 +18,14 @@ import {
 
 import Footer from '@/shared_components/footer/footer';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
+import FeedContainer from '@/shared_components/feed/feedContainer';
+import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 
 interface Props {
-  userJwt: string | null;
+  userJwt: string;
 }
 
 const Index = ({ userJwt }: Props) => {
@@ -89,6 +91,18 @@ const Index = ({ userJwt }: Props) => {
                   }}
                 />
               </div>
+              <div className="my-10">
+                <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                  Your shift applications
+                </p>
+                <ApplicationContainer userJwt={userJwt} userId={self?.id} />
+              </div>
+              <>
+                <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                  Whats happening
+                </p>
+                <FeedContainer />
+              </>
               {self && self.orgs.length === 0 && (
                 <>
                   <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">

@@ -611,7 +611,6 @@ function ShiftsList({
   listRef: React.RefObject<HTMLOListElement>;
   setSelectedShift: React.Dispatch<React.SetStateAction<IShift | null>>;
 }) {
-  console.log(shifts);
   return (
     <ol
       ref={listRef}

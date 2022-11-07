@@ -16,6 +16,7 @@ export interface IShift {
   id: string;
   name: string;
   orgId: string;
+  ownerUrn: string;
   status: 'open' | 'broadcasting' | 'applied' | 'filled' | 'expired';
   description: string;
   assignedTo: string;
