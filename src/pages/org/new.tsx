@@ -61,9 +61,7 @@ const Index = ({ userJwt }: Props) => {
                   <h3 className="text-lg font-medium leading-6 text-gray-900">
                     Company Information
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Use a permanent address where you can receive mail.
-                  </p>
+                  <p className="mt-1 text-sm text-gray-500"></p>
                 </div>
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div className="sm:col-span-3">
