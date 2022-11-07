@@ -93,7 +93,7 @@ const Index = ({ userJwt }: Props) => {
               </div>
               <div className="my-10">
                 <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                  Your open applications
+                  Your shift applications
                 </p>
                 <ApplicationContainer userJwt={userJwt} userId={self?.id} />
               </div>
