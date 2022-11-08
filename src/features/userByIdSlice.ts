@@ -60,6 +60,17 @@ export const userByIdSlice = createSlice({
       .addCase(fetchGetUserById.rejected, (state, action) => {
         state.userById.status = 'failed';
         state.userById.error = action.error.message;
+      })
+      .addCase(fetchGetUserByIdShifts.pending, (state) => {
+        state.userByIdShifts.status = 'loading';
+      })
+      .addCase(fetchGetUserByIdShifts.fulfilled, (state, action) => {
+        state.userByIdShifts.status = 'succeeded';
+        state.userByIdShifts.shifts = action.payload;
+      })
+      .addCase(fetchGetUserByIdShifts.rejected, (state, action) => {
+        state.userByIdShifts.status = 'failed';
+        state.userByIdShifts.error = action.error.message;
       });
   },
 });
@@ -81,7 +92,7 @@ export const fetchGetUserById = createAsyncThunk(
 export const fetchGetUserByIdShifts = createAsyncThunk(
   'userById/fetchGetUserByIdShifts',
   async ({ jwtToken, userId }: { jwtToken: string; userId: string }) => {
-    const rawUser = await axios.get<IShift>(
+    const rawUser = await axios.get<IShift[]>(
       `${API_URL}/user/${userId}/shifts`,
       {
         headers: {

@@ -10,10 +10,12 @@ import {
   fetchGetUserById,
   fetchGetUserByIdShifts,
   selectUserById,
+  selectUserByIdShifts,
 } from '@/features/userByIdSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
+import WeekCalendar from '@/pages_components/org/shiftCalendar';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -59,6 +61,7 @@ const UserPage = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserById);
+  const userShifts = useAppSelector(selectUserByIdShifts);
 
   useFetchSelf(userJwt);
 
@@ -230,6 +233,25 @@ const UserPage = ({ userJwt }: Props) => {
                       </div>
                     ))}
                   </div>
+                </div>
+                {/* / Team member list */}
+
+                <div>
+                  <WeekCalendar
+                    orgShifts={userShifts}
+                    userJwt={userJwt}
+                    autoScroll={false}
+                    refreshShifts={() => {
+                      if (user) {
+                        dispatch(
+                          fetchGetUserByIdShifts({
+                            userId: user.id,
+                            jwtToken: userJwt,
+                          })
+                        );
+                      }
+                    }}
+                  />
                 </div>
               </article>
             </main>
