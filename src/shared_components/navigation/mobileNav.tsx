@@ -88,8 +88,10 @@ export default function MobileNav({ signOut, user }: Props) {
                       <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <span className="sr-only">Open user menu</span>
                         {user?.imageUrl ? (
-                          <img
+                          <Image
                             className="h-8 w-8 rounded-full"
+                            width={32}
+                            height={32}
                             src={user?.imageUrl || ''}
                             alt="profile image"
                           />

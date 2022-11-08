@@ -107,10 +107,12 @@ export default function DesktopNav({ signOut, user }: Props) {
             <div className="flex items-center">
               <div>
                 {user?.imageUrl ? (
-                  <img
+                  <Image
                     className="inline-block h-9 w-9 rounded-full"
                     src={user?.imageUrl || ''}
                     alt="profile image"
+                    height={40}
+                    width={40}
                   />
                 ) : (
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-400">

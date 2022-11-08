@@ -92,9 +92,9 @@ const UserPage = ({ userJwt }: Props) => {
                       <div className="flex">
                         {user?.imageUrl ? (
                           <Image
-                            className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"
-                            width="24"
-                            height="24"
+                            className="h-24 w-24 rounded-full ring-1 ring-white sm:h-32 sm:w-32"
+                            width={84}
+                            height={84}
                             src={user?.imageUrl || ''}
                             alt="profile image"
                           />
