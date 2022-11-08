@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { fetchGetUserById, selectUser } from '@/features/userSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
+import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -56,6 +57,8 @@ const UserPage = ({ userJwt }: Props) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
+  useFetchSelf(userJwt);
+
   useEffect(() => {
     if (router.query.userId) {
       dispatch(
@@ -89,9 +92,9 @@ const UserPage = ({ userJwt }: Props) => {
                       <div className="flex">
                         {user?.imageUrl ? (
                           <Image
-                            className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"
-                            width="24"
-                            height="24"
+                            className="h-24 w-24 rounded-full ring-1 ring-white sm:h-32 sm:w-32"
+                            width={84}
+                            height={84}
                             src={user?.imageUrl || ''}
                             alt="profile image"
                           />
