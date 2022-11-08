@@ -2,9 +2,9 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
-
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 
 import { useAppSelector } from '@/reduxHooks';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
@@ -20,6 +20,7 @@ import useFetchOrg from '@/shared_hooks/useFetchOrgHook';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import useFetchOrgShifts from '@/shared_hooks/useFetchOrgShifts';
 import { selectOrgShifts } from '@/features/orgShiftsSlice';
+import Link from 'next/link';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -50,7 +51,19 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
         <div className="my-0 w-full px-6 text-start md:max-w-50vw">
           {org && (
             <div className="w-full">
-              <h2 className="mt-4 text-2xl">{org.name}</h2>
+              <div className="mt-4 flex">
+                <Link
+                  href={{
+                    pathname: `/org/[orgId]/`,
+                    query: { orgId: org?.id },
+                  }}
+                >
+                  <a>
+                    <ArrowLeftCircleIcon className="mr-2 h-8 w-8 text-gray-400 hover:text-gray-500" />
+                  </a>
+                </Link>
+                <h2 className="text-2xl">{org.name}</h2>
+              </div>
             </div>
           )}
         </div>

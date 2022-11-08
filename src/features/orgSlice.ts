@@ -15,10 +15,14 @@ export interface IOrg {
   id: string;
   name: string;
   primaryMembers: string[];
+  phoneNumber: string;
+  email: string;
   friends: string[];
   schedules: string[];
   joinCode: string;
+  location?: string;
   imageUrl?: string;
+  coverImageUrl?: string;
   description?: string;
   createdAtMs: number;
   updatedAtMs: number;
