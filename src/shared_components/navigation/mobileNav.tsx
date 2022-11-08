@@ -21,19 +21,6 @@ const mainNavigation = [
   },
 ];
 
-const profileClickNavigation = [
-  {
-    name: 'Your Profile',
-    href: '/profile',
-    current: false,
-  },
-  {
-    name: 'Settings',
-    href: '/settings',
-    current: false,
-  },
-];
-
 interface Props {
   user: IUser | null;
   signOut: () => void;
