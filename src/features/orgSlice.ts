@@ -11,13 +11,15 @@ import {
 
 import { API_URL } from '@/util/walletApiUtil';
 
-interface IOrg {
+export interface IOrg {
   id: string;
   name: string;
   primaryMembers: string[];
   friends: string[];
   schedules: string[];
   joinCode: string;
+  imageUrl?: string;
+  description?: string;
   createdAtMs: number;
   updatedAtMs: number;
 }

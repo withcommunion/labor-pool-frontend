@@ -11,6 +11,7 @@ import {
 import { API_URL } from '@/util/walletApiUtil';
 import { IUser } from '@/features/selfSlice';
 import { IShift } from './orgShiftsSlice';
+import { IOrg } from './orgSlice';
 
 export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -25,6 +26,12 @@ export interface UserByIdState {
     status: RequestStatus;
     error: string | null | undefined;
   };
+  userByIdSocials: {
+    following: { users: IUser[]; orgs: IOrg[] };
+    followers: { users: IUser[]; orgs: IOrg[] };
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
 }
 
 const initialState: UserByIdState = {
@@ -35,6 +42,12 @@ const initialState: UserByIdState = {
   },
   userByIdShifts: {
     shifts: [],
+    status: 'idle',
+    error: null,
+  },
+  userByIdSocials: {
+    following: { users: [], orgs: [] },
+    followers: { users: [], orgs: [] },
     status: 'idle',
     error: null,
   },
@@ -71,6 +84,18 @@ export const userByIdSlice = createSlice({
       .addCase(fetchGetUserByIdShifts.rejected, (state, action) => {
         state.userByIdShifts.status = 'failed';
         state.userByIdShifts.error = action.error.message;
+      })
+      .addCase(fetchGetUserByIdSocials.pending, (state) => {
+        state.userByIdSocials.status = 'loading';
+      })
+      .addCase(fetchGetUserByIdSocials.fulfilled, (state, action) => {
+        state.userByIdSocials.status = 'succeeded';
+        state.userByIdSocials.followers = action.payload.followers;
+        state.userByIdSocials.following = action.payload.following;
+      })
+      .addCase(fetchGetUserByIdSocials.rejected, (state, action) => {
+        state.userByIdSocials.status = 'failed';
+        state.userByIdSocials.error = action.error.message;
       });
   },
 });
@@ -100,6 +125,23 @@ export const fetchGetUserByIdShifts = createAsyncThunk(
         },
       }
     );
+    const user = rawUser.data;
+
+    return user;
+  }
+);
+
+export const fetchGetUserByIdSocials = createAsyncThunk(
+  'userById/fetchGetUserByIdSocials',
+  async ({ jwtToken, userId }: { jwtToken: string; userId: string }) => {
+    const rawUser = await axios.get<{
+      following: { users: IUser[]; orgs: IOrg[] };
+      followers: { users: IUser[]; orgs: IOrg[] };
+    }>(`${API_URL}/entity/urn:user:${userId}/socials`, {
+      headers: {
+        Authorization: jwtToken,
+      },
+    });
     const user = rawUser.data;
 
     return user;
@@ -139,6 +181,23 @@ export const selectUserByIdShiftsStatus = createSelector(
 );
 export const selectUserByIdShiftsError = createSelector(
   [selectRootUserByIdShifts],
+  (root) => root.error
+);
+
+const selectRootUserByIdSocials = createSelector(
+  [selectRootUserById],
+  (root) => root.userByIdSocials
+);
+export const selectUserByIdSocials = createSelector(
+  [selectRootUserByIdSocials],
+  (root) => ({ followers: root.followers, following: root.following })
+);
+export const selectUserByIdSocialsStatus = createSelector(
+  [selectRootUserByIdSocials],
+  (root) => root.status
+);
+export const selectUserByIdSocialsError = createSelector(
+  [selectRootUserByIdSocials],
   (root) => root.error
 );
 

@@ -2,6 +2,8 @@ import { GetServerSideProps } from 'next';
 import { Amplify } from 'aws-amplify';
 import cx from 'classnames';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { Transition } from '@headlessui/react';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
@@ -9,47 +11,21 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import {
   fetchGetUserById,
   fetchGetUserByIdShifts,
+  fetchGetUserByIdSocials,
   selectUserById,
   selectUserByIdShifts,
+  selectUserByIdSocials,
 } from '@/features/userByIdSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
+import Link from 'next/link';
+import { IUser } from '@/features/selfSlice';
+import { IOrg } from '@/features/orgSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
-
-const team = [
-  {
-    name: 'Leslie Alexander',
-    handle: 'lesliealexander',
-    role: 'Co-Founder / CEO',
-    imageUrl:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Michael Foster',
-    handle: 'michaelfoster',
-    role: 'Co-Founder / CTO',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Dries Vincent',
-    handle: 'driesvincent',
-    role: 'Manager, Business Relations',
-    imageUrl:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-  {
-    name: 'Lindsay Walton',
-    handle: 'lindsaywalton',
-    role: 'Front-end Developer',
-    imageUrl:
-      'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-  },
-];
 
 const fallbackBgImage =
   'https://images.unsplash.com/photo-1444628838545-ac4016a5418a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80';
@@ -62,6 +38,10 @@ const UserPage = ({ userJwt }: Props) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUserById);
   const userShifts = useAppSelector(selectUserByIdShifts);
+  const userSocials = useAppSelector(selectUserByIdSocials);
+
+  const [isFollowersListExpanded, setIsFollowersListExpanded] = useState(false);
+  const [isFollowingListExpanded, setIsFollowingListExpanded] = useState(false);
 
   useFetchSelf(userJwt);
 
@@ -80,6 +60,17 @@ const UserPage = ({ userJwt }: Props) => {
     if (user) {
       dispatch(
         fetchGetUserByIdShifts({
+          jwtToken: userJwt,
+          userId: user.id,
+        })
+      );
+    }
+  }, [dispatch, user, userJwt]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(
+        fetchGetUserByIdSocials({
           jwtToken: userJwt,
           userId: user.id,
         })
@@ -198,43 +189,101 @@ const UserPage = ({ userJwt }: Props) => {
                   </dl>
                 </div>
 
-                {/* Team member list */}
-                <div className="mx-auto mt-8 max-w-5xl px-4 pb-12 sm:px-6 lg:px-8">
-                  <h2 className="text-sm font-medium text-gray-500">
-                    Team members
-                  </h2>
-                  <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {team.map((person) => (
-                      <div
-                        key={person.handle}
-                        className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-pink-500 focus-within:ring-offset-2 hover:border-gray-400"
-                      >
-                        <div className="flex-shrink-0">
-                          <img
-                            className="h-10 w-10 rounded-full"
-                            src={person.imageUrl}
-                            alt=""
-                          />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <a href="#" className="focus:outline-none">
-                            <span
-                              className="absolute inset-0"
-                              aria-hidden="true"
-                            />
-                            <p className="text-sm font-medium text-gray-900">
-                              {person.name}
-                            </p>
-                            <p className="truncate text-sm text-gray-500">
-                              {person.role}
-                            </p>
-                          </a>
-                        </div>
+                <div className="mb-10 flex max-h-40vh flex-row justify-start overflow-y-scroll text-start">
+                  {/*  Following */}
+                  <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
+                    <button
+                      onClick={() => {
+                        setIsFollowingListExpanded(!isFollowingListExpanded);
+                      }}
+                    >
+                      <h2 className="text-sm font-medium text-gray-500">
+                        <span className="text-black">
+                          {userSocials.following.users.length +
+                            userSocials.following.orgs.length}{' '}
+                        </span>
+                        Following
+                      </h2>
+                    </button>
+
+                    <Transition
+                      show={isFollowingListExpanded}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <h3 className="text-xs font-medium text-gray-500">
+                        Users
+                      </h3>
+                      <div className="mt-1">
+                        <EntityList
+                          users={userSocials.following.users}
+                          entityType="user"
+                        />
                       </div>
-                    ))}
+
+                      <h3 className="text-xs font-medium text-gray-500">
+                        Orgs
+                      </h3>
+                      <div className="mt-1">
+                        <EntityList
+                          orgs={userSocials.following.orgs}
+                          entityType="org"
+                        />
+                      </div>
+                    </Transition>
+                  </div>
+                  {/*  /Following */}
+
+                  {/* Followers */}
+                  <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
+                    <button
+                      onClick={() => {
+                        setIsFollowersListExpanded(!isFollowersListExpanded);
+                      }}
+                    >
+                      <h2 className="text-sm font-medium text-gray-500">
+                        <span className="text-black">
+                          {userSocials.followers.users.length +
+                            userSocials.followers.orgs.length}{' '}
+                        </span>
+                        Followers
+                      </h2>
+                    </button>
+                    <Transition
+                      show={isFollowersListExpanded}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <h3 className="text-xs font-medium text-gray-500">
+                        Users
+                      </h3>
+                      <div className="mt-1">
+                        <EntityList
+                          users={userSocials.followers.users}
+                          entityType="user"
+                        />
+                      </div>
+
+                      <h3 className="text-xs font-medium text-gray-500">
+                        Orgs
+                      </h3>
+                      <div className="mt-1">
+                        <EntityList
+                          orgs={userSocials.followers.orgs}
+                          entityType="org"
+                        />
+                      </div>
+                    </Transition>
                   </div>
                 </div>
-                {/* / Team member list */}
 
                 <div>
                   <WeekCalendar
@@ -279,5 +328,91 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
+
+function SocialCard({
+  user,
+  org,
+  entityType,
+}: {
+  user?: IUser;
+  org?: IOrg;
+  entityType: 'org' | 'user';
+}) {
+  const name = user ? `${user.firstName} ${user.lastName}` : org?.name;
+  const imageUrl = user?.imageUrl || '';
+  const urlPathname = entityType === 'user' ? '/user/[userId]' : '/org/[orgId]';
+  const urlQuery = user ? { userId: user?.id } : { orgId: org?.id };
+
+  return (
+    <li>
+      <div className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-pink-500 focus-within:ring-offset-2 hover:border-gray-400">
+        <div className="flex-shrink-0">
+          {imageUrl ? (
+            <Image
+              className="h-10 w-10"
+              width={40}
+              height={40}
+              src={imageUrl || ''}
+              alt="profile image"
+            />
+          ) : (
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-400 ">
+              <span className="text-xl font-medium leading-none text-white">
+                {user
+                  ? `${user?.firstName?.charAt(0)}${user?.lastName?.charAt(0)}`
+                  : org?.name.charAt(0)}
+              </span>
+            </span>
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <Link
+            href={{
+              pathname: urlPathname,
+              query: urlQuery,
+            }}
+          >
+            <a className="focus:outline-none">
+              <span className="absolute inset-0" aria-hidden="true" />
+              <p className="text-sm font-medium text-gray-900">{name}</p>
+              <p className="truncate text-sm text-gray-500">
+                {user?.description || org?.description}
+              </p>
+            </a>
+          </Link>
+        </div>
+      </div>
+    </li>
+  );
+}
+
+function EntityList({
+  users,
+  orgs,
+  entityType,
+}: {
+  users?: IUser[];
+  orgs?: IOrg[];
+  entityType: 'org' | 'user';
+}) {
+  return (
+    <>
+      {users?.length && (
+        <ul>
+          {users.map((user) => (
+            <SocialCard key={user.id} user={user} entityType={entityType} />
+          ))}
+        </ul>
+      )}
+      {orgs?.length && (
+        <ul>
+          {orgs.map((org) => (
+            <SocialCard key={org.id} org={org} entityType={entityType} />
+          ))}
+        </ul>
+      )}
+    </>
+  );
+}
 
 export default UserPage;
