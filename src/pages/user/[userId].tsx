@@ -1,16 +1,21 @@
 import { GetServerSideProps } from 'next';
 import { Amplify } from 'aws-amplify';
-import { FunnelIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import cx from 'classnames';
 import { useRouter } from 'next/router';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 
-import { fetchGetUserById, selectUser } from '@/features/userSlice';
+import {
+  fetchGetUserById,
+  fetchGetUserByIdShifts,
+  selectUserById,
+  selectUserByIdShifts,
+} from '@/features/userByIdSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
+import WeekCalendar from '@/pages_components/org/shiftCalendar';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -55,7 +60,8 @@ interface Props {
 const UserPage = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
+  const user = useAppSelector(selectUserById);
+  const userShifts = useAppSelector(selectUserByIdShifts);
 
   useFetchSelf(userJwt);
 
@@ -69,6 +75,17 @@ const UserPage = ({ userJwt }: Props) => {
       );
     }
   }, [dispatch, router.query.userId, userJwt]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(
+        fetchGetUserByIdShifts({
+          jwtToken: userJwt,
+          userId: user.id,
+        })
+      );
+    }
+  }, [dispatch, user, userJwt]);
 
   return (
     <>
@@ -217,48 +234,27 @@ const UserPage = ({ userJwt }: Props) => {
                     ))}
                   </div>
                 </div>
+                {/* / Team member list */}
+
+                <div>
+                  <WeekCalendar
+                    orgShifts={userShifts}
+                    userJwt={userJwt}
+                    autoScroll={false}
+                    refreshShifts={() => {
+                      if (user) {
+                        dispatch(
+                          fetchGetUserByIdShifts({
+                            userId: user.id,
+                            jwtToken: userJwt,
+                          })
+                        );
+                      }
+                    }}
+                  />
+                </div>
               </article>
             </main>
-            <aside className="hidden w-96 flex-shrink-0 border-r border-gray-200 xl:order-first xl:flex xl:flex-col">
-              <div className="px-6 pt-6 pb-4">
-                <h2 className="text-lg font-medium text-gray-900">Directory</h2>
-                <p className="mt-1 text-sm text-gray-600">
-                  Search directory of 3,018 employees
-                </p>
-                <form className="mt-6 flex space-x-4" action="#">
-                  <div className="min-w-0 flex-1">
-                    <label htmlFor="search" className="sr-only">
-                      Search
-                    </label>
-                    <div className="relative rounded-md shadow-sm">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <MagnifyingGlassIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <input
-                        type="search"
-                        name="search"
-                        id="search"
-                        className="block w-full rounded-md border-gray-300 pl-10 focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
-                        placeholder="Search"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-3.5 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2"
-                  >
-                    <FunnelIcon
-                      className="h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only">Search</span>
-                  </button>
-                </form>
-              </div>
-            </aside>
           </div>
         </div>
       </div>

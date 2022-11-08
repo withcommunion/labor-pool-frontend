@@ -9,7 +9,7 @@ import orgNewShiftReducer from '@/features/orgNewShiftSlice';
 import shiftActionsReducer from '@/features/shiftApplicationActionsSlice';
 import allShiftsReducer from '@/features/allShiftsSlice';
 import myShiftApplicationsReducer from '@/features/myShiftApplicationsSlice';
-import userByIdReducer from '@/features/userSlice';
+import userByIdReducer from '@/features/userByIdSlice';
 
 const store = configureStore({
   reducer: {
