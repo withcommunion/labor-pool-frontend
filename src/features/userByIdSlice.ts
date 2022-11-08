@@ -10,19 +10,34 @@ import {
 
 import { API_URL } from '@/util/walletApiUtil';
 import { IUser } from '@/features/selfSlice';
+import { IShift } from './orgShiftsSlice';
 
 export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 export interface UserByIdState {
-  user: IUser | null;
-  status: RequestStatus;
-  error: string | null | undefined;
+  userById: {
+    user: IUser | null;
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
+  userByIdShifts: {
+    shifts: IShift[];
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
 }
 
 const initialState: UserByIdState = {
-  user: null,
-  status: 'idle',
-  error: null,
+  userById: {
+    user: null,
+    status: 'idle',
+    error: null,
+  },
+  userByIdShifts: {
+    shifts: [],
+    status: 'idle',
+    error: null,
+  },
 };
 
 export const userByIdSlice = createSlice({
@@ -36,15 +51,15 @@ export const userByIdSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchGetUserById.pending, (state) => {
-        state.status = 'loading';
+        state.userById.status = 'loading';
       })
       .addCase(fetchGetUserById.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
+        state.userById.status = 'succeeded';
+        state.userById.user = action.payload;
       })
       .addCase(fetchGetUserById.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
+        state.userById.status = 'failed';
+        state.userById.error = action.error.message;
       });
   },
 });
@@ -63,19 +78,57 @@ export const fetchGetUserById = createAsyncThunk(
   }
 );
 
-export const selectRootUserById = (state: RootState) => state.userById;
+export const fetchGetUserByIdShifts = createAsyncThunk(
+  'userById/fetchGetUserByIdShifts',
+  async ({ jwtToken, userId }: { jwtToken: string; userId: string }) => {
+    const rawUser = await axios.get<IShift>(
+      `${API_URL}/user/${userId}/shifts`,
+      {
+        headers: {
+          Authorization: jwtToken,
+        },
+      }
+    );
+    const user = rawUser.data;
 
-export const selectUser = createSelector(
+    return user;
+  }
+);
+
+const selectRootUserById = (state: RootState) => state.userById;
+
+const selectRootUser = createSelector(
   [selectRootUserById],
+  (root) => root.userById
+);
+export const selectUserById = createSelector(
+  [selectRootUser],
   (root) => root.user
 );
 export const selectUserByIdStatus = createSelector(
-  [selectRootUserById],
+  [selectRootUser],
   (root) => root.status
 );
 export const selectUserByIdError = createSelector(
+  [selectRootUser],
+  (root) => root.error
+);
+
+const selectRootUserByIdShifts = createSelector(
   [selectRootUserById],
+  (root) => root.userByIdShifts
+);
+export const selectUserByIdShifts = createSelector(
+  [selectRootUserByIdShifts],
+  (root) => root.shifts
+);
+export const selectUserByIdShiftsStatus = createSelector(
+  [selectRootUserByIdShifts],
   (root) => root.status
+);
+export const selectUserByIdShiftsError = createSelector(
+  [selectRootUserByIdShifts],
+  (root) => root.error
 );
 
 export const { reset } = userByIdSlice.actions;

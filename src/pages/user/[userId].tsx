@@ -6,7 +6,11 @@ import { useRouter } from 'next/router';
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 
-import { fetchGetUserById, selectUser } from '@/features/userByIdSlice';
+import {
+  fetchGetUserById,
+  fetchGetUserByIdShifts,
+  selectUserById,
+} from '@/features/userByIdSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
@@ -54,7 +58,7 @@ interface Props {
 const UserPage = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
+  const user = useAppSelector(selectUserById);
 
   useFetchSelf(userJwt);
 
@@ -68,6 +72,17 @@ const UserPage = ({ userJwt }: Props) => {
       );
     }
   }, [dispatch, router.query.userId, userJwt]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(
+        fetchGetUserByIdShifts({
+          jwtToken: userJwt,
+          userId: user.id,
+        })
+      );
+    }
+  }, [dispatch, user, userJwt]);
 
   return (
     <>
