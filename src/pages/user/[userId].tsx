@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { fetchGetUserById, selectUser } from '@/features/userSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
+import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -55,6 +56,8 @@ const UserPage = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+
+  useFetchSelf(userJwt);
 
   useEffect(() => {
     if (router.query.userId) {
