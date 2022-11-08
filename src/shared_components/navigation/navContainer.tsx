@@ -1,3 +1,5 @@
+import { selectSelf } from '@/features/selfSlice';
+import { useAppSelector } from '@/reduxHooks';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,6 +12,7 @@ export default function NavContainer() {
   const router = useRouter();
   const [shouldRenderNav, setShouldRenderNav] = useState(false);
   const path = router.pathname;
+  const self = useAppSelector(selectSelf);
 
   useEffect(() => {
     const pathsToNotRenderNav = ['/', '/login', '/404'];
@@ -30,10 +33,10 @@ export default function NavContainer() {
   return shouldRenderNav ? (
     <>
       <div className="hidden md:contents">
-        {<DesktopNav signOut={onSignOut} />}
+        {<DesktopNav signOut={onSignOut} user={self} />}
       </div>
       <div className="contents md:hidden">
-        {<MobileNav signOut={onSignOut} />}
+        {<MobileNav signOut={onSignOut} user={self} />}
       </div>
     </>
   ) : null;
