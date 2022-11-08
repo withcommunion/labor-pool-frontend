@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
 import { useAuthenticator } from '@aws-amplify/ui-react';
@@ -13,26 +13,43 @@ import InviteLink, {
   InviteTextArea,
 } from '@/pages_components/org/inviteLink/inviteLink';
 import Footer from '@/shared_components/footer/footer';
+import { useAppDispatch, useAppSelector } from '@/reduxHooks';
+import { fetchGetOrgById, selectOrgById } from '@/features/orgByIdSlice';
+import Link from 'next/link';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/outline';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 
 interface Props {
-  userJwt: string | null;
+  userJwt: string;
 }
 
 const OrgInvite = ({ userJwt }: Props) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { signOut } = useAuthenticator((context) => [
     context.signOut,
     context.user,
   ]);
+  const org = useAppSelector(selectOrgById);
 
   const steps = ['managers', 'employees', 'friendlyOrgs'];
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
 
   const { orgId } = router.query;
   const queryOrgId = (orgId as string) || '';
+
+  useEffect(() => {
+    if (router.query.orgId) {
+      dispatch(
+        fetchGetOrgById({
+          jwtToken: userJwt,
+          orgId: router.query.orgId as string,
+        })
+      );
+    }
+  }, [dispatch, router.query.orgId, userJwt]);
 
   useFetchSelf(userJwt);
 
@@ -46,6 +63,21 @@ const OrgInvite = ({ userJwt }: Props) => {
 
       <main className="min-h-100vh">
         <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
+          <div className="w-full">
+            <div className="mt-4 flex">
+              <Link
+                href={{
+                  pathname: `/org/[orgId]/`,
+                  query: { orgId: org?.id },
+                }}
+              >
+                <a>
+                  <ArrowLeftCircleIcon className="mr-2 h-8 w-8 text-gray-400 hover:text-gray-500" />
+                </a>
+              </Link>
+              <h2 className="text-2xl">{org?.name}</h2>
+            </div>
+          </div>
           <div className="flex flex-col items-center justify-center">
             {steps[currentStepIdx] === 'managers' && (
               <InviteManagers queryOrgId={queryOrgId} orgJoinCode="1" />
