@@ -3,7 +3,6 @@ import { Amplify } from 'aws-amplify';
 import cx from 'classnames';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Transition } from '@headlessui/react';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
@@ -23,6 +22,7 @@ import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import Link from 'next/link';
 import { IUser } from '@/features/selfSlice';
 import { IOrg } from '@/features/orgSlice';
+import SimpleModal from '@/shared_components/simpleModal';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -189,7 +189,7 @@ const UserPage = ({ userJwt }: Props) => {
                   </dl>
                 </div>
 
-                <div className="mb-10 flex max-h-40vh flex-row justify-start overflow-y-scroll text-start">
+                <div className="mb-10 flex flex-row justify-start ">
                   {/*  Following */}
                   <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
                     <button
@@ -206,35 +206,57 @@ const UserPage = ({ userJwt }: Props) => {
                       </h2>
                     </button>
 
-                    <Transition
-                      show={isFollowingListExpanded}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
+                    <SimpleModal
+                      isOpen={isFollowingListExpanded}
+                      toggleIsOpen={() => {
+                        setIsFollowingListExpanded(!isFollowingListExpanded);
+                      }}
+                      title="Following"
                     >
-                      <h3 className="text-xs font-medium text-gray-500">
-                        Users
-                      </h3>
-                      <div className="mt-1">
-                        <EntityList
-                          users={userSocials.following.users}
-                          entityType="user"
-                        />
-                      </div>
+                      <div className="max-h-75vh overflow-y-scroll">
+                        <h3 className="text-xs font-medium text-gray-500">
+                          Users
+                        </h3>
+                        <div>
+                          <div className="mt-1">
+                            <EntityList
+                              onClick={() => {
+                                setIsFollowingListExpanded(
+                                  !isFollowingListExpanded
+                                );
+                              }}
+                              users={userSocials.following.users}
+                              entityType="user"
+                            />
+                          </div>
 
-                      <h3 className="text-xs font-medium text-gray-500">
-                        Orgs
-                      </h3>
-                      <div className="mt-1">
-                        <EntityList
-                          orgs={userSocials.following.orgs}
-                          entityType="org"
-                        />
+                          <h3 className="text-xs font-medium text-gray-500">
+                            Orgs
+                          </h3>
+                          <div className="mt-1">
+                            <EntityList
+                              onClick={() => {
+                                setIsFollowingListExpanded(
+                                  !isFollowingListExpanded
+                                );
+                              }}
+                              orgs={userSocials.following.orgs}
+                              entityType="org"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          className="sticky bottom-0 mt-5 w-full bg-white"
+                          onClick={() => {
+                            setIsFollowingListExpanded(
+                              !isFollowingListExpanded
+                            );
+                          }}
+                        >
+                          Close
+                        </button>
                       </div>
-                    </Transition>
+                    </SimpleModal>
                   </div>
                   {/*  /Following */}
 
@@ -253,35 +275,57 @@ const UserPage = ({ userJwt }: Props) => {
                         Followers
                       </h2>
                     </button>
-                    <Transition
-                      show={isFollowersListExpanded}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
+                    <SimpleModal
+                      isOpen={isFollowersListExpanded}
+                      toggleIsOpen={() => {
+                        setIsFollowersListExpanded(!isFollowersListExpanded);
+                      }}
+                      title="Followers"
                     >
-                      <h3 className="text-xs font-medium text-gray-500">
-                        Users
-                      </h3>
-                      <div className="mt-1">
-                        <EntityList
-                          users={userSocials.followers.users}
-                          entityType="user"
-                        />
-                      </div>
+                      <div className="max-h-75vh overflow-y-scroll">
+                        <h3 className="text-xs font-medium text-gray-500">
+                          Users
+                        </h3>
+                        <div>
+                          <div className="mt-1">
+                            <EntityList
+                              onClick={() => {
+                                setIsFollowersListExpanded(
+                                  !isFollowersListExpanded
+                                );
+                              }}
+                              users={userSocials.followers.users}
+                              entityType="user"
+                            />
+                          </div>
 
-                      <h3 className="text-xs font-medium text-gray-500">
-                        Orgs
-                      </h3>
-                      <div className="mt-1">
-                        <EntityList
-                          orgs={userSocials.followers.orgs}
-                          entityType="org"
-                        />
+                          <h3 className="text-xs font-medium text-gray-500">
+                            Orgs
+                          </h3>
+                          <div className="mt-1">
+                            <EntityList
+                              onClick={() => {
+                                setIsFollowersListExpanded(
+                                  !isFollowersListExpanded
+                                );
+                              }}
+                              orgs={userSocials.followers.orgs}
+                              entityType="org"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          className="sticky bottom-0 mt-5 w-full bg-white"
+                          onClick={() => {
+                            setIsFollowersListExpanded(
+                              !isFollowersListExpanded
+                            );
+                          }}
+                        >
+                          Close
+                        </button>
                       </div>
-                    </Transition>
+                    </SimpleModal>
                   </div>
                 </div>
 
@@ -333,10 +377,12 @@ function SocialCard({
   user,
   org,
   entityType,
+  onClick,
 }: {
   user?: IUser;
   org?: IOrg;
   entityType: 'org' | 'user';
+  onClick: () => void;
 }) {
   const name = user ? `${user.firstName} ${user.lastName}` : org?.name;
   const imageUrl = user?.imageUrl || '';
@@ -344,7 +390,7 @@ function SocialCard({
   const urlQuery = user ? { userId: user?.id } : { orgId: org?.id };
 
   return (
-    <li>
+    <li onClick={() => onClick()}>
       <div className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-pink-500 focus-within:ring-offset-2 hover:border-gray-400">
         <div className="flex-shrink-0">
           {imageUrl ? (
@@ -387,12 +433,14 @@ function SocialCard({
 }
 
 function EntityList({
+  onClick,
   users,
   orgs,
   entityType,
 }: {
   users?: IUser[];
   orgs?: IOrg[];
+  onClick: () => void;
   entityType: 'org' | 'user';
 }) {
   return (
@@ -400,14 +448,24 @@ function EntityList({
       {users?.length && (
         <ul>
           {users.map((user) => (
-            <SocialCard key={user.id} user={user} entityType={entityType} />
+            <SocialCard
+              key={user.id}
+              user={user}
+              entityType={entityType}
+              onClick={() => onClick()}
+            />
           ))}
         </ul>
       )}
       {orgs?.length && (
         <ul>
           {orgs.map((org) => (
-            <SocialCard key={org.id} org={org} entityType={entityType} />
+            <SocialCard
+              key={org.id}
+              org={org}
+              entityType={entityType}
+              onClick={onClick}
+            />
           ))}
         </ul>
       )}
