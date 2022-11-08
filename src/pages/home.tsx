@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
-import { useAuthenticator } from '@aws-amplify/ui-react';
 import Link from 'next/link';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
@@ -35,8 +34,6 @@ const Index = ({ userJwt }: Props) => {
 
   const self = useAppSelector((state) => selectSelf(state));
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
-
-  const { signOut } = useAuthenticator((context) => [context.signOut]);
 
   useEffect(() => {
     if (self && self.orgs.length === 0 && self.orgs[0]) {
@@ -172,17 +169,6 @@ const Index = ({ userJwt }: Props) => {
             </div>
 
             <div className="">
-              <button
-                className="m-5 border p-2"
-                onClick={() => {
-                  signOut();
-                  setTimeout(() => {
-                    router.push('/');
-                  }, 500);
-                }}
-              >
-                Signout
-              </button>
               <Footer />
             </div>
           </div>

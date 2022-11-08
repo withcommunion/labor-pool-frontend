@@ -10,7 +10,7 @@ import {
 
 import { API_URL } from '@/util/walletApiUtil';
 
-interface IUser {
+export interface IUser {
   id: string;
   firstName: string;
   lastName: string;
@@ -20,6 +20,10 @@ interface IUser {
   phoneNumber: string;
   allowSms: boolean;
   email: string;
+  description?: string;
+  location?: string;
+  imageUrl?: string;
+  coverImageUrl?: string;
   createdAtMs: number;
   updatedAtMs: number;
 }
