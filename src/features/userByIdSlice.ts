@@ -25,6 +25,16 @@ export interface UserByIdState {
     status: RequestStatus;
     error: string | null | undefined;
   };
+  userByIdFollowers: {
+    users: IUser[];
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
+  userByIdFollowing: {
+    users: IUser[];
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
 }
 
 const initialState: UserByIdState = {
@@ -35,6 +45,16 @@ const initialState: UserByIdState = {
   },
   userByIdShifts: {
     shifts: [],
+    status: 'idle',
+    error: null,
+  },
+  userByIdFollowers: {
+    users: [],
+    status: 'idle',
+    error: null,
+  },
+  userByIdFollowing: {
+    users: [],
     status: 'idle',
     error: null,
   },
