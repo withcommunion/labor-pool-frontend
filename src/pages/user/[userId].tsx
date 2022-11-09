@@ -195,149 +195,149 @@ const UserPage = ({ userJwt }: Props) => {
                       </dd>
                     </div>
                   </dl>
+
+                  <div className="mb-10 flex">
+                    {/*  Following */}
+                    <div className="mt-8 max-w-5xl ">
+                      <button
+                        onClick={() => {
+                          setIsFollowingListExpanded(!isFollowingListExpanded);
+                        }}
+                      >
+                        <h2 className="text-sm font-medium text-gray-500">
+                          <span className="text-black">
+                            {userSocials.following.users.length +
+                              userSocials.following.orgs.length}{' '}
+                          </span>
+                          Following
+                        </h2>
+                      </button>
+
+                      <SimpleModal
+                        isOpen={isFollowingListExpanded}
+                        toggleIsOpen={() => {
+                          setIsFollowingListExpanded(!isFollowingListExpanded);
+                        }}
+                        title="Following"
+                      >
+                        <div className="max-h-75vh overflow-y-scroll">
+                          <h3 className="text-xs font-medium text-gray-500">
+                            Users
+                          </h3>
+                          <div>
+                            <div className="mt-1">
+                              <SocialList
+                                onClick={() => {
+                                  setIsFollowingListExpanded(
+                                    !isFollowingListExpanded
+                                  );
+                                }}
+                                users={userSocials.following.users}
+                                entityType="user"
+                              />
+                            </div>
+
+                            <h3 className="text-xs font-medium text-gray-500">
+                              Orgs
+                            </h3>
+                            <div className="mt-1">
+                              <SocialList
+                                onClick={() => {
+                                  setIsFollowingListExpanded(
+                                    !isFollowingListExpanded
+                                  );
+                                }}
+                                orgs={userSocials.following.orgs}
+                                entityType="org"
+                              />
+                            </div>
+                          </div>
+                          <button
+                            className="sticky bottom-0 mt-5 w-full bg-white"
+                            onClick={() => {
+                              setIsFollowingListExpanded(
+                                !isFollowingListExpanded
+                              );
+                            }}
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </SimpleModal>
+                    </div>
+                    {/*  /Following */}
+
+                    {/* Followers */}
+                    <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
+                      <button
+                        onClick={() => {
+                          setIsFollowersListExpanded(!isFollowersListExpanded);
+                        }}
+                      >
+                        <h2 className="text-sm font-medium text-gray-500">
+                          <span className="text-black">
+                            {userSocials.followers.users.length +
+                              userSocials.followers.orgs.length}{' '}
+                          </span>
+                          Followers
+                        </h2>
+                      </button>
+                      <SimpleModal
+                        isOpen={isFollowersListExpanded}
+                        toggleIsOpen={() => {
+                          setIsFollowersListExpanded(!isFollowersListExpanded);
+                        }}
+                        title="Followers"
+                      >
+                        <div className="max-h-75vh overflow-y-scroll">
+                          <h3 className="text-xs font-medium text-gray-500">
+                            Users
+                          </h3>
+                          <div>
+                            <div className="mt-1">
+                              <SocialList
+                                onClick={() => {
+                                  setIsFollowersListExpanded(
+                                    !isFollowersListExpanded
+                                  );
+                                }}
+                                users={userSocials.followers.users}
+                                entityType="user"
+                              />
+                            </div>
+
+                            <h3 className="text-xs font-medium text-gray-500">
+                              Orgs
+                            </h3>
+                            <div className="mt-1">
+                              <SocialList
+                                onClick={() => {
+                                  setIsFollowersListExpanded(
+                                    !isFollowersListExpanded
+                                  );
+                                }}
+                                orgs={userSocials.followers.orgs}
+                                entityType="org"
+                              />
+                            </div>
+                          </div>
+                          <button
+                            className="sticky bottom-0 mt-5 w-full bg-white"
+                            onClick={() => {
+                              setIsFollowersListExpanded(
+                                !isFollowersListExpanded
+                              );
+                            }}
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </SimpleModal>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mb-10 flex flex-row justify-start ">
-                  {/*  Following */}
-                  <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
-                    <button
-                      onClick={() => {
-                        setIsFollowingListExpanded(!isFollowingListExpanded);
-                      }}
-                    >
-                      <h2 className="text-sm font-medium text-gray-500">
-                        <span className="text-black">
-                          {userSocials.following.users.length +
-                            userSocials.following.orgs.length}{' '}
-                        </span>
-                        Following
-                      </h2>
-                    </button>
-
-                    <SimpleModal
-                      isOpen={isFollowingListExpanded}
-                      toggleIsOpen={() => {
-                        setIsFollowingListExpanded(!isFollowingListExpanded);
-                      }}
-                      title="Following"
-                    >
-                      <div className="max-h-75vh overflow-y-scroll">
-                        <h3 className="text-xs font-medium text-gray-500">
-                          Users
-                        </h3>
-                        <div>
-                          <div className="mt-1">
-                            <SocialList
-                              onClick={() => {
-                                setIsFollowingListExpanded(
-                                  !isFollowingListExpanded
-                                );
-                              }}
-                              users={userSocials.following.users}
-                              entityType="user"
-                            />
-                          </div>
-
-                          <h3 className="text-xs font-medium text-gray-500">
-                            Orgs
-                          </h3>
-                          <div className="mt-1">
-                            <SocialList
-                              onClick={() => {
-                                setIsFollowingListExpanded(
-                                  !isFollowingListExpanded
-                                );
-                              }}
-                              orgs={userSocials.following.orgs}
-                              entityType="org"
-                            />
-                          </div>
-                        </div>
-                        <button
-                          className="sticky bottom-0 mt-5 w-full bg-white"
-                          onClick={() => {
-                            setIsFollowingListExpanded(
-                              !isFollowingListExpanded
-                            );
-                          }}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </SimpleModal>
-                  </div>
-                  {/*  /Following */}
-
-                  {/* Followers */}
-                  <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
-                    <button
-                      onClick={() => {
-                        setIsFollowersListExpanded(!isFollowersListExpanded);
-                      }}
-                    >
-                      <h2 className="text-sm font-medium text-gray-500">
-                        <span className="text-black">
-                          {userSocials.followers.users.length +
-                            userSocials.followers.orgs.length}{' '}
-                        </span>
-                        Followers
-                      </h2>
-                    </button>
-                    <SimpleModal
-                      isOpen={isFollowersListExpanded}
-                      toggleIsOpen={() => {
-                        setIsFollowersListExpanded(!isFollowersListExpanded);
-                      }}
-                      title="Followers"
-                    >
-                      <div className="max-h-75vh overflow-y-scroll">
-                        <h3 className="text-xs font-medium text-gray-500">
-                          Users
-                        </h3>
-                        <div>
-                          <div className="mt-1">
-                            <SocialList
-                              onClick={() => {
-                                setIsFollowersListExpanded(
-                                  !isFollowersListExpanded
-                                );
-                              }}
-                              users={userSocials.followers.users}
-                              entityType="user"
-                            />
-                          </div>
-
-                          <h3 className="text-xs font-medium text-gray-500">
-                            Orgs
-                          </h3>
-                          <div className="mt-1">
-                            <SocialList
-                              onClick={() => {
-                                setIsFollowersListExpanded(
-                                  !isFollowersListExpanded
-                                );
-                              }}
-                              orgs={userSocials.followers.orgs}
-                              entityType="org"
-                            />
-                          </div>
-                        </div>
-                        <button
-                          className="sticky bottom-0 mt-5 w-full bg-white"
-                          onClick={() => {
-                            setIsFollowersListExpanded(
-                              !isFollowersListExpanded
-                            );
-                          }}
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </SimpleModal>
-                  </div>
-                </div>
-
-                <div>
+                <div className="mx-auto sm:mx-10">
                   <WeekCalendar
                     showAddShiftBtn={self?.id === user?.id}
                     orgShifts={userShifts}

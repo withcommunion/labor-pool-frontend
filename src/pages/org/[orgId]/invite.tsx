@@ -62,7 +62,7 @@ const OrgInvite = ({ userJwt }: Props) => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
+        <div className="my-0 mx-auto w-full px-6 md:max-w-50vw">
           <div className="w-full">
             <div className="mt-4 flex">
               <Link
