@@ -1,25 +1,20 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftOnRectangleIcon,
+  Bars3Icon,
+  BellIcon,
+  BuildingStorefrontIcon,
+  UserIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import cx from 'classnames';
 import { IUser } from '@/features/selfSlice';
 import { useRouter } from 'next/router';
 
-const mainNavigation = [
-  { name: 'Home', href: '/home', current: true },
-  {
-    name: 'Schedule',
-    href: '/home',
-    current: false,
-  },
-  {
-    name: 'Applications',
-    href: '/home',
-    current: false,
-  },
-];
+const mainNavigation = [{ name: 'Home', href: '/home', current: true }];
 
 interface Props {
   user: IUser | null;
@@ -29,10 +24,11 @@ export default function MobileNav({ signOut, user }: Props) {
   const router = useRouter();
 
   const isProfilePage = router.pathname === '/user/[userId]';
+  const isOrgPage = router.pathname === '/org/[orgId]';
 
   return (
     <div className="absolute sticky top-0 z-10 w-full">
-      <Disclosure as="nav" className="bg-white shadow">
+      <Disclosure as="nav" className="w-full bg-white shadow">
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -83,30 +79,42 @@ export default function MobileNav({ signOut, user }: Props) {
                   </button>
 
                   {/* Profile dropdown */}
-                  <Menu as="div" className="relative ml-3">
-                    <div>
-                      <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <span className="sr-only">Open user menu</span>
-                        {user?.imageUrl ? (
-                          <Image
-                            className="h-8 w-8 rounded-full"
-                            width={32}
-                            height={32}
-                            src={user?.imageUrl || ''}
-                            alt="profile image"
-                          />
-                        ) : (
-                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-400 sm:h-32 sm:w-32">
-                            <span className="text-lg font-medium leading-none text-white">
-                              {user?.firstName?.charAt(0)}
-                              {user?.lastName?.charAt(0)}
-                            </span>
-                          </span>
-                        )}
-                      </Menu.Button>
-                    </div>
+                  <Menu as="div" className="relative ml-2">
+                    <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none">
+                      <div className="group block w-full flex-shrink-0">
+                        <div className="flex items-center">
+                          <div>
+                            {user?.imageUrl ? (
+                              <Image
+                                className="inline-block h-9 w-9 rounded-full"
+                                src={user?.imageUrl || ''}
+                                alt="profile image"
+                                height={40}
+                                width={40}
+                              />
+                            ) : (
+                              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-400">
+                                <span className="text-lg font-medium leading-none text-white">
+                                  {user?.firstName?.charAt(0)}
+                                  {user?.lastName?.charAt(0)}
+                                </span>
+                              </span>
+                            )}
+                          </div>
+                          <div className="ml-3">
+                            <>
+                              <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                                {user?.firstName} {user?.lastName}
+                              </p>
+                              <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
+                                View profile
+                              </p>
+                            </>
+                          </div>
+                        </div>
+                      </div>
+                    </Menu.Button>
                     <Transition
-                      as={Fragment}
                       enter="transition ease-out duration-200"
                       enterFrom="transform opacity-0 scale-95"
                       enterTo="transform opacity-100 scale-100"
@@ -114,37 +122,73 @@ export default function MobileNav({ signOut, user }: Props) {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-10 -mr-4 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
-                          <Link
-                            href={{
-                              pathname: `/user/[userId]`,
-                              query: { userId: user?.id },
-                            }}
-                          >
-                            <a
-                              className={cx(
-                                isProfilePage ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
+                          <>
+                            <Link
+                              href={{
+                                pathname: `/user/[userId]`,
+                                query: { userId: user?.id },
+                              }}
                             >
-                              Your Profile
-                            </a>
-                          </Link>
+                              <a
+                                className={cx(
+                                  isProfilePage ? 'bg-gray-100' : '',
+                                  'relative inline-flex w-full items-center rounded-md border border-transparent bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100  focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2'
+                                )}
+                              >
+                                <UserIcon
+                                  className="-ml-2 mr-3 h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                                <span>Your Profile</span>
+                              </a>
+                            </Link>
+                          </>
                         </Menu.Item>
+                        {user?.orgRoles.map((role) => {
+                          return (
+                            role.role === 'manager' && (
+                              <Menu.Item key={role.orgId}>
+                                <>
+                                  <Link
+                                    href={{
+                                      pathname: `/home/[urn]`,
+                                      query: { urn: `urn:org:${role?.orgId}` },
+                                    }}
+                                  >
+                                    <a
+                                      className={cx(
+                                        isOrgPage ? 'bg-gray-100' : '',
+                                        'relative inline-flex w-full items-center rounded-md border border-transparent bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100  focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2'
+                                      )}
+                                    >
+                                      <BuildingStorefrontIcon
+                                        className="-ml-2 mr-3 h-5 w-5"
+                                        aria-hidden="true"
+                                      />
+                                      <span>{role.orgId}</span>
+                                    </a>
+                                  </Link>
+                                </>
+                              </Menu.Item>
+                            )
+                          );
+                        })}
                         <Menu.Item>
-                          {({ active }) => (
+                          <div className="mt-2">
                             <button
-                              onClick={signOut}
                               type="button"
-                              className={cx(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
+                              className="relative inline-flex w-full items-center rounded-md border border-transparent px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100  focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2"
+                              onClick={signOut}
                             >
-                              Sign out
+                              <ArrowLeftOnRectangleIcon
+                                className="-ml-2 mr-3 h-5 w-5"
+                                aria-hidden="true"
+                              />
+                              <span>Sign Out</span>
                             </button>
-                          )}
+                          </div>
                         </Menu.Item>
                       </Menu.Items>
                     </Transition>

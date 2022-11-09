@@ -8,12 +8,17 @@ import {
 } from '@/features/myShiftApplicationsSlice';
 import ApplicationList from './applicationList';
 import { useEffect } from 'react';
-
 interface Props {
   userJwt: string;
   userId?: string;
+  orgId?: string;
 }
-export default function ApplicationContainer({ userJwt, userId }: Props) {
+
+export default function ApplicationContainer({
+  userJwt,
+  userId,
+  orgId,
+}: Props) {
   const dispatch = useAppDispatch();
   const myShiftApplications = useAppSelector(
     selectMyShiftApplicationsOrderedByTime
@@ -28,7 +33,10 @@ export default function ApplicationContainer({ userJwt, userId }: Props) {
         fetchGetShiftApplications({ jwtToken: userJwt, userId: userId })
       );
     }
-  }, [dispatch, userJwt, userId]);
+    if (orgId) {
+      dispatch(fetchGetShiftApplications({ jwtToken: userJwt, orgId: orgId }));
+    }
+  }, [dispatch, userJwt, userId, orgId]);
 
   return (
     <div className="">
