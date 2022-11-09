@@ -1,11 +1,11 @@
 import { IShift } from '@/features/orgShiftsSlice';
 import { useEffect, useState } from 'react';
-import { UserIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, UserIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 // import { selectOrg } from '@/features/orgSlice';
-import { selectSelf } from '@/features/selfSlice';
+import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
 import {
   fetchPostShiftApplication,
   fetchGetShiftApplications,
@@ -17,6 +17,7 @@ import {
 import AddShiftFormContainer from './addShiftFormContainer';
 import { parseIdFromUrn } from '@/util/walletApiUtil';
 import Link from 'next/link';
+import { selectOrgById } from '@/features/orgByIdSlice';
 
 interface Props {
   shift?: IShift | null;
@@ -28,10 +29,20 @@ export default function ShiftDetailsContainer({
   userJwt,
   cleanup,
 }: Props) {
-  const [editShift, setEditShift] = useState(false);
   const dispatch = useAppDispatch();
+
   const self = useAppSelector(selectSelf);
   const shiftApplications = useAppSelector(selectPendingShiftApplications);
+  const org = useAppSelector(selectOrgById);
+
+  const [isEditShift, setIsEditShift] = useState(false);
+
+  const isOnLeadershipTeam = useAppSelector((state) =>
+    selectIsOnOrgLeadershipTeam(state, org?.id || '')
+  );
+  const canEditShift =
+    Boolean(self?.id && shift?.ownerUrn.includes(self.id)) ||
+    isOnLeadershipTeam;
 
   useEffect(() => {
     dispatch(
@@ -42,22 +53,30 @@ export default function ShiftDetailsContainer({
     );
   }, [shift, userJwt, dispatch]);
 
-  const canEditShift = Boolean(self?.id && shift?.ownerUrn.includes(self.id));
-
   return (
     <>
       <div>
-        {canEditShift && (
-          <button onClick={() => setEditShift(!editShift)}>Edit</button>
+        {canEditShift && !isEditShift && (
+          <div className="w-fit">
+            <button
+              onClick={() => setIsEditShift(!isEditShift)}
+              type="button"
+              className="inline-flex items-start rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <PencilIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+              Edit
+            </button>
+          </div>
         )}
-        {canEditShift && editShift && (
+        {canEditShift && isEditShift && (
           <AddShiftFormContainer
             userJwt={userJwt}
             existingShift={shift}
             cleanup={cleanup}
           />
         )}
-        {!editShift && shift && (
+
+        {!isEditShift && shift && (
           <ShiftDetailCard
             shift={shift}
             shiftApplications={shiftApplications}
@@ -131,11 +150,6 @@ function ShiftDetailCard({
 
   return (
     <div className="overflow-hidden bg-white text-start shadow sm:rounded-lg">
-      <div className="px-4 py-5 sm:px-6">
-        <h3 className="text-lg font-medium leading-6 text-gray-900">
-          Shift Details
-        </h3>
-      </div>
       <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
         <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
           <div className="sm:col-span-2">
