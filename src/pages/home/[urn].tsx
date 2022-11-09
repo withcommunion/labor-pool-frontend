@@ -36,12 +36,6 @@ const Index = ({ userJwt }: Props) => {
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
 
   useEffect(() => {
-    if (self && self.orgs.length === 0 && self.orgs[0]) {
-      router.push({ pathname: `/org/${self.orgs[0]}`, query: router.query });
-    }
-  }, [self, router]);
-
-  useEffect(() => {
     const { inviteeOrgId: queryInviteeOrgId, action: queryAction } =
       router.query;
     const inviteeOrgId = (queryInviteeOrgId as string) || '';
