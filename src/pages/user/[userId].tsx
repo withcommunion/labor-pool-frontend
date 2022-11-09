@@ -23,6 +23,7 @@ import SocialList from '@/shared_components/socialsList/SocialList';
 
 import SimpleModal from '@/shared_components/simpleModal';
 import Head from 'next/head';
+import { selectSelf } from '@/features/selfSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -36,6 +37,8 @@ interface Props {
 const UserPage = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const self = useAppSelector(selectSelf);
   const user = useAppSelector(selectUserById);
   const userShifts = useAppSelector(selectUserByIdShifts);
   const userSocials = useAppSelector(selectUserByIdSocials);
@@ -336,6 +339,7 @@ const UserPage = ({ userJwt }: Props) => {
 
                 <div>
                   <WeekCalendar
+                    showAddShiftBtn={self?.id === user?.id}
                     orgShifts={userShifts}
                     userJwt={userJwt}
                     autoScroll={false}

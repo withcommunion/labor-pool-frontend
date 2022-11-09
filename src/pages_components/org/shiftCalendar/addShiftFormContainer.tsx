@@ -7,13 +7,13 @@ import cx from 'classnames';
 import { useAppSelector, useAppDispatch } from '@/reduxHooks';
 
 import { IShift } from '@/features/orgShiftsSlice';
-import { selectOrg } from '@/features/orgSlice';
 import {
   fetchPostOrgShift,
   fetchPatchOrgShift,
   reset,
   selectOrgNewShiftStatus,
 } from '@/features/orgNewShiftSlice';
+import { selectOrgById } from '@/features/orgByIdSlice';
 
 export default function AddShiftFormContainer({
   userJwt,
@@ -25,7 +25,7 @@ export default function AddShiftFormContainer({
   existingShift?: IShift | null;
 }) {
   const dispatch = useAppDispatch();
-  const org = useAppSelector(selectOrg);
+  const org = useAppSelector(selectOrgById);
   const newShiftStatus = useAppSelector(selectOrgNewShiftStatus);
   const [role, setRole] = useState(existingShift?.name || '');
   const [shiftStart, setShiftStart] = useState(

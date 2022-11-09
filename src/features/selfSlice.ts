@@ -97,5 +97,11 @@ export const selectSelfUserId = createSelector(
   (root) => root.selfUserId
 );
 
+export const selectIsOnOrgLeadershipTeam = createSelector(
+  [selectSelf, (state, orgId: string) => orgId],
+  (self, orgId) =>
+    Boolean(self?.orgRoles.find((orgRole) => orgRole.orgId === orgId))
+);
+
 export const { reset, selfUserIdSet } = userSlice.actions;
 export default userSlice.reducer;

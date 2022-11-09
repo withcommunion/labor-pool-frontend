@@ -8,7 +8,7 @@ import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
-import { selectSelf } from '@/features/selfSlice';
+import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
 import {
   fetchPostOrgFriendlyOrgJoin,
   fetchPostOrgMemberJoin,
@@ -48,6 +48,9 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const org = useAppSelector(selectOrgById);
   const orgShifts = useAppSelector(selectOrgByIdShifts);
   const orgSocials = useAppSelector(selectOrgByIdSocials);
+  const isOnLeadershipTeam = useAppSelector((state) =>
+    selectIsOnOrgLeadershipTeam(state, org?.id || '')
+  );
 
   useFetchSelf(userJwt);
   useHandleJoinOrg(userJwt);
@@ -378,6 +381,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
 
                 <div>
                   <WeekCalendar
+                    showAddShiftBtn={isOnLeadershipTeam}
                     orgShifts={orgShifts}
                     userJwt={userJwt}
                     autoScroll={false}
