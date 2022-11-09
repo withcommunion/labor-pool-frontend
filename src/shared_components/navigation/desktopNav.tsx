@@ -56,37 +56,39 @@ export default function DesktopNav({ signOut, user }: Props) {
         >
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
-              <div
-                className={cx(
-                  item.current
-                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                  'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
-                )}
-              >
-                <item.icon
+              <a>
+                <div
                   className={cx(
                     item.current
-                      ? 'text-gray-500'
-                      : 'text-gray-400 group-hover:text-gray-500',
-                    'mr-3 h-6 w-6 flex-shrink-0'
+                      ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                    'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
                   )}
-                  aria-hidden="true"
-                />
-                <span className="flex-1">{item.name}</span>
-                {item.count ? (
-                  <span
+                >
+                  <item.icon
                     className={cx(
                       item.current
-                        ? 'bg-white'
-                        : 'bg-gray-100 group-hover:bg-gray-200',
-                      'ml-3 inline-block rounded-full py-0.5 px-3 text-xs font-medium'
+                        ? 'text-gray-500'
+                        : 'text-gray-400 group-hover:text-gray-500',
+                      'mr-3 h-6 w-6 flex-shrink-0'
                     )}
-                  >
-                    {item.count}
-                  </span>
-                ) : null}
-              </div>
+                    aria-hidden="true"
+                  />
+                  <span className="flex-1">{item.name}</span>
+                  {item.count ? (
+                    <span
+                      className={cx(
+                        item.current
+                          ? 'bg-white'
+                          : 'bg-gray-100 group-hover:bg-gray-200',
+                        'ml-3 inline-block rounded-full py-0.5 px-3 text-xs font-medium'
+                      )}
+                    >
+                      {item.count}
+                    </span>
+                  ) : null}
+                </div>
+              </a>
             </Link>
           ))}
           <button
