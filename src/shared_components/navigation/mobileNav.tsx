@@ -40,7 +40,7 @@ export default function MobileNav({ signOut, user }: Props) {
 
   return (
     <div className="absolute sticky top-0 z-10 w-full">
-      <Disclosure as="nav" className="bg-white shadow">
+      <Disclosure as="nav" className="w-full bg-white shadow">
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -165,8 +165,8 @@ export default function MobileNav({ signOut, user }: Props) {
                                 <>
                                   <Link
                                     href={{
-                                      pathname: `/org/[orgId]`,
-                                      query: { orgId: role?.orgId },
+                                      pathname: `/home/[urn]`,
+                                      query: { urn: `urn:org:${role?.orgId}` },
                                     }}
                                   >
                                     <a

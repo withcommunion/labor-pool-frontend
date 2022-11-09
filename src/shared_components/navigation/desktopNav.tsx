@@ -41,7 +41,8 @@ interface Props {
 export default function DesktopNav({ signOut, user }: Props) {
   const router = useRouter();
   const isProfilePage = router.pathname === '/user/[userId]';
-  const isOrgPage = router.pathname === '/org/[orgId]';
+  const isOrgPage = router.pathname === '/home/[urn]';
+
   return (
     <div className="float-left flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
       <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
@@ -184,8 +185,8 @@ export default function DesktopNav({ signOut, user }: Props) {
                       <Link
                         key={role.orgId}
                         href={{
-                          pathname: `/org/[orgId]`,
-                          query: { orgId: role?.orgId },
+                          pathname: `/home/[urn]`,
+                          query: { urn: `urn:org:${role?.orgId}` },
                         }}
                       >
                         <a

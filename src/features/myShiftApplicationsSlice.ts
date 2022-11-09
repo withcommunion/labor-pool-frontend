@@ -77,15 +77,24 @@ export const myShiftApplicationsSlice = createSlice({
 
 export const fetchGetShiftApplications = createAsyncThunk(
   'myShiftApplications/fetchGetShiftApplications',
-  async ({ jwtToken, userId }: { jwtToken: string; userId: string }) => {
-    const rawShiftApplication = await axios.get<ShiftApplication[]>(
-      `${API_URL}/user/${userId}/shifts/applications`,
-      {
-        headers: {
-          Authorization: jwtToken,
-        },
-      }
-    );
+  async ({
+    jwtToken,
+    userId,
+    orgId,
+  }: {
+    jwtToken: string;
+    userId?: string;
+    orgId?: string;
+  }) => {
+    const url = userId
+      ? `${API_URL}/user/${userId}/shifts/applications`
+      : `${API_URL}/org/${orgId || ''}/shifts/applications`;
+
+    const rawShiftApplication = await axios.get<ShiftApplication[]>(url, {
+      headers: {
+        Authorization: jwtToken,
+      },
+    });
     const parsedShiftApplication = rawShiftApplication.data;
 
     return parsedShiftApplication;

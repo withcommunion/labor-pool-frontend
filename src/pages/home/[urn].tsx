@@ -3,13 +3,11 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
-import Link from 'next/link';
 
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 
-import { selectSelf } from '@/features/selfSlice';
 import {
   fetchAllShifts,
   selectAllShiftsOrderedByEarliestStartTime,
@@ -19,6 +17,7 @@ import Footer from '@/shared_components/footer/footer';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
+import { fetchGetOrgById, selectOrgById } from '@/features/orgByIdSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -32,29 +31,22 @@ const Index = ({ userJwt }: Props) => {
   const dispatch = useAppDispatch();
   useFetchSelf(userJwt);
 
-  const self = useAppSelector((state) => selectSelf(state));
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
 
-  useEffect(() => {
-    const { inviteeOrgId: queryInviteeOrgId, action: queryAction } =
-      router.query;
-    const inviteeOrgId = (queryInviteeOrgId as string) || '';
-    const action = (queryAction as string) || '';
-
-    const isJoinInvite = Boolean(
-      inviteeOrgId && (action === 'memberJoin' || action === 'friendlyOrgJoin')
-    );
-
-    if (self && isJoinInvite) {
-      router.push({ pathname: `/org/${inviteeOrgId}`, query: router.query });
-    }
-  }, [router, self]);
+  const orgId = (router.query.urn as string).split(':')[2];
+  const org = useAppSelector(selectOrgById);
 
   useEffect(() => {
     if (userJwt) {
       dispatch(fetchAllShifts({ jwtToken: userJwt }));
     }
   }, [userJwt, dispatch]);
+
+  useEffect(() => {
+    if (orgId) {
+      dispatch(fetchGetOrgById({ jwtToken: userJwt, orgId }));
+    }
+  }, [userJwt, dispatch, orgId]);
 
   return (
     <div>
@@ -65,11 +57,11 @@ const Index = ({ userJwt }: Props) => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="container my-0 mx-auto w-full px-6 ">
-          <div className="flex flex-col items-center justify-center">
+        <div className="my-0 w-full px-2 sm:px-6 ">
+          <div className="flex flex-col px-10px">
             <div>
               <h2 className="my-4 text-lg font-semibold text-indigo-600">
-                Hey {self?.firstName},
+                Hey {org?.name},
               </h2>
 
               <div className="my-10 w-full">
@@ -87,7 +79,7 @@ const Index = ({ userJwt }: Props) => {
                 <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
                   Your shift applications
                 </p>
-                <ApplicationContainer userJwt={userJwt} userId={self?.id} />
+                <ApplicationContainer userJwt={userJwt} orgId={org?.id} />
               </div>
               <>
                 <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
@@ -95,72 +87,6 @@ const Index = ({ userJwt }: Props) => {
                 </p>
                 <FeedContainer />
               </>
-              {self && self.orgs.length === 0 && (
-                <>
-                  <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
-                    <div className="px-4 py-5 sm:px-6">
-                      <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                        You are not part of any organizations
-                      </p>
-                    </div>
-                    <div className="px-4 py-5 text-xl sm:p-6">
-                      <p>Would you like to make one?</p>
-                      <Link
-                        href={{ pathname: '/org/new', query: router.query }}
-                      >
-                        <a>
-                          <button
-                            type="button"
-                            className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          >
-                            Create new org
-                          </button>
-                        </a>
-                      </Link>
-                    </div>
-
-                    <div className="px-4 py-5 sm:p-6">
-                      <p className="text-lg">
-                        Or are you trying to join an existing organization?
-                      </p>
-                      <p>
-                        If you have a join URL, enter it into your browser you
-                        will join that organization.
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {self && self.orgs.length >= 1 && (
-                <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
-                  <div className="px-4 py-5 sm:px-6">
-                    <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                      You are part of a few orgs - choose one
-                    </p>
-                  </div>
-                  <div className="flex flex-col px-4 py-5 sm:p-6">
-                    {self.orgs.map((orgId) => (
-                      <Link
-                        key={orgId}
-                        href={{
-                          pathname: `/org/[orgId]`,
-                          query: { orgId },
-                        }}
-                      >
-                        <a className="my-2">
-                          <button
-                            type="button"
-                            className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          >
-                            {orgId}
-                          </button>
-                        </a>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="">
