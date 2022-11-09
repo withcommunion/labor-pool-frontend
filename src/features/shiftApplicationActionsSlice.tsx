@@ -129,6 +129,7 @@ export const fetchPostShiftApplication = createAsyncThunk(
     jwtToken: string;
     shiftApplication: IShiftApplicationBody;
   }) => {
+    console.log(shiftApplication);
     const rawShiftApplication = await axios.post<ShiftApplication>(
       `${API_URL}/shift/${shiftApplication.shiftId}/application`,
       shiftApplication,

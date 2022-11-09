@@ -5,7 +5,11 @@ import { format } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 // import { selectOrg } from '@/features/orgSlice';
-import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
+import {
+  selectIsOnOrgLeadershipTeam,
+  selectSelf,
+  selectSelfActingAsOrg,
+} from '@/features/selfSlice';
 import {
   fetchPostShiftApplication,
   fetchGetShiftApplications,
@@ -43,6 +47,8 @@ export default function ShiftDetailsContainer({
   const canEditShift =
     Boolean(self?.id && shift?.ownerUrn.includes(self.id)) ||
     isOnLeadershipTeam;
+
+  const selfActingAsOrg = useAppSelector(selectSelfActingAsOrg);
 
   useEffect(() => {
     dispatch(
@@ -105,7 +111,7 @@ export default function ShiftDetailsContainer({
                     jwtToken: userJwt,
                     shiftApplication: {
                       shiftId: shift.id,
-                      orgId: shift.orgId,
+                      orgId: shift.orgId || selfActingAsOrg.orgId || '',
                       userId: self.id,
                       /**
                        * TODO: add a message field to the application

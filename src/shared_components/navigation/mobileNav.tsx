@@ -14,19 +14,7 @@ import cx from 'classnames';
 import { IUser } from '@/features/selfSlice';
 import { useRouter } from 'next/router';
 
-const mainNavigation = [
-  { name: 'Home', href: '/home', current: true },
-  {
-    name: 'Schedule',
-    href: '/home',
-    current: false,
-  },
-  {
-    name: 'Applications',
-    href: '/home',
-    current: false,
-  },
-];
+const mainNavigation = [{ name: 'Home', href: '/home', current: true }];
 
 interface Props {
   user: IUser | null;
@@ -93,7 +81,7 @@ export default function MobileNav({ signOut, user }: Props) {
                   {/* Profile dropdown */}
                   <Menu as="div" className="relative ml-2">
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none">
-                      <button className="group block w-full flex-shrink-0">
+                      <div className="group block w-full flex-shrink-0">
                         <div className="flex items-center">
                           <div>
                             {user?.imageUrl ? (
@@ -124,7 +112,7 @@ export default function MobileNav({ signOut, user }: Props) {
                             </>
                           </div>
                         </div>
-                      </button>
+                      </div>
                     </Menu.Button>
                     <Transition
                       enter="transition ease-out duration-200"

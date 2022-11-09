@@ -1,15 +1,11 @@
 import {
-  CalendarIcon,
-  FolderIcon,
   HomeIcon,
-  Cog6ToothIcon,
   PlusIcon,
   ArrowLeftOnRectangleIcon,
   UserIcon,
   BuildingStorefrontIcon,
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import cx from 'classnames';
@@ -18,21 +14,6 @@ import { useRouter } from 'next/router';
 
 const navigation = [
   { name: 'Home', icon: HomeIcon, href: '/home', current: true },
-  {
-    name: 'Your Schedule',
-    icon: CalendarIcon,
-    href: '/schedule',
-    count: 3,
-    current: false,
-  },
-  {
-    name: 'Your Applications',
-    icon: FolderIcon,
-    href: '/applications',
-    count: 4,
-    current: false,
-  },
-  { name: 'Settings', icon: Cog6ToothIcon, href: '/settings', current: false },
 ];
 interface Props {
   signOut: () => void;
@@ -84,18 +65,6 @@ export default function DesktopNav({ signOut, user }: Props) {
                     aria-hidden="true"
                   />
                   <span className="flex-1">{item.name}</span>
-                  {item.count ? (
-                    <span
-                      className={cx(
-                        item.current
-                          ? 'bg-white'
-                          : 'bg-gray-100 group-hover:bg-gray-200',
-                        'ml-3 inline-block rounded-full py-0.5 px-3 text-xs font-medium'
-                      )}
-                    >
-                      {item.count}
-                    </span>
-                  ) : null}
                 </div>
               </a>
             </Link>
@@ -113,7 +82,7 @@ export default function DesktopNav({ signOut, user }: Props) {
       <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
         <Menu as="div" className="relative">
           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none ">
-            <button className="group block w-full flex-shrink-0">
+            <div className="group block w-full flex-shrink-0">
               <div className="flex items-center">
                 <div>
                   {user?.imageUrl ? (
@@ -144,7 +113,7 @@ export default function DesktopNav({ signOut, user }: Props) {
                   </>
                 </div>
               </div>
-            </button>
+            </div>
           </Menu.Button>
           <Transition
             enter="transition ease-out duration-200"
@@ -181,9 +150,8 @@ export default function DesktopNav({ signOut, user }: Props) {
               {user?.orgRoles.map((role) => {
                 return (
                   role.role === 'manager' && (
-                    <>
+                    <div key={role.orgId}>
                       <Link
-                        key={role.orgId}
                         href={{
                           pathname: `/home/[urn]`,
                           query: { urn: `urn:org:${role?.orgId}` },
@@ -202,7 +170,7 @@ export default function DesktopNav({ signOut, user }: Props) {
                           <span>{role.orgId}</span>
                         </a>
                       </Link>
-                    </>
+                    </div>
                   )
                 );
               })}

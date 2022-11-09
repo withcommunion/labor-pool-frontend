@@ -30,6 +30,7 @@ import { IShift } from '@/features/orgShiftsSlice';
 import SimpleModal from '@/shared_components/simpleModal';
 import AddShiftFormContainer from './shiftCalendar/addShiftFormContainer';
 import ShiftDetailsContainer from './shiftCalendar/shiftDetailsContainer';
+import { IUser } from '@/features/selfSlice';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -51,6 +52,7 @@ interface Props {
   refreshShifts: () => void;
   autoScroll: boolean;
   showAddShiftBtn: boolean;
+  selfOrgRoles?: IUser['orgRoles'];
 }
 
 export default function WeekCalendar({

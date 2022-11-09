@@ -28,12 +28,15 @@ export interface IUser {
   updatedAtMs: number;
 }
 
-// Define a type for the slice state
 export interface SelfState {
   self: IUser | null;
   selfUserId: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null | undefined;
+  selfActingAsOrg: {
+    orgId: string | null;
+    active: boolean;
+  };
 }
 
 // Define the initial state using that type
@@ -42,6 +45,10 @@ const initialState: SelfState = {
   selfUserId: null,
   status: 'idle',
   error: null,
+  selfActingAsOrg: {
+    orgId: null,
+    active: false,
+  },
 };
 
 export const userSlice = createSlice({
@@ -54,6 +61,12 @@ export const userSlice = createSlice({
     },
     selfUserIdSet: (state, action: PayloadAction<string>) => {
       state.selfUserId = action.payload;
+    },
+    selfActingAsOrgSet: (
+      state,
+      action: PayloadAction<{ orgId: string | null; active: boolean }>
+    ) => {
+      state.selfActingAsOrg = action.payload;
     },
   },
   extraReducers(builder) {
@@ -103,5 +116,10 @@ export const selectIsOnOrgLeadershipTeam = createSelector(
     Boolean(self?.orgRoles.find((orgRole) => orgRole.orgId === orgId))
 );
 
-export const { reset, selfUserIdSet } = userSlice.actions;
+export const selectSelfActingAsOrg = createSelector(
+  [selectRootSelf],
+  (root) => root.selfActingAsOrg
+);
+
+export const { reset, selfUserIdSet, selfActingAsOrgSet } = userSlice.actions;
 export default userSlice.reducer;

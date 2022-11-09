@@ -18,6 +18,11 @@ import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
 import { fetchGetOrgById, selectOrgById } from '@/features/orgByIdSlice';
+import {
+  selectIsOnOrgLeadershipTeam,
+  selectSelf,
+  selfActingAsOrgSet,
+} from '@/features/selfSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -30,11 +35,15 @@ const Index = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   useFetchSelf(userJwt);
+  const self = useAppSelector(selectSelf);
 
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
 
   const orgId = (router.query.urn as string).split(':')[2];
   const org = useAppSelector(selectOrgById);
+  const isOnLeadershipTeam = useAppSelector((state) =>
+    selectIsOnOrgLeadershipTeam(state, org?.id || '')
+  );
 
   useEffect(() => {
     if (userJwt) {
@@ -47,6 +56,17 @@ const Index = ({ userJwt }: Props) => {
       dispatch(fetchGetOrgById({ jwtToken: userJwt, orgId }));
     }
   }, [userJwt, dispatch, orgId]);
+
+  useEffect(() => {
+    const cleanup = () => {
+      dispatch(selfActingAsOrgSet({ orgId: null, active: false }));
+    };
+    if (self?.orgRoles.find((role) => role.orgId.includes(orgId))) {
+      dispatch(selfActingAsOrgSet({ orgId, active: true }));
+    }
+
+    return cleanup;
+  });
 
   return (
     <div>
@@ -67,7 +87,7 @@ const Index = ({ userJwt }: Props) => {
               <div className="my-10 w-full">
                 <WeekCalendar
                   autoScroll={false}
-                  showAddShiftBtn={true}
+                  showAddShiftBtn={isOnLeadershipTeam}
                   orgShifts={allShifts}
                   userJwt={userJwt || ''}
                   refreshShifts={() => {
