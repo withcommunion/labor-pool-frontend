@@ -40,13 +40,17 @@ export default function ShiftDetailsContainer({
         shiftId: shift?.id || '',
       })
     );
-  }, []);
+  }, [shift, userJwt, dispatch]);
+
+  const canEditShift = Boolean(self?.id && shift?.ownerUrn.includes(self.id));
 
   return (
     <>
       <div>
-        <button onClick={() => setEditShift(!editShift)}>Edit</button>
-        {editShift && (
+        {canEditShift && (
+          <button onClick={() => setEditShift(!editShift)}>Edit</button>
+        )}
+        {canEditShift && editShift && (
           <AddShiftFormContainer
             userJwt={userJwt}
             existingShift={shift}
