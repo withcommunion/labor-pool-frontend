@@ -37,6 +37,11 @@ export interface SelfState {
     orgId: string | null;
     active: boolean;
   };
+  patchSelf: {
+    updated: boolean;
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string | null | undefined;
+  };
 }
 
 // Define the initial state using that type
@@ -48,6 +53,11 @@ const initialState: SelfState = {
   selfActingAsOrg: {
     orgId: null,
     active: false,
+  },
+  patchSelf: {
+    updated: false,
+    status: 'idle',
+    error: null,
   },
 };
 
@@ -81,6 +91,17 @@ export const userSlice = createSlice({
       .addCase(fetchSelf.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(fetchPatchSelf.pending, (state) => {
+        state.patchSelf.status = 'loading';
+      })
+      .addCase(fetchPatchSelf.fulfilled, (state, action) => {
+        state.patchSelf.status = 'succeeded';
+        state.patchSelf.updated = action.payload;
+      })
+      .addCase(fetchPatchSelf.rejected, (state, action) => {
+        state.patchSelf.status = 'failed';
+        state.patchSelf.error = action.error.message;
       });
   },
 });
@@ -96,6 +117,24 @@ export const fetchSelf = createAsyncThunk(
     const self = rawSelf.data;
 
     return self;
+  }
+);
+
+export const fetchPatchSelf = createAsyncThunk(
+  'self/patchSelf',
+  async ({ jwtToken, self }: { jwtToken: string; self: Partial<IUser> }) => {
+    const rawUpdateSelf = await axios.patch<boolean>(
+      `${API_URL}/user/`,
+      { self },
+      {
+        headers: {
+          Authorization: jwtToken,
+        },
+      }
+    );
+    const updateSelf = rawUpdateSelf.data;
+
+    return updateSelf;
   }
 );
 
