@@ -50,19 +50,15 @@ interface Props {
   userJwt: string;
   refreshShifts: () => void;
   autoScroll: boolean;
+  showAddShiftBtn: boolean;
 }
-
-/**
- *
- * TODO: Make grid half scale
- * TODO 30 min increments shifts
- */
 
 export default function WeekCalendar({
   orgShifts,
   userJwt,
   refreshShifts,
   autoScroll,
+  showAddShiftBtn,
 }: Props) {
   const container = useRef(null);
   const containerNav = useRef(null);
@@ -153,6 +149,7 @@ export default function WeekCalendar({
       <div className="flex h-full flex-col px-5 sm:max-h-85vh md:max-h-80vh">
         <CalendarHeader
           startDate={startDay}
+          showAddShiftBtn={showAddShiftBtn}
           onAddShiftClick={() => setIsNewShiftModalOpen(!isNewShiftModalOpen)}
           onTodayClick={() => setStartDay(new Date(Date.now()))}
           onNextWeekClick={() => {
@@ -262,12 +259,14 @@ function CalendarTypeSelector() {
 
 function CalendarHeader({
   startDate,
+  showAddShiftBtn,
   onTodayClick,
   onNextWeekClick,
   onPrevWeekClick,
   onAddShiftClick,
 }: {
   startDate: Date;
+  showAddShiftBtn: boolean;
   onTodayClick: () => void;
   onNextWeekClick: () => void;
   onPrevWeekClick: () => void;
@@ -310,13 +309,15 @@ function CalendarHeader({
         <div className="hidden md:ml-4 md:flex md:items-center">
           <CalendarTypeSelector />
           <div className="ml-6 h-6 w-px bg-gray-300" />
-          <button
-            type="button"
-            className="ml-6 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={onAddShiftClick}
-          >
-            Add Shift
-          </button>
+          {showAddShiftBtn && (
+            <button
+              type="button"
+              className="ml-6 rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={onAddShiftClick}
+            >
+              Add Shift
+            </button>
+          )}
         </div>
         <Menu as="div" className="relative ml-6 md:hidden">
           <Menu.Button className="-mx-2 flex items-center rounded-full border border-transparent p-2 text-gray-400 hover:text-gray-500">

@@ -21,6 +21,7 @@ import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import useFetchOrgShifts from '@/shared_hooks/useFetchOrgShifts';
 import { selectOrgShifts } from '@/features/orgShiftsSlice';
 import Link from 'next/link';
+import { selectIsOnOrgLeadershipTeam } from '@/features/selfSlice';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -31,6 +32,9 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
 
   const org = useAppSelector((state) => selectOrg(state));
   const orgShifts = useAppSelector((state) => selectOrgShifts(state));
+  const isOnLeadershipTeam = useAppSelector((state) =>
+    selectIsOnOrgLeadershipTeam(state, org?.id || '')
+  );
 
   useFetchSelf(userJwt);
   useFetchOrg(router.query.orgId as string, userJwt);
@@ -69,6 +73,7 @@ const OrgSchedule = ({ userJwt }: { userJwt: string }) => {
         </div>
 
         <WeekCalendar
+          showAddShiftBtn={isOnLeadershipTeam}
           autoScroll={true}
           orgShifts={orgShifts}
           userJwt={userJwt}

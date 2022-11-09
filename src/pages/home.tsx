@@ -81,6 +81,7 @@ const Index = ({ userJwt }: Props) => {
               <div className="my-10 w-full">
                 <WeekCalendar
                   autoScroll={false}
+                  showAddShiftBtn={true}
                   orgShifts={allShifts}
                   userJwt={userJwt || ''}
                   refreshShifts={() => {
