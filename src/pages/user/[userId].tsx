@@ -34,6 +34,7 @@ import {
   PencilIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import FeedContainer from '@/shared_components/feed/feedContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -273,6 +274,14 @@ const UserPage = ({ userJwt }: Props) => {
                       }
                     }}
                   />
+
+                  <div>
+                    <h3>Feed</h3>
+                    <FeedContainer
+                      userJwt={userJwt}
+                      entityUrn={user?.id && `urn:user:${user?.id}`}
+                    />
+                  </div>
                 </div>
               </article>
             </main>
