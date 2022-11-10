@@ -13,6 +13,18 @@ interface Event {
 interface Props {
   events: Event[];
 }
+
+/**
+ * Created a shift
+ * Applied to shift
+ * Filled Shift
+ * Created an org
+ * Joined the network
+ *
+ * Followed a user
+ * Followed an org
+ */
+
 export default function FeedList({ events }: Props) {
   return (
     <div>

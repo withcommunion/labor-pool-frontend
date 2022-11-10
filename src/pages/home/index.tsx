@@ -18,6 +18,7 @@ import Footer from '@/shared_components/footer/footer';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
+import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -84,10 +85,17 @@ const Index = ({ userJwt }: Props) => {
               </div>
               <div className="my-10">
                 <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                  Shifts in your network
+                </p>
+                <ShiftListContainer userJwt={userJwt} shifts={allShifts} />
+              </div>
+              <div className="my-10">
+                <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
                   Your shift applications
                 </p>
                 <ApplicationContainer userJwt={userJwt} userId={self?.id} />
               </div>
+
               <>
                 <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
                   Whats happening
