@@ -377,7 +377,7 @@ function ProfileHeader({
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Phone</dt>
             <dd className="mt-1 text-sm text-gray-900">{user?.phoneNumber}</dd>
-            <div className="mt-1 flex">
+            {/* <div className="mt-1 flex">
               <input
                 type="checkbox"
                 name="allow-sms"
@@ -393,7 +393,7 @@ function ProfileHeader({
               >
                 Allow SMS
               </label>
-            </div>
+            </div> */}
           </div>
 
           <div className="sm:col-span-1">
@@ -429,9 +429,9 @@ function EditProfileHeader({
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [phone, setPhone] = useState(user?.phoneNumber || '');
-  const [allowSms, setAllowSms] = useState(user?.allowSms || false);
   const [location, setLocation] = useState(user?.location || '');
   const [description, setDescription] = useState(user?.description || '');
+  // const [allowSms, setAllowSms] = useState(user?.allowSms || false);
   // const [imageUrl, setImageUrl] = useState(user?.imageUrl || '');
   // const [coverImageUrl, setCoverImageUrl] = useState(user?.coverImageUrl || '');
 
@@ -527,7 +527,7 @@ function EditProfileHeader({
                           phoneNumber: phone,
                           location,
                           description,
-                          allowSms,
+                          // allowSms,
                         },
                       })
                     );
@@ -565,7 +565,7 @@ function EditProfileHeader({
               />
             </div>
 
-            <div className="mt-1 flex">
+            {/* <div className="mt-1 flex">
               <input
                 type="checkbox"
                 name="allow-sms"
@@ -583,7 +583,7 @@ function EditProfileHeader({
               >
                 Allow SMS
               </label>
-            </div>
+            </div> */}
           </div>
 
           <div className="sm:col-span-1">
