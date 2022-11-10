@@ -87,7 +87,6 @@ export const feedSlice = createSlice({
 export const fetchFeedByEntityUrn = createAsyncThunk(
   'feed/fetchFeedByEntityUrn',
   async ({ jwtToken, entityUrn }: { jwtToken: string; entityUrn: string }) => {
-    console.log(entityUrn);
     const rawEntityFeed = await axios.get<IEvent[]>(
       `${API_URL}/entity/${entityUrn}/events`,
       {

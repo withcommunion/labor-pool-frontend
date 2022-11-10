@@ -274,13 +274,14 @@ const UserPage = ({ userJwt }: Props) => {
                       }
                     }}
                   />
-                </div>
 
-                <div>
-                  <FeedContainer
-                    userJwt={userJwt}
-                    entityUrn={user?.id && `urn:user:${user?.id}`}
-                  />
+                  <div>
+                    <h3>Feed</h3>
+                    <FeedContainer
+                      userJwt={userJwt}
+                      entityUrn={user?.id && `urn:user:${user?.id}`}
+                    />
+                  </div>
                 </div>
               </article>
             </main>

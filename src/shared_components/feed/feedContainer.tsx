@@ -19,8 +19,7 @@ export default function FeedContainer({ userJwt, entityUrn, fetchAll }: Props) {
   const allEvents = useAppSelector(selectAllFeed);
   const entityUrnEvents = useAppSelector(selectFeedById);
 
-  console.log('allEvents', allEvents);
-  console.log('entityUrnEvents', entityUrnEvents);
+  const showAllEvents = fetchAll || !entityUrn;
 
   useEffect(() => {
     if (!fetchAll && entityUrn && userJwt) {
@@ -32,7 +31,7 @@ export default function FeedContainer({ userJwt, entityUrn, fetchAll }: Props) {
 
   return (
     <div>
-      <FeedList events={allEvents || entityUrnEvents} />
+      <FeedList events={showAllEvents ? allEvents : entityUrnEvents} />
     </div>
   );
 }
