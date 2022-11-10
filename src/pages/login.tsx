@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
@@ -21,17 +21,35 @@ Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
 
 const Index = () => {
   const router = useRouter();
+  const [isSignInFlow, setIsSignInFlow] = useState(false);
 
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user, route } = useAuthenticator((context) => [
+    context.user,
+    context.route,
+  ]);
 
   useEffect(() => {
-    if (user) {
+    console.log(route);
+    if (route === 'signIn') {
+      setIsSignInFlow(true);
+    } else if (route !== 'authenticated') {
+      setIsSignInFlow(false);
+    }
+  }, [route]);
+
+  useEffect(() => {
+    if (user && isSignInFlow) {
       router.push({
         pathname: `/home`,
         query: router.query,
       });
+    } else if (user && user.attributes?.sub) {
+      router.push({
+        pathname: `user/[userId]`,
+        query: { userId: user.attributes?.sub },
+      });
     }
-  }, [user, router]);
+  }, [user, router, route, isSignInFlow]);
 
   /**
    * 
