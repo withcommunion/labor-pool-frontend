@@ -123,15 +123,11 @@ export const fetchSelf = createAsyncThunk(
 export const fetchPatchSelf = createAsyncThunk(
   'self/patchSelf',
   async ({ jwtToken, self }: { jwtToken: string; self: Partial<IUser> }) => {
-    const rawUpdateSelf = await axios.patch<boolean>(
-      `${API_URL}/user/`,
-      { self },
-      {
-        headers: {
-          Authorization: jwtToken,
-        },
-      }
-    );
+    const rawUpdateSelf = await axios.patch<boolean>(`${API_URL}/user/`, self, {
+      headers: {
+        Authorization: jwtToken,
+      },
+    });
     const updateSelf = rawUpdateSelf.data;
 
     return updateSelf;
@@ -158,6 +154,15 @@ export const selectIsOnOrgLeadershipTeam = createSelector(
 export const selectSelfActingAsOrg = createSelector(
   [selectRootSelf],
   (root) => root.selfActingAsOrg
+);
+
+export const selectRootPatchSelf = createSelector(
+  [selectRootSelf],
+  (root) => root.patchSelf
+);
+export const selectPatchSelfStatus = createSelector(
+  [selectRootPatchSelf],
+  (root) => root.status
 );
 
 export const { reset, selfUserIdSet, selfActingAsOrgSet } = userSlice.actions;

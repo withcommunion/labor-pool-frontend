@@ -23,7 +23,12 @@ import SocialList from '@/shared_components/socialsList/SocialList';
 
 import SimpleModal from '@/shared_components/simpleModal';
 import Head from 'next/head';
-import { fetchPatchSelf, IUser, selectSelf } from '@/features/selfSlice';
+import {
+  fetchPatchSelf,
+  IUser,
+  selectPatchSelfStatus,
+  selectSelf,
+} from '@/features/selfSlice';
 import {
   CheckBadgeIcon,
   PencilIcon,
@@ -47,6 +52,7 @@ const UserPage = ({ userJwt }: Props) => {
   const user = useAppSelector(selectUserById);
   const userShifts = useAppSelector(selectUserByIdShifts);
   const userSocials = useAppSelector(selectUserByIdSocials);
+  const patchSelfStatus = useAppSelector(selectPatchSelfStatus);
 
   const [isFollowersListExpanded, setIsFollowersListExpanded] = useState(false);
   const [isFollowingListExpanded, setIsFollowingListExpanded] = useState(false);
@@ -64,7 +70,7 @@ const UserPage = ({ userJwt }: Props) => {
         })
       );
     }
-  }, [dispatch, router.query.userId, userJwt]);
+  }, [dispatch, router.query.userId, userJwt, patchSelfStatus]);
 
   useEffect(() => {
     if (user) {
@@ -371,6 +377,23 @@ function ProfileHeader({
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Phone</dt>
             <dd className="mt-1 text-sm text-gray-900">{user?.phoneNumber}</dd>
+            <div className="mt-1 flex">
+              <input
+                type="checkbox"
+                name="allow-sms"
+                id="allow-sms"
+                readOnly={true}
+                autoComplete="allow-sms"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                checked={user?.allowSms}
+              />
+              <label
+                htmlFor="allow-sms"
+                className="ml-2 text-sm font-medium text-gray-500"
+              >
+                Allow SMS
+              </label>
+            </div>
           </div>
 
           <div className="sm:col-span-1">
@@ -406,6 +429,7 @@ function EditProfileHeader({
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [phone, setPhone] = useState(user?.phoneNumber || '');
+  const [allowSms, setAllowSms] = useState(user?.allowSms || false);
   const [location, setLocation] = useState(user?.location || '');
   const [description, setDescription] = useState(user?.description || '');
   // const [imageUrl, setImageUrl] = useState(user?.imageUrl || '');
@@ -503,6 +527,7 @@ function EditProfileHeader({
                           phoneNumber: phone,
                           location,
                           description,
+                          allowSms,
                         },
                       })
                     );
@@ -538,6 +563,26 @@ function EditProfileHeader({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
+            </div>
+
+            <div className="mt-1 flex">
+              <input
+                type="checkbox"
+                name="allow-sms"
+                id="allow-sms"
+                autoComplete="allow-sms"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                checked={allowSms}
+                onChange={() => {
+                  setAllowSms(!allowSms);
+                }}
+              />
+              <label
+                htmlFor="allow-sms"
+                className="ml-2 text-sm font-medium text-gray-500"
+              >
+                Allow SMS
+              </label>
             </div>
           </div>
 
