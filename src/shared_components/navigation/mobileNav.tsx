@@ -3,7 +3,6 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  BellIcon,
   BuildingStorefrontIcon,
   UserIcon,
   XMarkIcon,
