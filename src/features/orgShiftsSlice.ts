@@ -20,7 +20,7 @@ export interface IShift {
   status: 'open' | 'broadcasting' | 'applied' | 'filled' | 'expired';
   location?: string;
   description: string;
-  assignedTo: string;
+  assignedTo: string[];
   startTimeMs: number;
   endTimeMs: number;
   startDateIso: string;

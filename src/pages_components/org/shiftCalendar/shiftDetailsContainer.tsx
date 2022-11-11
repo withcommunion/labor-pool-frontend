@@ -159,6 +159,24 @@ function ShiftDetailCard({
   const ownerId = parseIdFromUrn(shift.ownerUrn);
   const query = isOwnerUser ? { userId: ownerId } : { orgId: ownerId };
 
+  const self = useAppSelector(selectSelf);
+  const selfActingAsOrg = useAppSelector(selectSelfActingAsOrg);
+  const selfUrn = selfActingAsOrg.active
+    ? `urn:org:${selfActingAsOrg?.orgId || ''}`
+    : `urn:user:${self?.id || ''}`;
+
+  const isUserAlreadyApplied = shiftApplications.some((application) => {
+    return application.ownerUrn.includes(selfUrn);
+  });
+  const isUserAlreadyAccepted = shift.assignedTo.includes(selfUrn);
+  const isUserOwner = shift.ownerUrn.includes(selfUrn);
+
+  const showApplyButton =
+    shift.status !== 'filled' &&
+    !isUserAlreadyAccepted &&
+    !isUserAlreadyApplied &&
+    !isUserOwner;
+
   return (
     <div className="overflow-hidden bg-white text-start shadow sm:rounded-lg">
       <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -216,7 +234,7 @@ function ShiftDetailCard({
             <dd className="mt-1 text-sm text-gray-900">{shift.description}</dd>
           </div>
 
-          {shift.status !== 'filled' && (
+          {showApplyButton && (
             <div className="sm:col-span-2">
               <dt className="text-sm font-medium text-gray-500">Actions</dt>
               <dd className="mt-1 text-sm text-gray-900">
