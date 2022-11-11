@@ -84,6 +84,7 @@ export default function ShiftDetailsContainer({
 
         {!isEditShift && shift && (
           <ShiftDetailCard
+            canManageShift={canEditShift}
             shift={shift}
             shiftApplications={shiftApplications}
             rejectApplicant={(application: ShiftApplication) => {
@@ -139,11 +140,13 @@ export default function ShiftDetailsContainer({
 function ShiftDetailCard({
   shift,
   shiftApplications,
+  canManageShift,
   applyToShift,
   acceptApplicant,
   rejectApplicant,
 }: {
   shift: IShift;
+  canManageShift: boolean;
   shiftApplications: ShiftApplication[];
   applyToShift: () => void;
   acceptApplicant: (shiftApplication: ShiftApplication) => void;
@@ -214,7 +217,7 @@ function ShiftDetailCard({
               </dd>
             </div>
           )}
-          {shiftApplications.length > 0 && (
+          {canManageShift && shiftApplications.length > 0 && (
             <div className="sm:col-span-2">
               <dt className="text-sm font-medium text-gray-500">Applicants</dt>
               <dd className="mt-1 text-sm text-gray-900">
