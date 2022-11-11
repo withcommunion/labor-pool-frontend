@@ -66,51 +66,54 @@ export default function ShiftListContainer({ shifts, userJwt }: Props) {
               <h3 className="text-2xl font-semibold">
                 {format(parseInt(dayInMs), 'E, LLL dd')}
               </h3>
-              {dayShiftMap[dayInMs].map((shift) => {
-                return (
-                  shift.ownerUrn && (
-                    <li
-                      key={shift.id}
-                      className="cursor-pointer border-b-2 py-2"
-                      onClick={() => setSelectedShift(shift)}
-                    >
-                      <div className="flex flex-row items-center gap-x-4">
-                        <span
-                          className={cx(
-                            'bg-white-400 inline-flex h-12 w-12 items-center justify-center rounded-full outline',
-                            {
-                              'bg-orange-300':
-                                self?.id && shift.ownerUrn.includes(self.id),
-                              'bg-green-300':
-                                self?.id && shift.assignedTo?.includes(self.id),
-                              'bg-blue-300': shift.status === 'open',
-                              'bg-red-300':
-                                shift.status === 'filled' &&
-                                !(
+              <div className="grid grid-cols-1 lg:grid-cols-3">
+                {dayShiftMap[dayInMs].map((shift) => {
+                  return (
+                    shift.ownerUrn && (
+                      <li
+                        key={shift.id}
+                        className="cursor-pointer border-b-2 py-2"
+                        onClick={() => setSelectedShift(shift)}
+                      >
+                        <div className="flex flex-row items-center gap-x-4">
+                          <span
+                            className={cx(
+                              'bg-white-400 inline-flex h-12 w-12 items-center justify-center rounded-full outline',
+                              {
+                                'bg-orange-300':
+                                  self?.id && shift.ownerUrn.includes(self.id),
+                                'bg-green-300':
                                   self?.id &&
-                                  shift.assignedTo?.includes(self.id)
-                                ),
-                            }
-                          )}
-                        >
-                          <span className="text-xl font-medium leading-none text-black">
-                            {shift?.status?.charAt(0).toUpperCase()}
+                                  shift.assignedTo?.includes(self.id),
+                                'bg-blue-300': shift.status === 'open',
+                                'bg-red-300':
+                                  shift.status === 'filled' &&
+                                  !(
+                                    self?.id &&
+                                    shift.assignedTo?.includes(self.id)
+                                  ),
+                              }
+                            )}
+                          >
+                            <span className="text-xl font-medium leading-none text-black">
+                              {shift?.status?.charAt(0).toUpperCase()}
+                            </span>
                           </span>
-                        </span>
-                        <div className="flex flex-col">
-                          <p className="text-gray-500">
-                            {format(shift.startTimeMs, 'M/dd h:mm b')} -{' '}
-                            {format(shift.endTimeMs, 'h:mm b')}
-                          </p>
-                          <p className="font-medium">{shift.name}</p>
+                          <div className="flex flex-col">
+                            <p className="text-gray-500">
+                              {format(shift.startTimeMs, 'M/dd h:mm b')} -{' '}
+                              {format(shift.endTimeMs, 'h:mm b')}
+                            </p>
+                            <p className="font-medium">{shift.name}</p>
 
-                          <p>Created by: {shift.ownerUrn.slice(0, 15)}</p>
+                            <p>Created by: {shift.ownerUrn.slice(0, 15)}</p>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  )
-                );
-              })}
+                      </li>
+                    )
+                  );
+                })}
+              </div>
             </ul>
           );
         })}
