@@ -85,9 +85,6 @@ const Index = ({ userJwt }: Props) => {
               </div>
 
               <>
-                <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                  Whats happening
-                </p>
                 <FeedContainer userJwt={userJwt} fetchAll={true} />
               </>
 
