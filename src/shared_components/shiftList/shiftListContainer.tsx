@@ -106,7 +106,9 @@ export default function ShiftListContainer({ shifts, userJwt }: Props) {
                             </p>
                             <p className="font-medium">{shift.name}</p>
 
-                            <p>Created by: {shift.ownerUrn.slice(0, 15)}</p>
+                            <p className="font-light">
+                              Created by: {shift.ownerUrn.slice(0, 15)}
+                            </p>
                           </div>
                         </div>
                       </li>
