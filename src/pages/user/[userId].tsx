@@ -255,6 +255,12 @@ const UserPage = ({ userJwt }: Props) => {
                       </SimpleModal>
                     </div>
                   </div>
+                  <div>
+                    <FeedContainer
+                      userJwt={userJwt}
+                      entityUrn={user?.id && `urn:user:${user?.id}`}
+                    />
+                  </div>
                 </div>
 
                 <div className="mx-auto sm:mx-10">
@@ -274,14 +280,6 @@ const UserPage = ({ userJwt }: Props) => {
                       }
                     }}
                   />
-
-                  <div>
-                    <h3>Feed</h3>
-                    <FeedContainer
-                      userJwt={userJwt}
-                      entityUrn={user?.id && `urn:user:${user?.id}`}
-                    />
-                  </div>
                 </div>
               </article>
             </main>
