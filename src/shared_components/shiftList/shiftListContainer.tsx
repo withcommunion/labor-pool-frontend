@@ -66,7 +66,7 @@ export default function ShiftListContainer({ shifts, userJwt }: Props) {
               <h3 className="text-2xl font-semibold">
                 {format(parseInt(dayInMs), 'E, LLL dd')}
               </h3>
-              <div className="grid grid-cols-1 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-x-6 lg:grid-cols-3">
                 {dayShiftMap[dayInMs].map((shift) => {
                   return (
                     shift.ownerUrn && (

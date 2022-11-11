@@ -10,7 +10,7 @@ import {
 
 import { API_URL } from '@/util/walletApiUtil';
 import { ShiftApplication } from './shiftApplicationActionsSlice';
-import { getTime } from 'date-fns';
+import { getTime, startOfToday } from 'date-fns';
 
 export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -146,6 +146,7 @@ export const selectMyShiftApplicationsOrderedByTime = createSelector(
     });
   }
 );
+
 export const selectMyShiftApplicationsStatus = createSelector(
   [selectRootMyShiftApplications],
   (root) => root.status

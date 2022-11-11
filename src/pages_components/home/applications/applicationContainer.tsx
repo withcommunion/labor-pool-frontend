@@ -3,8 +3,8 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import {
   fetchGetShiftApplications,
   fetchDeleteShiftApplication,
-  selectMyShiftApplicationsOrderedByTime,
   selectMyShiftApplicationsStatus,
+  selectPendingShiftApplications,
 } from '@/features/myShiftApplicationsSlice';
 import ApplicationList from './applicationList';
 import { useEffect } from 'react';
@@ -20,9 +20,7 @@ export default function ApplicationContainer({
   orgId,
 }: Props) {
   const dispatch = useAppDispatch();
-  const myShiftApplications = useAppSelector(
-    selectMyShiftApplicationsOrderedByTime
-  );
+  const myShiftApplications = useAppSelector(selectPendingShiftApplications);
   const myShiftApplicationsStatus = useAppSelector(
     selectMyShiftApplicationsStatus
   );

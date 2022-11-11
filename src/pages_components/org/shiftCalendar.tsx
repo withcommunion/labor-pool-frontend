@@ -148,7 +148,7 @@ export default function WeekCalendar({
           />
         </div>
       </SimpleModal>
-      <div className="flex h-full flex-col px-5 sm:max-h-85vh md:max-h-80vh">
+      <div className="flex h-full flex-col sm:max-h-85vh md:max-h-80vh">
         <CalendarHeader
           startDate={startDay}
           showAddShiftBtn={showAddShiftBtn}
@@ -275,7 +275,7 @@ function CalendarHeader({
   onAddShiftClick: () => void;
 }) {
   return (
-    <header className="flex flex-none items-center justify-between border-b border-gray-200 py-4 px-6">
+    <header className="flex flex-none items-center justify-between border-b border-gray-200 py-4 ">
       <h1 className="text-lg font-semibold text-gray-900">
         <time dateTime={format(startDate, 'yyyy-MM')}>
           {format(startDate, 'MMMM yyyy')}
