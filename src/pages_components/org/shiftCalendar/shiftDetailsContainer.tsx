@@ -42,7 +42,7 @@ export default function ShiftDetailsContainer({
   const [isEditShift, setIsEditShift] = useState(false);
 
   const isOnLeadershipTeam = useAppSelector((state) =>
-    selectIsOnOrgLeadershipTeam(state, org?.id || '')
+    selectIsOnOrgLeadershipTeam(state, shift?.ownerUrn.split(':')[2] || '')
   );
   const canEditShift =
     Boolean(self?.id && shift?.ownerUrn.includes(self.id)) ||
@@ -107,13 +107,15 @@ export default function ShiftDetailsContainer({
             }}
             applyToShift={async () => {
               if (self) {
+                const ownerUrn = selfActingAsOrg.orgId
+                  ? `urn:org:${selfActingAsOrg.orgId}`
+                  : `urn:user:${self.id}`;
                 await dispatch(
                   fetchPostShiftApplication({
                     jwtToken: userJwt,
                     shiftApplication: {
                       shiftId: shift.id,
-                      orgId: selfActingAsOrg.orgId || '',
-                      userId: self.id,
+                      ownerUrn,
                       /**
                        * TODO: add a message field to the application
                        */
@@ -251,7 +253,7 @@ function ShiftDetailCard({
                               aria-hidden="true"
                             />
                             <span className="ml-2 w-0 flex-1 truncate">
-                              {application.userId}
+                              {application.ownerUrn}
                             </span>
                           </div>
                           <div className="ml-4 flex gap-x-2">

@@ -117,9 +117,8 @@ export const shiftActionsSlice = createSlice({
 
 interface IShiftApplicationBody {
   shiftId: string;
-  orgId: string;
-  userId: string;
   description: string;
+  ownerUrn: string;
 }
 export const fetchPostShiftApplication = createAsyncThunk(
   'shiftActions/fetchPostShiftApplication',
