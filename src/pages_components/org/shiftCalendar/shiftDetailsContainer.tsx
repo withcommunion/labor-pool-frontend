@@ -162,7 +162,9 @@ function ShiftDetailCard({
       <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
         <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Shift Owner</dt>
+            <dt className="text-sm font-medium text-gray-500">
+              Who created this?
+            </dt>
             <dd className="mt-1 text-sm text-gray-900">
               <Link
                 href={{
@@ -170,7 +172,9 @@ function ShiftDetailCard({
                   query,
                 }}
               >
-                {shift.ownerUrn}
+                <a className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800">
+                  {shift.ownerUrn}
+                </a>
               </Link>
             </dd>
           </div>
@@ -181,7 +185,9 @@ function ShiftDetailCard({
             <dd className="mt-1 text-sm text-gray-900">{shift.name}</dd>
           </div>
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Assigned to</dt>
+            <dt className="text-sm font-medium text-gray-500">
+              Who is coming?
+            </dt>
             <dd className="mt-1 text-sm text-gray-900">{shift.assignedTo}</dd>
           </div>
           <div className="sm:col-span-2">
