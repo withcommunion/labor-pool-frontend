@@ -107,10 +107,6 @@ export default function WeekCalendar({
     }
   }, [shiftsInWeek, autoScroll]);
 
-  if (!orgShifts) {
-    return null;
-  }
-
   return (
     <>
       <SimpleModal
