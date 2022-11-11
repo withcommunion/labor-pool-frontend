@@ -71,6 +71,25 @@ const Index = ({ userJwt }: Props) => {
               <h2 className="my-4 text-lg font-semibold text-indigo-600">
                 Hey {self?.firstName},
               </h2>
+              <>
+                <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                  Whats happening
+                </p>
+                <FeedContainer userJwt={userJwt} fetchAll={true} />
+              </>
+              <div className="my-10">
+                <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                  Shifts in your network
+                </p>
+                <ShiftListContainer userJwt={userJwt} shifts={allShifts} />
+              </div>
+
+              <div className="my-10">
+                <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+                  Your shift applications
+                </p>
+                <ApplicationContainer userJwt={userJwt} userId={self?.id} />
+              </div>
 
               <div className="my-10 w-full">
                 <WeekCalendar
@@ -83,25 +102,6 @@ const Index = ({ userJwt }: Props) => {
                   }}
                 />
               </div>
-              <div className="my-10">
-                <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                  Shifts in your network
-                </p>
-                <ShiftListContainer userJwt={userJwt} shifts={allShifts} />
-              </div>
-              <div className="my-10">
-                <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                  Your shift applications
-                </p>
-                <ApplicationContainer userJwt={userJwt} userId={self?.id} />
-              </div>
-
-              <>
-                <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                  Whats happening
-                </p>
-                <FeedContainer userJwt={userJwt} fetchAll={true} />
-              </>
             </div>
 
             <div className="">

@@ -18,6 +18,8 @@ export interface INewShiftParams {
   orgId: string;
   startDate: string;
   endDate: string;
+  ownerUrn?: string;
+  location?: string;
   description?: string;
   status?: string;
   assignedTo?: string;

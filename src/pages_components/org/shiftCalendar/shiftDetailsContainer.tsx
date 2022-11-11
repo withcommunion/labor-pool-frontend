@@ -112,7 +112,7 @@ export default function ShiftDetailsContainer({
                     jwtToken: userJwt,
                     shiftApplication: {
                       shiftId: shift.id,
-                      orgId: shift.orgId || selfActingAsOrg.orgId || '',
+                      orgId: selfActingAsOrg.orgId || '',
                       userId: self.id,
                       /**
                        * TODO: add a message field to the application
@@ -174,15 +174,17 @@ function ShiftDetailCard({
               </Link>
             </dd>
           </div>
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Role</dt>
+          <div className="sm:col-span-2">
+            <dt className="text-sm font-medium text-gray-500">
+              What are you offering or looking for?
+            </dt>
             <dd className="mt-1 text-sm text-gray-900">{shift.name}</dd>
           </div>
-          <div className="sm:col-span-1">
+          <div className="sm:col-span-2">
             <dt className="text-sm font-medium text-gray-500">Assigned to</dt>
             <dd className="mt-1 text-sm text-gray-900">{shift.assignedTo}</dd>
           </div>
-          <div className="sm:col-span-1">
+          <div className="sm:col-span-2">
             <dt className="text-sm font-medium text-gray-500">
               Start Date - End Date
             </dt>
@@ -190,6 +192,10 @@ function ShiftDetailCard({
               {format(shift.startTimeMs, 'M/dd h:mm b')} -{' '}
               {format(shift.endTimeMs, 'M/dd h:mm b')}
             </dd>
+          </div>
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Location</dt>
+            <dd className="mt-1 text-sm text-gray-900">{shift.location}</dd>
           </div>
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Status</dt>

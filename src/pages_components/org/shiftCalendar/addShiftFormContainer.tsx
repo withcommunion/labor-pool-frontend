@@ -41,11 +41,16 @@ export default function AddShiftFormContainer({
   const [description, setDescription] = useState(
     existingShift?.description || ''
   );
-  const [selectedUser, setSelectedUser] = useState(
-    existingShift?.assignedTo || ''
+  const [location, setLocation] = useState<string>(
+    existingShift?.location || ''
   );
-  const [isShiftBroadcasting, setIsShiftBroadcasting] = useState(
-    existingShift?.status === 'broadcasting' || false
+
+  const [isShiftBroadcasting, setIsShiftBroadcasting] = useState<boolean>(
+    existingShift?.status === 'broadcasting' ? true : false
+  );
+
+  const [status, setStatus] = useState<IShift['status']>(
+    existingShift?.status || 'broadcasting'
   );
 
   useEffect(() => {
@@ -60,12 +65,6 @@ export default function AddShiftFormContainer({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only want to run on unmount
   }, []);
-
-  useEffect(() => {
-    if (isShiftBroadcasting) {
-      setSelectedUser('');
-    }
-  }, [isShiftBroadcasting, setSelectedUser]);
 
   return (
     <div className="">
@@ -82,21 +81,12 @@ export default function AddShiftFormContainer({
             </h3>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            {/* <div className="sm:col-span-3">
-              <UserSelect
-                users={org?.primaryMembers || []}
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
-                disabled={isShiftBroadcasting}
-              />
-            </div> */}
-
             <div className="sm:col-span-6">
               <label
                 htmlFor="role-info"
                 className="block text-sm font-medium text-gray-700"
               >
-                Role
+                What are you offering or looking for?
               </label>
               <div className="mt-1">
                 <input
@@ -104,21 +94,101 @@ export default function AddShiftFormContainer({
                   name="role-info"
                   id="role-info"
                   autoComplete="role-info"
-                  className="block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="sm:col-span-6">
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="shift-start-date-time"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Opening Start
+              </label>
+              <div className="mt-1">
+                <input
+                  type="datetime-local"
+                  name="shift-start-date-time"
+                  id="shift-start-date-time"
+                  autoComplete="shift-start-date-time"
+                  className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  value={shiftStart}
+                  onChange={(e) => setShiftStart(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="shift-end-date-time"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Opening end
+              </label>
+              <div className="mt-1">
+                <input
+                  type="datetime-local"
+                  name="shift-end-date-time"
+                  id="shift-end-date-time"
+                  autoComplete="shift-end-date-time"
+                  className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  value={shiftEnd}
+                  onChange={(e) => setShiftEnd(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="mt-1 sm:col-span-3">
+              <label
+                htmlFor="shift-status"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Opening status
+              </label>
+              <select
+                id="shift-status"
+                name="shift-status"
+                className="mt-1 block w-full rounded-md border-2 border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                defaultValue={status}
+                value={status}
+                onChange={(e) => {
+                  const value = e.target.value as
+                    | 'open'
+                    | 'broadcasting'
+                    | 'filled';
+                  setStatus(value);
+
+                  if (value === 'broadcasting') {
+                    setIsShiftBroadcasting(true);
+                  } else {
+                    setIsShiftBroadcasting(false);
+                  }
+                }}
+              >
+                <option value={'open'}>Open</option>
+                <option value={'broadcasting'}>Broadcasting</option>
+                <option value={'filled'}>Filled</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-3">
               <Switch.Group
                 as="div"
                 className="flex h-full items-center md:pt-4"
               >
                 <Switch
                   checked={isShiftBroadcasting}
-                  onChange={setIsShiftBroadcasting}
+                  onChange={(event: boolean) => {
+                    setIsShiftBroadcasting(event);
+                    if (event === true) {
+                      setStatus('broadcasting');
+                    } else {
+                      setStatus('open');
+                    }
+                  }}
                   className={cx(
                     isShiftBroadcasting ? 'bg-indigo-600' : 'bg-gray-200',
                     'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
@@ -140,44 +210,22 @@ export default function AddShiftFormContainer({
               </Switch.Group>
             </div>
 
-            <div className="sm:col-span-3">
+            <div className="mt-1 sm:col-span-6">
               <label
-                htmlFor="shift-start-date-time"
+                htmlFor="shift-location"
                 className="block text-sm font-medium text-gray-700"
               >
-                Shift Start
+                Location
               </label>
-              <div className="mt-1">
-                <input
-                  type="datetime-local"
-                  name="shift-start-date-time"
-                  id="shift-start-date-time"
-                  autoComplete="shift-start-date-time"
-                  className="block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  value={shiftStart}
-                  onChange={(e) => setShiftStart(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="shift-end-date-time"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Shift end
-              </label>
-              <div className="mt-1">
-                <input
-                  type="datetime-local"
-                  name="shift-end-date-time"
-                  id="shift-end-date-time"
-                  autoComplete="shift-end-date-time"
-                  className="block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  value={shiftEnd}
-                  onChange={(e) => setShiftEnd(e.target.value)}
-                />
-              </div>
+              <input
+                type="text"
+                name="shift-location"
+                id="shift-location"
+                autoComplete="shift-location"
+                className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
             </div>
 
             <div className="sm:col-span-6">
@@ -185,15 +233,16 @@ export default function AddShiftFormContainer({
                 htmlFor="shift-description"
                 className="block text-sm font-medium text-gray-700"
               >
-                Shift Description
+                Opening Description
               </label>
               <div className="mt-1">
                 <textarea
                   id="shift-description"
+                  placeholder="Tips: Include the level of experience, payment, and details about your needs or preferences"
                   name="shift-description"
                   autoComplete="shift-description"
                   rows={5}
-                  className="block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -208,15 +257,6 @@ export default function AddShiftFormContainer({
             type="button"
             className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-indigo-200 sm:col-start-2 sm:text-sm"
             onClick={() => {
-              let status = '';
-              if (selectedUser) {
-                status = 'filled';
-              } else if (isShiftBroadcasting) {
-                status = 'broadcasting';
-              } else {
-                status = 'open';
-              }
-
               const shift = {
                 name: role,
                 orgId: org ? org.id : '',
@@ -224,6 +264,7 @@ export default function AddShiftFormContainer({
                 endDate: shiftEnd,
                 description: description,
                 status: status,
+                location: location,
               };
 
               if (existingShift) {

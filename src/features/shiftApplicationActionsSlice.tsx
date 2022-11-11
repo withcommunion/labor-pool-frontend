@@ -17,6 +17,7 @@ export interface ShiftApplication {
   shiftId: string;
   orgId: string;
   userId: string;
+  ownerUrn: string;
   description: string;
   status: 'pending' | 'accepted' | 'rejected';
   createdAtMs: number;

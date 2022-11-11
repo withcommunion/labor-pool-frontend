@@ -18,6 +18,7 @@ export interface IShift {
   orgId: string;
   ownerUrn: string;
   status: 'open' | 'broadcasting' | 'applied' | 'filled' | 'expired';
+  location?: string;
   description: string;
   assignedTo: string;
   startTimeMs: number;
