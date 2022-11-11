@@ -24,9 +24,11 @@ export default function SocialContainer({ ownerUrn, userJwt }: Props) {
   const userSocials = entitySocials;
 
   useEffect(() => {
-    dispatch(
-      fetchGetEntityByIdSocials({ entityUrn: ownerUrn, jwtToken: userJwt })
-    );
+    if (ownerUrn && userJwt) {
+      dispatch(
+        fetchGetEntityByIdSocials({ entityUrn: ownerUrn, jwtToken: userJwt })
+      );
+    }
   }, [dispatch, ownerUrn, userJwt]);
 
   return (

@@ -21,7 +21,6 @@ import {
 import AddShiftFormContainer from './addShiftFormContainer';
 import { parseIdFromUrn } from '@/util/walletApiUtil';
 import Link from 'next/link';
-import { selectOrgById } from '@/features/orgByIdSlice';
 
 interface Props {
   shift?: IShift | null;
@@ -37,7 +36,6 @@ export default function ShiftDetailsContainer({
 
   const self = useAppSelector(selectSelf);
   const shiftApplications = useAppSelector(selectPendingShiftApplications);
-  const org = useAppSelector(selectOrgById);
 
   const [isEditShift, setIsEditShift] = useState(false);
 
@@ -51,12 +49,14 @@ export default function ShiftDetailsContainer({
   const selfActingAsOrg = useAppSelector(selectSelfActingAsOrg);
 
   useEffect(() => {
-    dispatch(
-      fetchGetShiftApplications({
-        jwtToken: userJwt,
-        shiftId: shift?.id || '',
-      })
-    );
+    if (shift?.id && userJwt) {
+      dispatch(
+        fetchGetShiftApplications({
+          jwtToken: userJwt,
+          shiftId: shift.id,
+        })
+      );
+    }
   }, [shift, userJwt, dispatch]);
 
   return (
