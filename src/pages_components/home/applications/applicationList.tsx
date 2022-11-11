@@ -47,12 +47,12 @@ export default function ApplicationList({
                     </span>
                   </div>
                   <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                    <div className="flex flex-row">
+                    <div className="flex flex-col">
                       <p className="text-sm text-gray-500">
                         {application.ownerUrn}{' '}
-                        <p className="font-medium text-gray-900">
-                          {application.description}
-                        </p>
+                      </p>
+                      <p className="font-medium text-gray-900">
+                        {application.description}
                       </p>
                     </div>
                     <div className="whitespace-nowrap text-right text-sm text-gray-500">
