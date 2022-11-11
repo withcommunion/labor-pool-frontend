@@ -13,7 +13,10 @@ import cx from 'classnames';
 import { IUser } from '@/features/selfSlice';
 import { useRouter } from 'next/router';
 
-const mainNavigation = [{ name: 'Home', href: '/home', current: true }];
+const mainNavigation = [
+  { name: 'Home', href: '/home', current: true },
+  { name: 'Create Org', href: '/org/new', current: false },
+];
 
 interface Props {
   user: IUser | null;

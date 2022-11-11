@@ -53,7 +53,7 @@ const Index = ({ userJwt }: Props) => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
+        <div className="my-0 mx-auto w-full px-6 md:max-w-50vw">
           <form className="mt-5 space-y-8 divide-y divide-gray-200">
             <div className="space-y-8 divide-y divide-gray-200">
               <div>

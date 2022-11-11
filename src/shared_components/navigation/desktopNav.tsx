@@ -44,43 +44,49 @@ export default function DesktopNav({ signOut, user }: Props) {
           className="mt-5 flex-1 space-y-1 bg-white px-2"
           aria-label="Sidebar"
         >
-          {navigation.map((item) => (
-            <Link key={item.name} href={item.href}>
-              <a>
-                <div
-                  className={cx(
-                    item.current
-                      ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                    'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
-                  )}
-                >
-                  <item.icon
+          <div className="border-bottom-2">
+            {navigation.map((item) => (
+              <Link key={item.name} href={item.href}>
+                <a>
+                  <div
                     className={cx(
                       item.current
-                        ? 'text-gray-500'
-                        : 'text-gray-400 group-hover:text-gray-500',
-                      'mr-3 h-6 w-6 flex-shrink-0'
+                        ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                      'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
                     )}
-                    aria-hidden="true"
-                  />
-                  <span className="flex-1">{item.name}</span>
-                </div>
-              </a>
-            </Link>
-          ))}
-          <button
-            type="button"
-            className="relative inline-flex  items-center rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            <PlusIcon className="-ml-2 mr-3 h-5 w-5" aria-hidden="true" />
-            <span>Create Shift</span>
-          </button>
+                  >
+                    <item.icon
+                      className={cx(
+                        item.current
+                          ? 'text-gray-500'
+                          : 'text-gray-400 group-hover:text-gray-500',
+                        'mr-3 h-6 w-6 flex-shrink-0'
+                      )}
+                      aria-hidden="true"
+                    />
+                    <span className="flex-1">{item.name}</span>
+                  </div>
+                </a>
+              </Link>
+            ))}
+          </div>
         </nav>
       </div>
 
       <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
         <Menu as="div" className="relative">
+          <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none ">
+            <Link href="/org/new">
+              <button
+                type="button"
+                className="mb-2 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <PlusIcon className="-ml-2 mr-3 h-5 w-5" aria-hidden="true" />
+                <span>Create Org</span>
+              </button>
+            </Link>
+          </Menu.Button>
           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none ">
             <div className="group block w-full flex-shrink-0">
               <div className="flex items-center">
