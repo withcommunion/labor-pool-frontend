@@ -11,7 +11,7 @@ import {
 
 import { IShift } from '@/features/orgShiftsSlice';
 import { API_URL } from '@/util/walletApiUtil';
-import { isSameDay, isSameWeek } from 'date-fns';
+import { isAfter, isSameDay, isSameWeek, startOfToday } from 'date-fns';
 
 export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 export interface AllShiftsState {
@@ -111,6 +111,16 @@ export const selectAllShiftsInDay = createSelector(
   (shifts, startDay) => {
     return shifts.filter((shift) =>
       isSameDay(new Date(shift.startTimeMs), startDay)
+    );
+  }
+);
+
+export const selectAllShiftsInFuture = createSelector(
+  [selectAllShiftsOrderedByEarliestStartTime],
+  (shifts) => {
+    const today = startOfToday();
+    return shifts.filter((shift) =>
+      isAfter(new Date(shift.startTimeMs), today)
     );
   }
 );

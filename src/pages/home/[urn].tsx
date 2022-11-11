@@ -11,18 +11,20 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import {
   fetchAllShifts,
   selectAllShiftsOrderedByEarliestStartTime,
+  selectAllShiftsInFuture,
 } from '@/features/allShiftsSlice';
-
-import Footer from '@/shared_components/footer/footer';
-import WeekCalendar from '@/pages_components/org/shiftCalendar';
-import FeedContainer from '@/shared_components/feed/feedContainer';
-import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
 import { fetchGetOrgById, selectOrgById } from '@/features/orgByIdSlice';
 import {
   selectIsOnOrgLeadershipTeam,
   selectSelf,
   selfActingAsOrgSet,
 } from '@/features/selfSlice';
+
+import Footer from '@/shared_components/footer/footer';
+import WeekCalendar from '@/pages_components/org/shiftCalendar';
+import FeedContainer from '@/shared_components/feed/feedContainer';
+import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
+
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
@@ -39,6 +41,7 @@ const Index = ({ userJwt }: Props) => {
   const self = useAppSelector(selectSelf);
 
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
+  const allShiftsInFuture = useAppSelector(selectAllShiftsInFuture);
 
   const orgId = (router.query.urn as string).split(':')[2];
   const org = useAppSelector(selectOrgById);
@@ -95,7 +98,10 @@ const Index = ({ userJwt }: Props) => {
                   <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
                     Shifts in your network
                   </p>
-                  <ShiftListContainer userJwt={userJwt} shifts={allShifts} />
+                  <ShiftListContainer
+                    userJwt={userJwt}
+                    shifts={allShiftsInFuture}
+                  />
                 </div>
               </>
               <>

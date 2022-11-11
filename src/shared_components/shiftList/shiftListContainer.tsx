@@ -1,6 +1,6 @@
 import { IShift } from '@/features/orgShiftsSlice';
 import ShiftDetailsContainer from '@/pages_components/org/shiftCalendar/shiftDetailsContainer';
-import { format, lightFormat } from 'date-fns';
+import { format, getTime, startOfDay } from 'date-fns';
 import { useEffect, useState } from 'react';
 import SimpleModal from '../simpleModal';
 
@@ -20,7 +20,8 @@ export default function ShiftListContainer({ shifts, userJwt }: Props) {
       })
       .filter((shift) => Boolean(shift.ownerUrn))
       .reduce((acc, shift) => {
-        const shiftDay = lightFormat(new Date(shift.startTimeMs), 'yyyy-MM-dd');
+        // const shiftDay = format(shift.startTimeMs, 'yyyy-MM-dd');
+        const shiftDay = getTime(startOfDay(shift.startTimeMs));
         if (acc[shiftDay]) {
           acc[shiftDay].push(shift);
         } else {
@@ -55,11 +56,13 @@ export default function ShiftListContainer({ shifts, userJwt }: Props) {
         </div>
       </SimpleModal>
       <ul>
-        {Object.keys(dayShiftMap).map((day) => {
+        {Object.keys(dayShiftMap).map((dayInMs) => {
           return (
-            <ul key={day} className="py-2">
-              <h3 className="text-2xl font-semibold">{day}</h3>
-              {dayShiftMap[day].map((shift) => {
+            <ul key={dayInMs} className="py-2">
+              <h3 className="text-2xl font-semibold">
+                {format(parseInt(dayInMs), 'E, LLL dd')}
+              </h3>
+              {dayShiftMap[dayInMs].map((shift) => {
                 return (
                   shift.ownerUrn && (
                     <li

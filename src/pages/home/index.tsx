@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { selectSelf } from '@/features/selfSlice';
 import {
   fetchAllShifts,
+  selectAllShiftsInFuture,
   selectAllShiftsOrderedByEarliestStartTime,
 } from '@/features/allShiftsSlice';
 
@@ -33,6 +34,7 @@ const Index = ({ userJwt }: Props) => {
   useFetchSelf(userJwt);
 
   const self = useAppSelector((state) => selectSelf(state));
+  const allShiftsInFuture = useAppSelector(selectAllShiftsInFuture);
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
 
   useEffect(() => {
@@ -81,7 +83,10 @@ const Index = ({ userJwt }: Props) => {
                 <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
                   Shifts in your network
                 </p>
-                <ShiftListContainer userJwt={userJwt} shifts={allShifts} />
+                <ShiftListContainer
+                  userJwt={userJwt}
+                  shifts={allShiftsInFuture}
+                />
               </div>
 
               <div className="my-10">
