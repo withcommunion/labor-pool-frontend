@@ -30,7 +30,8 @@ import { IShift } from '@/features/orgShiftsSlice';
 import SimpleModal from '@/shared_components/simpleModal';
 import AddShiftFormContainer from './shiftCalendar/addShiftFormContainer';
 import ShiftDetailsContainer from './shiftCalendar/shiftDetailsContainer';
-import { IUser } from '@/features/selfSlice';
+import { IUser, selectSelf, selectSelfActingAsOrg } from '@/features/selfSlice';
+import { useAppSelector } from '@/reduxHooks';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -558,6 +559,11 @@ function Shift({
   const { shiftStartInGrid, shiftEndInGrid, dayPositionInGrid } =
     calculateShiftPosition(shiftStart, shiftEnd);
 
+  const self = useAppSelector(selectSelf);
+  const selfActingAsOrg = useAppSelector(selectSelfActingAsOrg);
+
+  const id = (selfActingAsOrg.active ? selfActingAsOrg.orgId : self?.id) || '';
+
   /**
    * TODO: There is a bug here.
    * Unclear how to repro accurately...add a new shift and see if it happens?
@@ -569,11 +575,22 @@ function Shift({
    * And somehow it fixes itself
    */
 
+  const zIndex = shiftStartInGrid;
+  const youAreShiftOwner = shift?.ownerUrn.includes(id);
+  const shiftIsAssignedToYou = shift?.assignedTo?.includes(id);
+  const shiftIsOpen = shift?.status === 'open';
+  const shiftIsBroadcasting = shift?.status === 'broadcasting';
+  const shiftIsAssignedToOther =
+    !shiftIsAssignedToYou && shift?.status === 'filled';
+
   return (
     <li
-      className={cx(`relative mt-px flex sm:col-start-${dayPositionInGrid}`, {
-        [`col-start-${dayPositionInGrid}`]: isMd,
-      })}
+      className={cx(
+        `relative mt-px flex sm:col-start-${dayPositionInGrid} z-[${zIndex}]`,
+        {
+          [`col-start-${dayPositionInGrid}`]: isMd,
+        }
+      )}
       style={{ gridRow: `${shiftStartInGrid} / span ${shiftEndInGrid}` }}
       onClick={() => {
         onClick(shift);
@@ -583,9 +600,12 @@ function Shift({
         className={cx(
           'group absolute inset-1 flex flex-col overflow-y-auto rounded-lg  p-2 text-xs leading-5 hover:bg-blue-100',
           {
-            'animate-pulse bg-blue-50': shift.status === 'broadcasting',
-            'bg-orange-100': shift.status === 'filled',
-            'bg-orange-50': shift.status === 'open',
+            'border-2 border-orange-700': youAreShiftOwner,
+            'bg-orange-300': youAreShiftOwner,
+            'bg-green-300': shiftIsAssignedToYou,
+            'bg-blue-300': shiftIsOpen,
+            'animate-pulse bg-orange-200': shiftIsBroadcasting,
+            'bg-red-300': shiftIsAssignedToOther,
           }
         )}
       >
