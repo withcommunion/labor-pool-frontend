@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Head from 'next/head';
 import { Amplify } from 'aws-amplify';
 import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
@@ -21,16 +21,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import classNames from 'classnames';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
-import SimpleModal from '@/shared_components/simpleModal';
-import SocialList from '@/shared_components/socials/socialList';
 import {
   fetchGetOrgById,
   fetchGetOrgByIdShifts,
   fetchGetOrgByIdSocials,
   selectOrgById,
   selectOrgByIdShifts,
-  selectOrgByIdSocials,
 } from '@/features/orgByIdSlice';
+import SocialContainer from '@/shared_components/socials/socialContainer';
+import FeedContainer from '@/shared_components/feed/feedContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -42,12 +41,8 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const [isFollowersListExpanded, setIsFollowersListExpanded] = useState(false);
-  const [isFollowingListExpanded, setIsFollowingListExpanded] = useState(false);
-
   const org = useAppSelector(selectOrgById);
   const orgShifts = useAppSelector(selectOrgByIdShifts);
-  const orgSocials = useAppSelector(selectOrgByIdSocials);
   const isOnLeadershipTeam = useAppSelector((state) =>
     selectIsOnOrgLeadershipTeam(state, org?.id || '')
   );
@@ -238,143 +233,18 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                     </div>
                   </dl>
 
-                  <div className="mb-10 flex">
-                    {/*  Following */}
-                    <div className="mt-8 max-w-5xl">
-                      <button
-                        onClick={() => {
-                          setIsFollowingListExpanded(!isFollowingListExpanded);
-                        }}
-                      >
-                        <h2 className="text-sm font-medium text-gray-500">
-                          <span className="text-black">
-                            {orgSocials.following.users.length +
-                              orgSocials.following.orgs.length}{' '}
-                          </span>
-                          Following
-                        </h2>
-                      </button>
-
-                      <SimpleModal
-                        isOpen={isFollowingListExpanded}
-                        toggleIsOpen={() => {
-                          setIsFollowingListExpanded(!isFollowingListExpanded);
-                        }}
-                        title="Following"
-                      >
-                        <div className="max-h-75vh overflow-y-scroll">
-                          <h3 className="text-xs font-medium text-gray-500">
-                            Users
-                          </h3>
-                          <div>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowingListExpanded(
-                                    !isFollowingListExpanded
-                                  );
-                                }}
-                                users={orgSocials.following.users}
-                                entityType="user"
-                              />
-                            </div>
-
-                            <h3 className="text-xs font-medium text-gray-500">
-                              Orgs
-                            </h3>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowingListExpanded(
-                                    !isFollowingListExpanded
-                                  );
-                                }}
-                                orgs={orgSocials.following.orgs}
-                                entityType="org"
-                              />
-                            </div>
-                          </div>
-                          <button
-                            className="sticky bottom-0 mt-5 w-full bg-white"
-                            onClick={() => {
-                              setIsFollowingListExpanded(
-                                !isFollowingListExpanded
-                              );
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </SimpleModal>
+                  <div className="mx-auto mt-6 max-w-5xl">
+                    <div className="mb-10">
+                      <SocialContainer
+                        userJwt={userJwt}
+                        ownerUrn={org?.id ? `urn:org:${org?.id}` : ''}
+                      />
                     </div>
-                    {/*  /Following */}
-
-                    {/* Followers */}
-                    <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
-                      <button
-                        onClick={() => {
-                          setIsFollowersListExpanded(!isFollowersListExpanded);
-                        }}
-                      >
-                        <h2 className="text-sm font-medium text-gray-500">
-                          <span className="text-black">
-                            {orgSocials.followers.users.length +
-                              orgSocials.followers.orgs.length}{' '}
-                          </span>
-                          Followers
-                        </h2>
-                      </button>
-                      <SimpleModal
-                        isOpen={isFollowersListExpanded}
-                        toggleIsOpen={() => {
-                          setIsFollowersListExpanded(!isFollowersListExpanded);
-                        }}
-                        title="Followers"
-                      >
-                        <div className="max-h-75vh overflow-y-scroll">
-                          <h3 className="text-xs font-medium text-gray-500">
-                            Users
-                          </h3>
-                          <div>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowersListExpanded(
-                                    !isFollowersListExpanded
-                                  );
-                                }}
-                                users={orgSocials.followers.users}
-                                entityType="user"
-                              />
-                            </div>
-
-                            <h3 className="text-xs font-medium text-gray-500">
-                              Orgs
-                            </h3>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowersListExpanded(
-                                    !isFollowersListExpanded
-                                  );
-                                }}
-                                orgs={orgSocials.followers.orgs}
-                                entityType="org"
-                              />
-                            </div>
-                          </div>
-                          <button
-                            className="sticky bottom-0 mt-5 w-full bg-white"
-                            onClick={() => {
-                              setIsFollowersListExpanded(
-                                !isFollowersListExpanded
-                              );
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </SimpleModal>
+                    <div className="mb-10">
+                      <FeedContainer
+                        userJwt={userJwt}
+                        entityUrn={org?.id ? `urn:org:${org?.id}` : ''}
+                      />
                     </div>
                   </div>
                 </div>

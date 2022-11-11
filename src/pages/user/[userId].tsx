@@ -10,18 +10,14 @@ import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import {
   fetchGetUserById,
   fetchGetUserByIdShifts,
-  fetchGetUserByIdSocials,
   selectUserById,
   selectUserByIdShifts,
-  selectUserByIdSocials,
 } from '@/features/userByIdSlice';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
-import SocialList from '@/shared_components/socials/socialList';
 
-import SimpleModal from '@/shared_components/simpleModal';
 import Head from 'next/head';
 import {
   fetchPatchSelf,
@@ -35,6 +31,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import FeedContainer from '@/shared_components/feed/feedContainer';
+import SocialContainer from '@/shared_components/socials/socialContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -52,11 +49,7 @@ const UserPage = ({ userJwt }: Props) => {
   const self = useAppSelector(selectSelf);
   const user = useAppSelector(selectUserById);
   const userShifts = useAppSelector(selectUserByIdShifts);
-  const userSocials = useAppSelector(selectUserByIdSocials);
   const patchSelfStatus = useAppSelector(selectPatchSelfStatus);
-
-  const [isFollowersListExpanded, setIsFollowersListExpanded] = useState(false);
-  const [isFollowingListExpanded, setIsFollowingListExpanded] = useState(false);
 
   const canEditProfile = self?.id === user?.id;
 
@@ -77,17 +70,6 @@ const UserPage = ({ userJwt }: Props) => {
     if (user) {
       dispatch(
         fetchGetUserByIdShifts({
-          jwtToken: userJwt,
-          userId: user.id,
-        })
-      );
-    }
-  }, [dispatch, user, userJwt]);
-
-  useEffect(() => {
-    if (user) {
-      dispatch(
-        fetchGetUserByIdSocials({
           jwtToken: userJwt,
           userId: user.id,
         })
@@ -116,144 +98,11 @@ const UserPage = ({ userJwt }: Props) => {
 
                 {/* Description list */}
                 <div className="mx-auto mt-6 max-w-5xl px-4 sm:px-6 lg:px-8">
-                  <div className="mb-10 flex">
-                    {/*  Following */}
-                    <div className="mt-8 max-w-5xl ">
-                      <button
-                        onClick={() => {
-                          setIsFollowingListExpanded(!isFollowingListExpanded);
-                        }}
-                      >
-                        <h2 className="text-sm font-medium text-gray-500">
-                          <span className="text-black">
-                            {userSocials.following.users.length +
-                              userSocials.following.orgs.length}{' '}
-                          </span>
-                          Following
-                        </h2>
-                      </button>
-
-                      <SimpleModal
-                        isOpen={isFollowingListExpanded}
-                        toggleIsOpen={() => {
-                          setIsFollowingListExpanded(!isFollowingListExpanded);
-                        }}
-                        title="Following"
-                      >
-                        <div className="max-h-75vh overflow-y-scroll">
-                          <h3 className="text-xs font-medium text-gray-500">
-                            Users
-                          </h3>
-                          <div>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowingListExpanded(
-                                    !isFollowingListExpanded
-                                  );
-                                }}
-                                users={userSocials.following.users}
-                                entityType="user"
-                              />
-                            </div>
-
-                            <h3 className="text-xs font-medium text-gray-500">
-                              Orgs
-                            </h3>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowingListExpanded(
-                                    !isFollowingListExpanded
-                                  );
-                                }}
-                                orgs={userSocials.following.orgs}
-                                entityType="org"
-                              />
-                            </div>
-                          </div>
-                          <button
-                            className="sticky bottom-0 mt-5 w-full bg-white"
-                            onClick={() => {
-                              setIsFollowingListExpanded(
-                                !isFollowingListExpanded
-                              );
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </SimpleModal>
-                    </div>
-                    {/*  /Following */}
-
-                    {/* Followers */}
-                    <div className="mt-8 max-w-5xl px-4 sm:px-6 lg:px-8">
-                      <button
-                        onClick={() => {
-                          setIsFollowersListExpanded(!isFollowersListExpanded);
-                        }}
-                      >
-                        <h2 className="text-sm font-medium text-gray-500">
-                          <span className="text-black">
-                            {userSocials.followers.users.length +
-                              userSocials.followers.orgs.length}{' '}
-                          </span>
-                          Followers
-                        </h2>
-                      </button>
-                      <SimpleModal
-                        isOpen={isFollowersListExpanded}
-                        toggleIsOpen={() => {
-                          setIsFollowersListExpanded(!isFollowersListExpanded);
-                        }}
-                        title="Followers"
-                      >
-                        <div className="max-h-75vh overflow-y-scroll">
-                          <h3 className="text-xs font-medium text-gray-500">
-                            Users
-                          </h3>
-                          <div>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowersListExpanded(
-                                    !isFollowersListExpanded
-                                  );
-                                }}
-                                users={userSocials.followers.users}
-                                entityType="user"
-                              />
-                            </div>
-
-                            <h3 className="text-xs font-medium text-gray-500">
-                              Orgs
-                            </h3>
-                            <div className="mt-1">
-                              <SocialList
-                                onClick={() => {
-                                  setIsFollowersListExpanded(
-                                    !isFollowersListExpanded
-                                  );
-                                }}
-                                orgs={userSocials.followers.orgs}
-                                entityType="org"
-                              />
-                            </div>
-                          </div>
-                          <button
-                            className="sticky bottom-0 mt-5 w-full bg-white"
-                            onClick={() => {
-                              setIsFollowersListExpanded(
-                                !isFollowersListExpanded
-                              );
-                            }}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </SimpleModal>
-                    </div>
+                  <div className="mb-10">
+                    <SocialContainer
+                      userJwt={userJwt}
+                      ownerUrn={user?.id ? `urn:user:${user?.id}` : ''}
+                    />
                   </div>
                   <div>
                     <FeedContainer
