@@ -19,7 +19,10 @@ export default function FeedContainer({ userJwt, entityUrn, fetchAll }: Props) {
   const allEvents = useAppSelector(selectAllFeed);
   const entityUrnEvents = useAppSelector(selectFeedById);
 
-  const showAllEvents = fetchAll || !entityUrn;
+  const showAllEventsInNetwork = fetchAll || !entityUrn;
+  const areEventsAvailable = showAllEventsInNetwork
+    ? Boolean(allEvents.length)
+    : Boolean(entityUrnEvents.length);
 
   useEffect(() => {
     if (!fetchAll && entityUrn && userJwt) {
@@ -31,7 +34,15 @@ export default function FeedContainer({ userJwt, entityUrn, fetchAll }: Props) {
 
   return (
     <div>
-      <FeedList events={showAllEvents ? allEvents : entityUrnEvents} />
+      <h2 className="mb-4 mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+        Whats happening
+      </h2>
+      <FeedList events={showAllEventsInNetwork ? allEvents : entityUrnEvents} />
+      {!areEventsAvailable && (
+        <p className="text-start text-gray-500">
+          No events to show at the moment
+        </p>
+      )}
     </div>
   );
 }
