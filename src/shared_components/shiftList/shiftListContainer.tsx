@@ -1,8 +1,11 @@
 import { IShift } from '@/features/orgShiftsSlice';
 import ShiftDetailsContainer from '@/pages_components/org/shiftCalendar/shiftDetailsContainer';
+import { useAppSelector } from '@/reduxHooks';
 import { format, getTime, startOfDay } from 'date-fns';
 import { useEffect, useState } from 'react';
+import cx from 'classnames';
 import SimpleModal from '../simpleModal';
+import { selectSelf } from '@/features/selfSlice';
 
 interface Props {
   userJwt: string;
@@ -12,6 +15,7 @@ interface Props {
 export default function ShiftListContainer({ shifts, userJwt }: Props) {
   const [dayShiftMap, setDayShiftMap] = useState<Record<string, IShift[]>>({});
   const [selectedShift, setSelectedShift] = useState<IShift | null>(null);
+  const self = useAppSelector(selectSelf);
 
   useEffect(() => {
     const shiftsByDay = [...shifts]
@@ -71,7 +75,24 @@ export default function ShiftListContainer({ shifts, userJwt }: Props) {
                       onClick={() => setSelectedShift(shift)}
                     >
                       <div className="flex flex-row items-center gap-x-4">
-                        <span className="bg-white-400 inline-flex h-12 w-12 items-center justify-center rounded-full outline">
+                        <span
+                          className={cx(
+                            'bg-white-400 inline-flex h-12 w-12 items-center justify-center rounded-full outline',
+                            {
+                              'bg-orange-300':
+                                self?.id && shift.ownerUrn.includes(self.id),
+                              'bg-green-300':
+                                self?.id && shift.assignedTo?.includes(self.id),
+                              'bg-blue-300': shift.status === 'open',
+                              'bg-red-300':
+                                shift.status === 'filled' &&
+                                !(
+                                  self?.id &&
+                                  shift.assignedTo?.includes(self.id)
+                                ),
+                            }
+                          )}
+                        >
                           <span className="text-xl font-medium leading-none text-black">
                             {shift?.status?.charAt(0).toUpperCase()}
                           </span>
