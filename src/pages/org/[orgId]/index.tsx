@@ -22,7 +22,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import SimpleModal from '@/shared_components/simpleModal';
-import SocialList from '@/shared_components/socialsList/SocialList';
+import SocialList from '@/shared_components/socials/socialList';
 import {
   fetchGetOrgById,
   fetchGetOrgByIdShifts,

@@ -5,15 +5,21 @@ import {
   selectFeedById,
 } from '@/features/feedSlice';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import FeedList from './feedList';
 
 interface Props {
   userJwt: string;
+  subHeader?: ReactElement;
   fetchAll?: boolean;
   entityUrn?: string;
 }
-export default function FeedContainer({ userJwt, entityUrn, fetchAll }: Props) {
+export default function FeedContainer({
+  userJwt,
+  entityUrn,
+  fetchAll,
+  subHeader,
+}: Props) {
   const dispatch = useAppDispatch();
 
   const allEvents = useAppSelector(selectAllFeed);
@@ -34,9 +40,12 @@ export default function FeedContainer({ userJwt, entityUrn, fetchAll }: Props) {
 
   return (
     <div>
-      <h2 className="mb-4 mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-        Whats happening
-      </h2>
+      <div className="mb-4">
+        <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+          Whats happening
+        </h2>
+        {subHeader}
+      </div>
       <FeedList events={showAllEventsInNetwork ? allEvents : entityUrnEvents} />
       {!areEventsAvailable && (
         <p className="text-start text-gray-500">

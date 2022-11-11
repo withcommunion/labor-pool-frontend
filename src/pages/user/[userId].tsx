@@ -19,7 +19,7 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import useFetchSelf from '@/shared_hooks/useFetchSelfHook';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
-import SocialList from '@/shared_components/socialsList/SocialList';
+import SocialList from '@/shared_components/socials/socialList';
 
 import SimpleModal from '@/shared_components/simpleModal';
 import Head from 'next/head';

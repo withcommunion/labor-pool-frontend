@@ -20,6 +20,7 @@ import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
+import SocialContainer from '@/shared_components/socials/socialContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -85,7 +86,16 @@ const Index = ({ userJwt }: Props) => {
               </div>
 
               <>
-                <FeedContainer userJwt={userJwt} fetchAll={true} />
+                <FeedContainer
+                  userJwt={userJwt}
+                  fetchAll={true}
+                  subHeader={
+                    <SocialContainer
+                      userJwt={userJwt}
+                      ownerUrn={self?.id ? `urn:user:${self.id}` : ''}
+                    />
+                  }
+                />
               </>
 
               <div className="my-10">

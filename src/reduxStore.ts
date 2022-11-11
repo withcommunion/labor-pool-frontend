@@ -12,6 +12,7 @@ import myShiftApplicationsReducer from '@/features/myShiftApplicationsSlice';
 import userByIdReducer from '@/features/userByIdSlice';
 import orgByIdReducer from '@/features/orgByIdSlice';
 import feedReducer from '@/features/feedSlice';
+import entityByIdReducer from '@/features/entityByIdSlice';
 
 const store = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ const store = configureStore({
     userById: userByIdReducer,
     orgById: orgByIdReducer,
     feed: feedReducer,
+    entityById: entityByIdReducer,
   },
 });
 
