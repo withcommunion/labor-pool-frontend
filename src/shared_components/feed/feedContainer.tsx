@@ -1,8 +1,8 @@
 import {
   fetchAllEntitiesFeed,
   fetchFeedByEntityUrn,
-  selectAllFeed,
-  selectFeedById,
+  selectAllFeedSortByLatest,
+  selectFeedByIdSortByLatest,
 } from '@/features/feedSlice';
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { ReactElement, useEffect } from 'react';
@@ -22,8 +22,8 @@ export default function FeedContainer({
 }: Props) {
   const dispatch = useAppDispatch();
 
-  const allEvents = useAppSelector(selectAllFeed);
-  const entityUrnEvents = useAppSelector(selectFeedById);
+  const allEvents = useAppSelector(selectAllFeedSortByLatest);
+  const entityUrnEvents = useAppSelector(selectFeedByIdSortByLatest);
 
   const showAllEventsInNetwork = fetchAll || !entityUrn;
   const areEventsAvailable = showAllEventsInNetwork

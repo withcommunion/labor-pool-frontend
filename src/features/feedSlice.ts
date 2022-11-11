@@ -133,6 +133,14 @@ export const selectFeedByIdError = createSelector(
   [selectRootFeedById],
   (root) => root.error
 );
+export const selectFeedByIdSortByLatest = createSelector(
+  [selectFeedById],
+  (events) =>
+    [...events].sort((a, b) => {
+      console.log(a.createdAtMs);
+      return b.createdAtMs - a.createdAtMs;
+    })
+);
 
 const selectRootAllFeed = createSelector(
   [selectRootFeed],
@@ -141,6 +149,14 @@ const selectRootAllFeed = createSelector(
 export const selectAllFeed = createSelector(
   [selectRootAllFeed],
   (root) => root.events
+);
+export const selectAllFeedSortByLatest = createSelector(
+  [selectAllFeed],
+  (events) =>
+    [...events].sort((a, b) => {
+      console.log(a.createdAtMs);
+      return b.createdAtMs - a.createdAtMs;
+    })
 );
 export const selectAllFeedStatus = createSelector(
   [selectRootAllFeed],
