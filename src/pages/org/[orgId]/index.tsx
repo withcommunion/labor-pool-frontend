@@ -30,6 +30,7 @@ import {
 } from '@/features/orgByIdSlice';
 import SocialContainer from '@/shared_components/socials/socialContainer';
 import FeedContainer from '@/shared_components/feed/feedContainer';
+import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -277,7 +278,25 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                   </div>
                 </div>
 
-                <div className="mx-auto sm:mx-10">
+                <div className="mx-5 sm:mx-[12vw]">
+                  <ShiftListContainer
+                    shifts={orgShifts}
+                    userJwt={userJwt}
+                    headerText={`${org?.name || ''}'s shifts`}
+                    showAddShiftBtn={isOnLeadershipTeam}
+                    refreshShifts={() => {
+                      if (org) {
+                        dispatch(
+                          fetchGetOrgByIdShifts({
+                            orgId: org.id,
+                            jwtToken: userJwt,
+                          })
+                        );
+                      }
+                    }}
+                  />
+                </div>
+                <div className="mx-5 sm:mx-10">
                   <WeekCalendar
                     showAddShiftBtn={isOnLeadershipTeam}
                     orgShifts={orgShifts}

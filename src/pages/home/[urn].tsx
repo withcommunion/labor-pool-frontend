@@ -83,7 +83,7 @@ const Index = ({ userJwt }: Props) => {
 
       <main className="min-h-100vh">
         <div className="my-0 w-full px-2 sm:px-6 ">
-          <div className="flex flex-col px-10px">
+          <div className="flex-col flex px-10px">
             <div className="mx-4 sm:mx-auto lg:mx-60">
               <h2 className="my-4 text-lg font-semibold text-indigo-600">
                 Hey {org?.name},
@@ -91,12 +91,14 @@ const Index = ({ userJwt }: Props) => {
 
               <>
                 <div className="my-10">
-                  <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                    Shifts in your network
-                  </p>
                   <ShiftListContainer
+                    headerText={'Shifts in your network'}
+                    showAddShiftBtn={isOnLeadershipTeam}
                     userJwt={userJwt}
                     shifts={allShiftsInFuture}
+                    refreshShifts={() => {
+                      dispatch(fetchAllShifts({ jwtToken: userJwt || '' }));
+                    }}
                   />
                 </div>
               </>
