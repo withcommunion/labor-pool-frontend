@@ -62,23 +62,21 @@ const OrgInvite = ({ userJwt }: Props) => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="my-0 mx-auto w-full px-6 md:max-w-50vw">
-          <div className="w-full">
-            <div className="mt-4 flex">
-              <Link
-                href={{
-                  pathname: `/org/[orgId]/`,
-                  query: { orgId: org?.id },
-                }}
-              >
-                <a>
-                  <ArrowLeftCircleIcon className="mr-2 h-8 w-8 text-gray-400 hover:text-gray-500" />
-                </a>
-              </Link>
-              <h2 className="text-2xl">{org?.name}</h2>
-            </div>
+        <div className="my-0 w-full px-6 ">
+          <div className="mt-4 flex sm:mx-[20vw]">
+            <Link
+              href={{
+                pathname: `/org/[orgId]/`,
+                query: { orgId: org?.id },
+              }}
+            >
+              <a>
+                <ArrowLeftCircleIcon className="mr-2 h-8 w-8 text-gray-400 hover:text-gray-500 " />
+              </a>
+            </Link>
+            <h2 className="text-2xl">{org?.name}</h2>
           </div>
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col   sm:mx-[20vw]">
             {steps[currentStepIdx] === 'managers' && (
               <InviteManagers queryOrgId={queryOrgId} orgJoinCode="1" />
             )}
@@ -229,7 +227,7 @@ function InviteFriendlyOrgs({
           (or copy the link and share it elsewhere)
         </p>
       </div>
-      <div>
+      <div className="w-full">
         <InviteTextArea
           orgId={queryOrgId}
           orgJoinCode={orgJoinCode}

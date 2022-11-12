@@ -99,7 +99,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
       </Head>
 
       <div className="flex h-full">
-        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex-col flex min-w-0 flex-1 overflow-hidden">
           <div className="relative z-0 flex flex-1 overflow-hidden">
             <main className="relative z-0 flex-1 overflow-y-auto focus:outline-none xl:order-last">
               <article>
@@ -213,13 +213,41 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                         {org?.email}
                       </dd>
                     </div>
+                    <div className="sm:col-span-1">
+                      <div className="flex flex-row gap-x-4">
+                        <div className="flex-col flex">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Instagram
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900">
+                            {org?.instagramHandle}
+                          </dd>
+                        </div>
+                        <div className="flex-col flex">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Facebook
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900">
+                            {org?.facebookHandle}
+                          </dd>
+                        </div>
+                        <div className="flex-col flex">
+                          <dt className="text-sm font-medium text-gray-500">
+                            Twitter
+                          </dt>
+                          <dd className="mt-1 text-sm text-gray-900">
+                            {org?.twitterHandle}
+                          </dd>
+                        </div>
+                      </div>
+                    </div>
 
                     <div className="sm:col-span-1">
                       <dt className="text-sm font-medium text-gray-500">
                         Location
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900">
-                        {org?.location}
+                        {org?.addressLine1}, {org?.city}, {org?.state}
                       </dd>
                     </div>
 
@@ -273,7 +301,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex-col flex items-center justify-center">
         <Footer />
       </div>
     </div>

@@ -14,6 +14,7 @@ import {
   fetchPostOrg,
   selectCreatedOrgStatus,
   selectCreatedOrgResp,
+  reset,
 } from '@/features/orgCreateSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -37,12 +38,14 @@ const Index = ({ userJwt }: Props) => {
 
   useEffect(() => {
     if (createdOrgStatus === 'succeeded' && createdOrgResp) {
+      const orgId = createdOrgResp.id as string;
+      dispatch(reset());
       router.push({
-        pathname: `/org/${createdOrgResp.id as string}/invite`,
+        pathname: `/org/${orgId}/invite`,
         query: router.query,
       });
     }
-  }, [createdOrgStatus, createdOrgResp, router]);
+  }, [createdOrgStatus, createdOrgResp, router, dispatch]);
 
   return (
     <div>
@@ -64,7 +67,7 @@ const Index = ({ userJwt }: Props) => {
                   <p className="mt-1 text-sm text-gray-500"></p>
                 </div>
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                  <div className="sm:col-span-3">
+                  <div className="sm:col-span-4">
                     <label
                       htmlFor="company-name"
                       className="block text-sm font-medium text-gray-700"
@@ -88,7 +91,7 @@ const Index = ({ userJwt }: Props) => {
                     </div>
                   </div>
 
-                  <div className="sm:col-span-4">
+                  <div className="sm:col-span-3">
                     <label
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700"
@@ -109,6 +112,116 @@ const Index = ({ userJwt }: Props) => {
                         }}
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="phoneNumber"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Phone Number
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        type="phoneNumber"
+                        autoComplete="phone"
+                        value={orgToCreate?.phoneNumber}
+                        onChange={(e) => {
+                          dispatch(
+                            setOrgToCreateAttributes({
+                              phoneNumber: e.target.value,
+                            })
+                          );
+                        }}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-4">
+                    <label
+                      htmlFor="handles"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Social Media Handles
+                    </label>
+                    <div className="flex flex-col sm:flex-row">
+                      <div className="fit-content flex flex-col">
+                        <label
+                          htmlFor="handle-instagram"
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          Instagram
+                        </label>
+                        <input
+                          id="handle-instagram"
+                          name="handle-instagram"
+                          type="handle-instagram"
+                          autoComplete="handle-instagram"
+                          value={orgToCreate?.instagramHandle}
+                          onChange={(e) => {
+                            dispatch(
+                              setOrgToCreateAttributes({
+                                instagramHandle: e.target.value,
+                              })
+                            );
+                          }}
+                          className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        />
+                      </div>
+
+                      <div className="fit-content flex flex-col">
+                        <label
+                          htmlFor="handle-facebook"
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          Facebook
+                        </label>
+                        <div className="mt-1">
+                          <input
+                            id="handle-facebook"
+                            name="handle-facebook"
+                            type="handle-facebook"
+                            autoComplete="handle-facebook"
+                            value={orgToCreate?.facebookHandle}
+                            onChange={(e) => {
+                              dispatch(
+                                setOrgToCreateAttributes({
+                                  facebookHandle: e.target.value,
+                                })
+                              );
+                            }}
+                            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="fit-content flex flex-col">
+                        <label
+                          htmlFor="handle-twitter"
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          Twitter
+                        </label>
+                        <input
+                          id="handle-twitter"
+                          name="handle-twitter"
+                          type="handle-twitter"
+                          autoComplete="handle-twitter"
+                          value={orgToCreate?.twitterHandle}
+                          onChange={(e) => {
+                            dispatch(
+                              setOrgToCreateAttributes({
+                                twitterHandle: e.target.value,
+                              })
+                            );
+                          }}
+                          className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        />
+                      </div>
                     </div>
                   </div>
 

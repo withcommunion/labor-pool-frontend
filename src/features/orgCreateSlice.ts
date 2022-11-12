@@ -19,8 +19,11 @@ export interface IOrgToCreate {
   state: string;
   zip: string;
   country: string;
-  phone: string;
+  phoneNumber: string;
   email: string;
+  facebookHandle?: string;
+  twitterHandle?: string;
+  instagramHandle?: string;
   website: string;
   logo: string;
   description: string;
@@ -44,7 +47,10 @@ const initialState: CreatedOrgState = {
     state: '',
     zip: '',
     country: 'US',
-    phone: '',
+    phoneNumber: '',
+    facebookHandle: '',
+    twitterHandle: '',
+    instagramHandle: '',
     email: '',
     website: '',
     logo: '',

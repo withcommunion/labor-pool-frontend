@@ -105,7 +105,7 @@ const Index = ({ userJwt }: Props) => {
                 <ApplicationContainer userJwt={userJwt} userId={self?.id} />
               </div>
 
-              <div className="my-10 w-full">
+              <div className="my-10">
                 <WeekCalendar
                   autoScroll={false}
                   showAddShiftBtn={true}
