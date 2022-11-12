@@ -90,9 +90,16 @@ export default function ShiftListContainer({
 
       <div className="mb-4 flex flex-row items-center gap-x-2">
         {headerText && (
-          <p className="mr-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-            {headerText}
-          </p>
+          <div className="flex-col flex">
+            <h3 className="mr-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+              {headerText}
+            </h3>
+            {!shifts.length && (
+              <p className="text-start text-gray-500">
+                No shifts to show at the moment
+              </p>
+            )}
+          </div>
         )}
         {showAddShiftBtn && (
           <button
