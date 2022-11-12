@@ -82,7 +82,7 @@ export default function ShiftListContainer({
             userJwt={userJwt}
             cleanup={() => {
               setSelectedShift(null);
-              //   refreshShifts();
+              refreshShifts();
             }}
           />
         </div>
