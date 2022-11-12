@@ -27,6 +27,8 @@ import ApplicationContainer from '@/pages_components/home/applications/applicati
 
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 import SocialContainer from '@/shared_components/socials/socialContainer';
+import Link from 'next/link';
+import { ShareIcon } from '@heroicons/react/24/outline';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -85,12 +87,30 @@ const Index = ({ userJwt }: Props) => {
         <div className="my-0 w-full px-2 sm:px-6 ">
           <div className="flex-col flex px-10px">
             <div className="mx-4 sm:mx-auto lg:mx-60">
-              <h2 className="my-4 text-lg font-semibold text-indigo-600">
+              <h2 className="my-4 mb-1 text-lg font-semibold text-indigo-600">
                 Hey {org?.name},
               </h2>
 
               <>
-                <div className="my-10">
+                <div>
+                  <p>
+                    Want to add your leadership team to be able to help manage?
+                  </p>
+                  <Link
+                    href={{
+                      pathname: `[orgId]/invite`,
+                      query: { orgId: org?.id },
+                    }}
+                  >
+                    <a className="mb-2 inline-flex items-center rounded-md border border-transparent bg-white text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <ShareIcon className="mr-2 h-5 w-5" /> Invite Links
+                    </a>
+                  </Link>
+                </div>
+              </>
+
+              <>
+                <div className="my-5">
                   <ShiftListContainer
                     headerText={'Shifts in your network'}
                     showAddShiftBtn={isOnLeadershipTeam}
