@@ -20,6 +20,7 @@ import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 import SocialContainer from '@/shared_components/socials/socialContainer';
+import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -36,6 +37,7 @@ const Index = ({ userJwt }: Props) => {
   const self = useAppSelector((state) => selectSelf(state));
   const allShiftsInFuture = useAppSelector(selectAllShiftsInFuture);
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
+  const { isMd } = useBreakpoint('md');
 
   useEffect(() => {
     const { inviteeOrgId: queryInviteeOrgId, action: queryAction } =
@@ -99,17 +101,19 @@ const Index = ({ userJwt }: Props) => {
                 />
               </>
 
-              <div className="my-10">
-                <WeekCalendar
-                  autoScroll={false}
-                  showAddShiftBtn={true}
-                  orgShifts={allShifts}
-                  userJwt={userJwt || ''}
-                  refreshShifts={() => {
-                    dispatch(fetchAllShifts({ jwtToken: userJwt || '' }));
-                  }}
-                />
-              </div>
+              {isMd && (
+                <div className="my-10">
+                  <WeekCalendar
+                    autoScroll={false}
+                    showAddShiftBtn={true}
+                    orgShifts={allShifts}
+                    userJwt={userJwt || ''}
+                    refreshShifts={() => {
+                      dispatch(fetchAllShifts({ jwtToken: userJwt || '' }));
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="">

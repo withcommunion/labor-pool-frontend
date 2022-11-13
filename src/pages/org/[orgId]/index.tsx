@@ -8,6 +8,7 @@ import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
+import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
 import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
 import {
   fetchPostOrgFriendlyOrgJoin,
@@ -41,6 +42,8 @@ const fallbackBgImage =
 const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const { isMd } = useBreakpoint('md');
 
   const org = useAppSelector(selectOrgById);
   const orgShifts = useAppSelector(selectOrgByIdShifts);
@@ -296,24 +299,26 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                     }}
                   />
                 </div>
-                <div className="mx-5 sm:mx-10">
-                  <WeekCalendar
-                    showAddShiftBtn={isOnLeadershipTeam}
-                    orgShifts={orgShifts}
-                    userJwt={userJwt}
-                    autoScroll={false}
-                    refreshShifts={() => {
-                      if (org) {
-                        dispatch(
-                          fetchGetOrgByIdShifts({
-                            orgId: org.id,
-                            jwtToken: userJwt,
-                          })
-                        );
-                      }
-                    }}
-                  />
-                </div>
+                {isMd && (
+                  <div className="mx-5 sm:mx-10">
+                    <WeekCalendar
+                      showAddShiftBtn={isOnLeadershipTeam}
+                      orgShifts={orgShifts}
+                      userJwt={userJwt}
+                      autoScroll={false}
+                      refreshShifts={() => {
+                        if (org) {
+                          dispatch(
+                            fetchGetOrgByIdShifts({
+                              orgId: org.id,
+                              jwtToken: userJwt,
+                            })
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                )}
               </article>
             </main>
           </div>
