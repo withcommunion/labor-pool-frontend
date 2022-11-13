@@ -1,7 +1,6 @@
 import { Fragment, useRef, useState, useEffect } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
-  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisHorizontalIcon,
@@ -145,7 +144,7 @@ export default function WeekCalendar({
           />
         </div>
       </SimpleModal>
-      <div className="flex h-full flex-col sm:max-h-85vh md:max-h-80vh">
+      <div className="flex-col flex h-full sm:max-h-85vh md:max-h-80vh">
         <CalendarHeader
           startDate={startDay}
           showAddShiftBtn={showAddShiftBtn}
@@ -160,7 +159,7 @@ export default function WeekCalendar({
         />
         <div
           ref={container}
-          className="isolate flex flex-auto flex-col overflow-auto bg-white"
+          className="flex-col isolate flex flex-auto overflow-auto bg-white"
         >
           <DaysOfWeekHeader
             dayToStartOn={startDay}
@@ -169,7 +168,7 @@ export default function WeekCalendar({
           />
           <div
             style={{ width: '165%' }}
-            className="flex max-w-full flex-none flex-col sm:max-w-none md:max-w-full"
+            className="flex-col flex max-w-full flex-none sm:max-w-none md:max-w-full"
           >
             <div className="flex flex-auto">
               <div className="sticky left-0 z-10 w-14 flex-none bg-white ring-1 ring-gray-100" />
@@ -200,6 +199,7 @@ export default function WeekCalendar({
   );
 }
 
+/**
 function CalendarTypeSelector() {
   return (
     <Menu as="div" className="relative">
@@ -255,6 +255,7 @@ function CalendarTypeSelector() {
     </Menu>
   );
 }
+ */
 
 function CalendarHeader({
   startDate,
@@ -306,7 +307,7 @@ function CalendarHeader({
           </button>
         </div>
         <div className="hidden md:ml-4 md:flex md:items-center">
-          <CalendarTypeSelector />
+          {/* <CalendarTypeSelector /> */}
           <div className="ml-6 h-6 w-px bg-gray-300" />
           {showAddShiftBtn && (
             <button
@@ -364,32 +365,6 @@ function CalendarHeader({
                   )}
                 </Menu.Item>
               </div>
-              <div className="py-1">
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )}
-                    >
-                      Day view
-                    </a>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <a
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-sm'
-                      )}
-                    >
-                      Week view
-                    </a>
-                  )}
-                </Menu.Item>
-              </div>
             </Menu.Items>
           </Transition>
         </Menu>
@@ -423,7 +398,7 @@ function DaysOfWeekHeader({
             <button
               key={day.getDay()}
               type="button"
-              className="flex flex-col items-center pt-2 pb-3"
+              className="flex-col flex items-center pt-2 pb-3"
               onClick={() => onDayClick(day)}
             >
               {format(day, 'EEE')}{' '}
@@ -598,7 +573,7 @@ function Shift({
     >
       <a
         className={cx(
-          'group absolute inset-1 flex flex-col overflow-y-auto rounded-lg  p-2 text-xs leading-5 hover:bg-blue-100',
+          'flex-col group absolute inset-1 flex overflow-y-auto rounded-lg  p-2 text-xs leading-5 hover:bg-blue-100',
           {
             'border-2 border-orange-700': youAreShiftOwner,
             'bg-orange-300': youAreShiftOwner,
