@@ -29,8 +29,7 @@ const formFields = {
         <div className="color-purple text-sm">
           <span className="font-semibold">🚨 Password Requirements</span>
           <p className="ml-2">
-            Min length of 8 characters, upper & lowercase letters, number, and a
-            special character
+            Min length of 6 characters, and atleast 1 number
           </p>
         </div>
       ),
