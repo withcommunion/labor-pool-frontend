@@ -86,7 +86,7 @@ const Index = ({ userJwt }: Props) => {
                             setOrgToCreateAttributes({ name: e.target.value })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2  border-gray-300 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
@@ -110,7 +110,7 @@ const Index = ({ userJwt }: Props) => {
                             setOrgToCreateAttributes({ email: e.target.value })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2 border-gray-300 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
@@ -136,7 +136,7 @@ const Index = ({ userJwt }: Props) => {
                             })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2 border-gray-300 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
@@ -148,8 +148,8 @@ const Index = ({ userJwt }: Props) => {
                     >
                       Social Media Handles
                     </label>
-                    <div className="flex flex-col sm:flex-row">
-                      <div className="fit-content flex flex-col">
+                    <div className="flex-col flex sm:flex-row">
+                      <div className="fit-content flex-col flex">
                         <label
                           htmlFor="handle-instagram"
                           className="text-sm font-medium text-gray-700"
@@ -169,11 +169,11 @@ const Index = ({ userJwt }: Props) => {
                               })
                             );
                           }}
-                          className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          className="rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
 
-                      <div className="fit-content flex flex-col">
+                      <div className="fit-content flex-col flex">
                         <label
                           htmlFor="handle-facebook"
                           className="text-sm font-medium text-gray-700"
@@ -194,12 +194,12 @@ const Index = ({ userJwt }: Props) => {
                                 })
                               );
                             }}
-                            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            className="rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
                       </div>
 
-                      <div className="fit-content flex flex-col">
+                      <div className="fit-content flex-col flex">
                         <label
                           htmlFor="handle-twitter"
                           className="text-sm font-medium text-gray-700"
@@ -219,7 +219,7 @@ const Index = ({ userJwt }: Props) => {
                               })
                             );
                           }}
-                          className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          className="rounded-md  border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         />
                       </div>
                     </div>
@@ -273,7 +273,7 @@ const Index = ({ userJwt }: Props) => {
                             })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
@@ -297,7 +297,7 @@ const Index = ({ userJwt }: Props) => {
                             setOrgToCreateAttributes({ city: e.target.value })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
@@ -321,7 +321,7 @@ const Index = ({ userJwt }: Props) => {
                             setOrgToCreateAttributes({ state: e.target.value })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
@@ -345,7 +345,7 @@ const Index = ({ userJwt }: Props) => {
                             setOrgToCreateAttributes({ zip: e.target.value })
                           );
                         }}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                   </div>
