@@ -3,6 +3,8 @@ import { Transition } from '@headlessui/react';
 import { IEvent } from '@/features/feedSlice';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import { parseEvent } from '@/util/walletApiUtil';
+import Link from 'next/link';
 
 interface Props {
   events: IEvent[];
@@ -29,40 +31,64 @@ export default function FeedList({ events }: Props) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          {eventsToShow.map((event) => (
-            <li key={event.id} className="py-4">
-              <Transition
-                appear={true}
-                show={true}
-                enter="transition-opacity duration-1000"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="transition-opacity duration-1000"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <div className="flex space-x-3">
-                  {/* <img
+          {eventsToShow.map((event) => {
+            const parsedEvent = parseEvent(event);
+            if (
+              !parsedEvent ||
+              !parsedEvent.ownerEntity ||
+              !parsedEvent.description
+            ) {
+              return null;
+            }
+            const { ownerEntity, description } = parsedEvent;
+            return (
+              <li key={event.id} className="py-4">
+                <Transition
+                  appear={true}
+                  show={true}
+                  enter="transition-opacity duration-1000"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="transition-opacity duration-1000"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <div className="flex space-x-3">
+                    {/* <img
                 className="h-6 w-6 rounded-full"
                 src={''}
                 alt=""
               /> */}
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">{event.ownerUrn}</h3>
-                      <p className="text-sm text-gray-500">
-                        {format(
-                          new Date(event.createdAtMs),
-                          'yyyy-MM-dd hh:mm'
-                        )}
-                      </p>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-medium">
+                          {ownerEntity ? (
+                            <Link
+                              href={{
+                                pathname: ownerEntity.queryPathname,
+                                query: ownerEntity.queryVals,
+                              }}
+                            >
+                              <a>{ownerEntity.name}</a>
+                            </Link>
+                          ) : (
+                            ''
+                          )}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {format(
+                            new Date(event.createdAtMs),
+                            'yyyy-MM-dd hh:mm'
+                          )}
+                        </p>
+                      </div>
+                      <p className="text-sm text-gray-500">{description}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{event.description}</p>
                   </div>
-                </div>
-              </Transition>
-            </li>
-          ))}
+                </Transition>
+              </li>
+            );
+          })}
         </Transition>
       </ul>
       <div>

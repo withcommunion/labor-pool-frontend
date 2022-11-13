@@ -9,6 +9,8 @@ import {
 } from '@reduxjs/toolkit';
 
 import { API_URL } from '@/util/walletApiUtil';
+import { IUser } from './selfSlice';
+import { IOrg } from './orgSlice';
 
 export interface IEvent {
   id: string;
@@ -17,6 +19,10 @@ export interface IEvent {
   event: string;
   description: string;
   record: object;
+  ownerEntity?: {
+    user?: IUser;
+    org?: IOrg;
+  };
   createdAtMs: number;
   updatedAtMs: number;
 }
