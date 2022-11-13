@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { format, addHours } from 'date-fns';
+import { format, addHours, isBefore } from 'date-fns';
 import { Switch } from '@headlessui/react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import cx from 'classnames';
@@ -45,8 +45,10 @@ export default function AddShiftFormContainer({
     existingShift?.location || ''
   );
 
+  const initialBroadcast =
+    existingShift?.status === 'broadcasting' ? true : false;
   const [isShiftBroadcasting, setIsShiftBroadcasting] = useState<boolean>(
-    existingShift?.status === 'broadcasting' ? true : false
+    existingShift ? initialBroadcast : true
   );
 
   const [status, setStatus] = useState<IShift['status']>(
@@ -116,7 +118,19 @@ export default function AddShiftFormContainer({
                   autoComplete="shift-start-date-time"
                   className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={shiftStart}
-                  onChange={(e) => setShiftStart(e.target.value)}
+                  onChange={(e) => {
+                    setShiftStart(e.target.value);
+                    if (
+                      isBefore(new Date(shiftEnd), new Date(e.target.value))
+                    ) {
+                      setShiftEnd(
+                        format(
+                          addHours(new Date(e.target.value), 2),
+                          `yyyy-MM-dd'T'HH:mm`
+                        )
+                      );
+                    }
+                  }}
                 />
               </div>
             </div>
