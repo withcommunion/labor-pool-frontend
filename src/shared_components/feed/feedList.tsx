@@ -76,10 +76,7 @@ export default function FeedList({ events }: Props) {
                           )}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          {format(
-                            new Date(event.createdAtMs),
-                            'yyyy-MM-dd hh:mm'
-                          )}
+                          {format(new Date(event.createdAtMs), 'MM/dd hh:mm')}
                         </p>
                       </div>
                       <p className="text-sm text-gray-500">{description}</p>

@@ -73,13 +73,13 @@ export function parseEvent(event: IEvent) {
     if (eventAction === 'modify') {
       return {
         ownerEntity,
-        description: 'Modified a shift: ${shiftRecord.name}',
+        description: `Modified a shift: ${shiftRecord.name}`,
       };
     }
     if (eventAction === 'remove') {
       return {
         ownerEntity,
-        description: 'Deleted a shift: ${shiftRecord.name}',
+        description: `Deleted a shift: ${shiftRecord.name}`,
       };
     }
   } else if (eventType === 'org') {
