@@ -150,7 +150,6 @@ export const selectAllFeedSortByLatest = createSelector(
   [selectAllFeed],
   (events) =>
     [...events].sort((a, b) => {
-      console.log(a.createdAtMs);
       return b.createdAtMs - a.createdAtMs;
     })
 );

@@ -5,13 +5,8 @@ import { format } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 // import { selectOrg } from '@/features/orgSlice';
+import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
 import {
-  selectIsOnOrgLeadershipTeam,
-  selectSelf,
-  selectSelfActingAsOrg,
-} from '@/features/selfSlice';
-import {
-  fetchPostShiftApplication,
   fetchGetShiftApplications,
   selectPendingShiftApplications,
   ShiftApplication,
@@ -21,6 +16,7 @@ import {
 import AddShiftFormContainer from './addShiftFormContainer';
 import { parseIdFromUrn } from '@/util/walletApiUtil';
 import Link from 'next/link';
+import ApplyToShiftContainer from '@/shared_components/applyToShift/ApplyToShiftContainer';
 
 interface Props {
   shift?: IShift | null;
@@ -45,8 +41,6 @@ export default function ShiftDetailsContainer({
   const canEditShift =
     Boolean(self?.id && shift?.ownerUrn.includes(self.id)) ||
     isOnLeadershipTeam;
-
-  const selfActingAsOrg = useAppSelector(selectSelfActingAsOrg);
 
   useEffect(() => {
     if (shift?.id && userJwt) {
@@ -84,53 +78,39 @@ export default function ShiftDetailsContainer({
 
         {!isEditShift && shift && (
           <ShiftDetailCard
+            userJwt={userJwt}
             canManageShift={canEditShift}
             shift={shift}
             shiftApplications={shiftApplications}
-            rejectApplicant={(application: ShiftApplication) => {
-              dispatch(
+            rejectApplicant={async (application: ShiftApplication) => {
+              await dispatch(
                 fetchPatchShiftAcceptRejectApplication({
                   jwtToken: userJwt,
                   shiftApplicationId: application.id || '',
                   status: 'rejected',
                 })
               );
-            }}
-            acceptApplicant={(application: ShiftApplication) => {
               dispatch(
+                fetchGetShiftApplications({
+                  jwtToken: userJwt,
+                  shiftId: shift?.id || '',
+                })
+              );
+            }}
+            acceptApplicant={async (application: ShiftApplication) => {
+              await dispatch(
                 fetchPatchShiftAcceptRejectApplication({
                   jwtToken: userJwt,
                   shiftApplicationId: application.id || '',
                   status: 'accepted',
                 })
               );
-            }}
-            applyToShift={async () => {
-              if (self) {
-                const ownerUrn = selfActingAsOrg.orgId
-                  ? `urn:org:${selfActingAsOrg.orgId}`
-                  : `urn:user:${self.id}`;
-                await dispatch(
-                  fetchPostShiftApplication({
-                    jwtToken: userJwt,
-                    shiftApplication: {
-                      shiftId: shift.id,
-                      ownerUrn,
-                      /**
-                       * TODO: add a message field to the application
-                       */
-                      description: 'I am a great worker I swear',
-                    },
-                  })
-                );
-
-                dispatch(
-                  fetchGetShiftApplications({
-                    jwtToken: userJwt,
-                    shiftId: shift?.id || '',
-                  })
-                );
-              }
+              dispatch(
+                fetchGetShiftApplications({
+                  jwtToken: userJwt,
+                  shiftId: shift?.id || '',
+                })
+              );
             }}
           />
         )}
@@ -143,14 +123,14 @@ function ShiftDetailCard({
   shift,
   shiftApplications,
   canManageShift,
-  applyToShift,
   acceptApplicant,
   rejectApplicant,
+  userJwt,
 }: {
   shift: IShift;
   canManageShift: boolean;
   shiftApplications: ShiftApplication[];
-  applyToShift: () => void;
+  userJwt: string;
   acceptApplicant: (shiftApplication: ShiftApplication) => void;
   rejectApplicant: (shiftApplication: ShiftApplication) => void;
 }) {
@@ -158,24 +138,6 @@ function ShiftDetailCard({
   const ownerPathname = isOwnerUser ? '/user/[userId]' : '/org/[orgId]';
   const ownerId = parseIdFromUrn(shift.ownerUrn);
   const query = isOwnerUser ? { userId: ownerId } : { orgId: ownerId };
-
-  const self = useAppSelector(selectSelf);
-  const selfActingAsOrg = useAppSelector(selectSelfActingAsOrg);
-  const selfUrn = selfActingAsOrg.active
-    ? `urn:org:${selfActingAsOrg?.orgId || ''}`
-    : `urn:user:${self?.id || ''}`;
-
-  const isUserAlreadyApplied = shiftApplications.some((application) => {
-    return application.ownerUrn.includes(selfUrn);
-  });
-  const isUserAlreadyAccepted = shift.assignedTo.includes(selfUrn);
-  const isUserOwner = shift.ownerUrn.includes(selfUrn);
-
-  const showApplyButton =
-    shift.status !== 'filled' &&
-    !isUserAlreadyAccepted &&
-    !isUserAlreadyApplied &&
-    !isUserOwner;
 
   return (
     <div className="overflow-hidden bg-white text-start shadow sm:rounded-lg">
@@ -234,21 +196,12 @@ function ShiftDetailCard({
             <dd className="mt-1 text-sm text-gray-900">{shift.description}</dd>
           </div>
 
-          {showApplyButton && (
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-medium text-gray-500">Actions</dt>
-              <dd className="mt-1 text-sm text-gray-900">
-                <button
-                  className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={() => {
-                    applyToShift();
-                  }}
-                >
-                  Apply
-                </button>
-              </dd>
-            </div>
-          )}
+          <div className="sm:col-span-2">
+            <dt className="text-sm font-medium text-gray-500">Actions</dt>
+            <dd className="mt-1 text-sm text-gray-900">
+              <ApplyToShiftContainer shift={shift} userJwt={userJwt} />
+            </dd>
+          </div>
           {canManageShift && shiftApplications.length > 0 && (
             <div className="sm:col-span-2">
               <dt className="text-sm font-medium text-gray-500">Applicants</dt>

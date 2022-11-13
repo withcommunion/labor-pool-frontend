@@ -198,7 +198,7 @@ export const fetchDeleteShiftApplication = createAsyncThunk(
     applicationId: string;
   }) => {
     const rawRequest = await axios.delete<boolean>(
-      `${API_URL}/application/${applicationId}`,
+      `${API_URL}/shift/application/${applicationId}`,
       {
         headers: {
           Authorization: jwtToken,
