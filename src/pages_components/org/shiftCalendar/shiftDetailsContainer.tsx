@@ -90,12 +90,13 @@ export default function ShiftDetailsContainer({
                   status: 'rejected',
                 })
               );
-              dispatch(
+              await dispatch(
                 fetchGetShiftApplications({
                   jwtToken: userJwt,
                   shiftId: shift?.id || '',
                 })
               );
+              cleanup();
             }}
             acceptApplicant={async (application: ShiftApplication) => {
               await dispatch(
@@ -105,12 +106,14 @@ export default function ShiftDetailsContainer({
                   status: 'accepted',
                 })
               );
-              dispatch(
+              await dispatch(
                 fetchGetShiftApplications({
                   jwtToken: userJwt,
                   shiftId: shift?.id || '',
                 })
               );
+
+              cleanup();
             }}
           />
         )}
@@ -136,6 +139,7 @@ function ShiftDetailCard({
 }) {
   const isOwnerUser = shift.ownerUrn.includes('user');
   const ownerPathname = isOwnerUser ? '/user/[userId]' : '/org/[orgId]';
+
   const ownerId = parseIdFromUrn(shift.ownerUrn);
   const query = isOwnerUser ? { userId: ownerId } : { orgId: ownerId };
 
@@ -213,33 +217,59 @@ function ShiftDetailCard({
                   {shiftApplications
                     .filter((application) => application.status === 'pending')
                     .map((application) => {
+                      const applicationOwnerId = parseIdFromUrn(
+                        application.ownerUrn
+                      );
+                      const isApplicantUser =
+                        application.ownerUrn.includes('user');
+                      const applicantPathname = isApplicantUser
+                        ? '/user/[userId]'
+                        : '/org/[orgId]';
+                      const applicantQuery = isApplicantUser
+                        ? { userId: applicationOwnerId }
+                        : { orgId: applicationOwnerId };
                       return (
                         <li
-                          className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                          className="flex-col flex justify-between py-3 pl-3 pr-4 text-sm"
                           key={application.id}
                         >
-                          <div className="flex w-0 flex-1 items-center">
-                            <UserIcon
-                              className="h-5 w-5 flex-shrink-0 text-gray-400"
-                              aria-hidden="true"
-                            />
-                            <span className="ml-2 w-0 flex-1 truncate">
-                              {application.ownerUrn}
-                            </span>
+                          <div className="flex flex-row">
+                            <div className="flex w-0 flex-1 items-center">
+                              <UserIcon
+                                className="mr-2 h-5 w-5 flex-shrink-0 text-gray-400"
+                                aria-hidden="true"
+                              />
+                              <Link
+                                href={{
+                                  pathname: applicantPathname,
+                                  query: applicantQuery,
+                                }}
+                              >
+                                <a
+                                  target="_blank"
+                                  className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800"
+                                >
+                                  {application.ownerUrn}
+                                </a>
+                              </Link>
+                            </div>
+                            <div className="ml-4 flex gap-x-4">
+                              <button
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                                onClick={() => rejectApplicant(application)}
+                              >
+                                Reject
+                              </button>
+                              <button
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                                onClick={() => acceptApplicant(application)}
+                              >
+                                Accept
+                              </button>
+                            </div>
                           </div>
-                          <div className="ml-4 flex gap-x-2">
-                            <a
-                              className="font-medium text-indigo-600 hover:text-indigo-500"
-                              onClick={() => acceptApplicant(application)}
-                            >
-                              Accept
-                            </a>
-                            <a
-                              className="font-medium text-indigo-600 hover:text-indigo-500"
-                              onClick={() => rejectApplicant(application)}
-                            >
-                              Reject
-                            </a>
+                          <div>
+                            <p className="mt-2">{application.description}</p>
                           </div>
                         </li>
                       );
