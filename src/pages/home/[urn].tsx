@@ -23,7 +23,6 @@ import {
 import Footer from '@/shared_components/footer/footer';
 import WeekCalendar from '@/pages_components/org/shiftCalendar';
 import FeedContainer from '@/shared_components/feed/feedContainer';
-import ApplicationContainer from '@/pages_components/home/applications/applicationContainer';
 
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 import SocialContainer from '@/shared_components/socials/socialContainer';
@@ -134,15 +133,6 @@ const Index = ({ userJwt }: Props) => {
                     />
                   }
                 />
-              </>
-
-              <>
-                <div className="my-10">
-                  <p className="mb-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
-                    Your shift applications
-                  </p>
-                  <ApplicationContainer userJwt={userJwt} orgId={org?.id} />
-                </div>
               </>
 
               <div className="my-10 w-full">
