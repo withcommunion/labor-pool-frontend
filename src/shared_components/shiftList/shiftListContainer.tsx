@@ -8,6 +8,7 @@ import SimpleModal from '../simpleModal';
 import { selectSelf } from '@/features/selfSlice';
 import AddShiftFormContainer from '@/pages_components/org/shiftCalendar/addShiftFormContainer';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { parseEntityFromOwnerEntity } from '@/util/walletApiUtil';
 
 interface Props {
   userJwt: string;
@@ -122,6 +123,7 @@ export default function ShiftListContainer({
               </h3>
               <div className="grid grid-cols-1 gap-x-6 lg:grid-cols-3">
                 {dayShiftMap[dayInMs].map((shift) => {
+                  const entity = parseEntityFromOwnerEntity(shift.ownerEntity);
                   return (
                     shift.ownerUrn && (
                       <li
@@ -161,7 +163,7 @@ export default function ShiftListContainer({
                             <p className="font-medium">{shift.name}</p>
 
                             <p className="font-light">
-                              Created by: {shift.ownerUrn.slice(0, 15)}
+                              Created by: {entity.name}
                             </p>
                           </div>
                         </div>

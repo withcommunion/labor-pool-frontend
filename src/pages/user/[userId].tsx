@@ -32,6 +32,7 @@ import {
 } from '@heroicons/react/24/outline';
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import SocialContainer from '@/shared_components/socials/socialContainer';
+import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -85,7 +86,7 @@ const UserPage = ({ userJwt }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex h-full">
-        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex-col flex min-w-0 flex-1 overflow-hidden">
           <div className="relative z-0 flex flex-1 overflow-hidden">
             <main className="relative z-0 flex-1 overflow-y-auto focus:outline-none xl:order-last">
               <article>
@@ -104,10 +105,28 @@ const UserPage = ({ userJwt }: Props) => {
                       ownerUrn={user?.id ? `urn:user:${user?.id}` : ''}
                     />
                   </div>
-                  <div>
+                  <div className="mb-10">
                     <FeedContainer
                       userJwt={userJwt}
                       entityUrn={user?.id && `urn:user:${user?.id}`}
+                    />
+                  </div>
+                  <div>
+                    <ShiftListContainer
+                      headerText={`${self?.firstName || ''}'s Shifts`}
+                      userJwt={userJwt}
+                      showAddShiftBtn={self?.id === user?.id}
+                      shifts={userShifts}
+                      refreshShifts={() => {
+                        if (user) {
+                          dispatch(
+                            fetchGetUserByIdShifts({
+                              userId: user.id,
+                              jwtToken: userJwt,
+                            })
+                          );
+                        }
+                      }}
                     />
                   </div>
                 </div>

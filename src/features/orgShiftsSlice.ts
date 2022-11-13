@@ -11,6 +11,8 @@ import {
 
 import { API_URL } from '@/util/walletApiUtil';
 import { isSameDay, isSameWeek } from 'date-fns';
+import { IUser } from './selfSlice';
+import { IOrg } from './orgSlice';
 
 export interface IShift {
   id: string;
@@ -21,6 +23,14 @@ export interface IShift {
   location?: string;
   description: string;
   assignedTo: string[];
+  assignedToEntities?: {
+    user?: IUser;
+    org?: IOrg;
+  }[];
+  ownerEntity?: {
+    user?: IUser;
+    org?: IOrg;
+  };
   startTimeMs: number;
   endTimeMs: number;
   startDateIso: string;

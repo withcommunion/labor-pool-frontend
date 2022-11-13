@@ -25,8 +25,8 @@ export default function DesktopNav({ signOut, user }: Props) {
   const isOrgPage = router.pathname === '/home/[urn]';
 
   return (
-    <div className="float-left flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
-      <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+    <div className="flex-col float-left flex min-h-0 flex-1 border-r border-gray-200 bg-white">
+      <div className="flex-col flex flex-1 overflow-y-auto pt-5 pb-4">
         <div className="flex flex-shrink-0 items-center px-4">
           <Link href="/home">
             <a>
@@ -78,13 +78,13 @@ export default function DesktopNav({ signOut, user }: Props) {
         <Menu as="div" className="relative">
           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none ">
             <Link href="/org/new">
-              <button
+              <a
                 type="button"
                 className="mb-2 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 <PlusIcon className="-ml-2 mr-3 h-5 w-5" aria-hidden="true" />
                 <span>Create Org</span>
-              </button>
+              </a>
             </Link>
           </Menu.Button>
           <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none ">

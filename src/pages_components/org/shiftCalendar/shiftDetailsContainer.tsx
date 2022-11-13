@@ -14,7 +14,7 @@ import {
 } from '@/features/shiftApplicationActionsSlice';
 
 import AddShiftFormContainer from './addShiftFormContainer';
-import { parseIdFromUrn } from '@/util/walletApiUtil';
+import { parseEntityFromOwnerEntity } from '@/util/walletApiUtil';
 import Link from 'next/link';
 import ApplyToShiftContainer from '@/shared_components/applyToShift/ApplyToShiftContainer';
 import { fetchDeleteOrgShift } from '@/features/orgNewShiftSlice';
@@ -156,11 +156,12 @@ function ShiftDetailCard({
   acceptApplicant: (shiftApplication: ShiftApplication) => void;
   rejectApplicant: (shiftApplication: ShiftApplication) => void;
 }) {
-  const isOwnerUser = shift.ownerUrn.includes('user');
-  const ownerPathname = isOwnerUser ? '/user/[userId]' : '/org/[orgId]';
+  // const isOwnerUser = shift.ownerUrn.includes('user');
+  // const ownerPathname = isOwnerUser ? '/user/[userId]' : '/org/[orgId]';
 
-  const ownerId = parseIdFromUrn(shift.ownerUrn);
-  const query = isOwnerUser ? { userId: ownerId } : { orgId: ownerId };
+  // const ownerId = parseIdFromUrn(shift.ownerUrn);
+  // const query = isOwnerUser ? { userId: ownerId } : { orgId: ownerId };
+  const shiftEntity = parseEntityFromOwnerEntity(shift.ownerEntity);
 
   return (
     <div className="overflow-hidden bg-white text-start shadow sm:rounded-lg">
@@ -173,12 +174,12 @@ function ShiftDetailCard({
             <dd className="mt-1 text-sm text-gray-900">
               <Link
                 href={{
-                  pathname: ownerPathname,
-                  query,
+                  pathname: shiftEntity.queryPathname,
+                  query: shiftEntity.queryVals,
                 }}
               >
                 <a className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800">
-                  {shift.ownerUrn}
+                  {shiftEntity.name}
                 </a>
               </Link>
             </dd>
@@ -193,7 +194,26 @@ function ShiftDetailCard({
             <dt className="text-sm font-medium text-gray-500">
               Who is coming?
             </dt>
-            <dd className="mt-1 text-sm text-gray-900">{shift.assignedTo}</dd>
+            {shift.assignedToEntities?.map((entity) => {
+              const parsedEntity = parseEntityFromOwnerEntity(entity);
+              return (
+                <dd
+                  key={parsedEntity.name}
+                  className="mt-1 text-sm text-gray-900"
+                >
+                  <Link
+                    href={{
+                      pathname: parsedEntity.queryPathname,
+                      query: parsedEntity.queryVals,
+                    }}
+                  >
+                    <a className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800">
+                      {parsedEntity.name}
+                    </a>
+                  </Link>
+                </dd>
+              );
+            })}
           </div>
           <div className="sm:col-span-2">
             <dt className="text-sm font-medium text-gray-500">
@@ -236,17 +256,9 @@ function ShiftDetailCard({
                   {shiftApplications
                     .filter((application) => application.status === 'pending')
                     .map((application) => {
-                      const applicationOwnerId = parseIdFromUrn(
-                        application.ownerUrn
+                      const applicationEntity = parseEntityFromOwnerEntity(
+                        application.ownerEntity
                       );
-                      const isApplicantUser =
-                        application.ownerUrn.includes('user');
-                      const applicantPathname = isApplicantUser
-                        ? '/user/[userId]'
-                        : '/org/[orgId]';
-                      const applicantQuery = isApplicantUser
-                        ? { userId: applicationOwnerId }
-                        : { orgId: applicationOwnerId };
                       return (
                         <li
                           className="flex-col flex justify-between py-3 pl-3 pr-4 text-sm"
@@ -260,15 +272,15 @@ function ShiftDetailCard({
                               />
                               <Link
                                 href={{
-                                  pathname: applicantPathname,
-                                  query: applicantQuery,
+                                  pathname: applicationEntity.queryPathname,
+                                  query: applicationEntity.queryVals,
                                 }}
                               >
                                 <a
                                   target="_blank"
                                   className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800"
                                 >
-                                  {application.ownerUrn}
+                                  {applicationEntity.name}
                                 </a>
                               </Link>
                             </div>

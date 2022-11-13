@@ -9,6 +9,8 @@ import {
 } from '@reduxjs/toolkit';
 
 import { API_URL } from '@/util/walletApiUtil';
+import { IUser } from './selfSlice';
+import { IOrg } from './orgSlice';
 
 export type RequestStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -19,6 +21,10 @@ export interface ShiftApplication {
   userId: string;
   ownerUrn: string;
   description: string;
+  ownerEntity?: {
+    user?: IUser;
+    org?: IOrg;
+  };
   status: 'pending' | 'accepted' | 'rejected';
   createdAtMs: number;
 }
