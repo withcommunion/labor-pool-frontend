@@ -1,6 +1,6 @@
 import { IShift } from '@/features/orgShiftsSlice';
 import { useEffect, useState } from 'react';
-import { PencilIcon, UserIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, UserIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
@@ -17,6 +17,7 @@ import AddShiftFormContainer from './addShiftFormContainer';
 import { parseIdFromUrn } from '@/util/walletApiUtil';
 import Link from 'next/link';
 import ApplyToShiftContainer from '@/shared_components/applyToShift/ApplyToShiftContainer';
+import { fetchDeleteOrgShift } from '@/features/orgNewShiftSlice';
 
 interface Props {
   shift?: IShift | null;
@@ -57,7 +58,25 @@ export default function ShiftDetailsContainer({
     <>
       <div>
         {canEditShift && !isEditShift && (
-          <div className="w-fit">
+          <div className="flex w-fit flex-row gap-x-2">
+            <button
+              onClick={async () => {
+                if (shift) {
+                  await dispatch(
+                    fetchDeleteOrgShift({
+                      jwtToken: userJwt,
+                      shiftId: shift.id,
+                    })
+                  );
+                  cleanup();
+                }
+              }}
+              type="button"
+              className="inline-flex items-start rounded-md border border-transparent bg-white px-4 py-2 text-sm font-medium text-red-400 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <TrashIcon className="h-5 w-5 text-red-400" />
+              Delete
+            </button>
             <button
               onClick={() => setIsEditShift(!isEditShift)}
               type="button"

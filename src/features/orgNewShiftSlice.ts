@@ -30,12 +30,22 @@ export interface OrgNewShiftState {
   newShift: IShift | null;
   status: RequestStatus;
   error: string | null | undefined;
+  deleteShift: {
+    isDeleted: boolean;
+    status: RequestStatus;
+    error: string | null | undefined;
+  };
 }
 
 const initialState: OrgNewShiftState = {
   newShift: null,
   status: 'idle',
   error: null,
+  deleteShift: {
+    isDeleted: false,
+    status: 'idle',
+    error: null,
+  },
 };
 
 export const orgNewShiftSlice = createSlice({
@@ -70,6 +80,17 @@ export const orgNewShiftSlice = createSlice({
         state.newShift = action.payload;
       })
       .addCase(fetchPatchOrgShift.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(fetchDeleteOrgShift.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchDeleteOrgShift.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.deleteShift.isDeleted = action.payload;
+      })
+      .addCase(fetchDeleteOrgShift.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
@@ -114,6 +135,23 @@ export const fetchPatchOrgShift = createAsyncThunk(
     const rawShift = await axios.patch<IShift>(
       `${API_URL}/shift/${shiftId}`,
       { ...shift, startDate, endDate },
+      {
+        headers: {
+          Authorization: jwtToken,
+        },
+      }
+    );
+    const parsedShift = rawShift.data;
+
+    return parsedShift;
+  }
+);
+
+export const fetchDeleteOrgShift = createAsyncThunk(
+  'orgNewShift/fetchDeleteOrgShift',
+  async ({ jwtToken, shiftId }: { jwtToken: string; shiftId: string }) => {
+    const rawShift = await axios.delete<boolean>(
+      `${API_URL}/shift/${shiftId}`,
       {
         headers: {
           Authorization: jwtToken,
