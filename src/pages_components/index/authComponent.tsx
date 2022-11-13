@@ -8,8 +8,8 @@ const formFields = {
     },
     phone_number: {
       order: 4,
-      isRequired: false,
-      placeholder: 'Phone Number (Optional)',
+      isRequired: true,
+      placeholder: 'Phone Number (Required)',
     },
     given_name: {
       order: 5,
