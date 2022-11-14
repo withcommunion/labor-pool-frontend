@@ -17,7 +17,7 @@ const InviteLink = ({ orgId, orgJoinCode, action, role }: Props) => {
 
   useEffect(() => {
     if (orgId && orgJoinCode && !orgUrlWithJoinCode) {
-      const prodUrl = 'https://labor-pool-frontend.vercel.app';
+      const prodUrl = 'https://communion.xyz';
       const devUrl = 'https://labor-pool-frontend.vercel.app';
       const localUrl = 'http://localhost:3000';
       const urlQueryParams = `?inviteeOrgId=${orgId}&joinCode=${orgJoinCode}&action=${action}&role=${role}`;
@@ -33,7 +33,7 @@ const InviteLink = ({ orgId, orgJoinCode, action, role }: Props) => {
   }, [orgId, orgJoinCode, orgUrlWithJoinCode, action, role]);
 
   return (
-    <div className="my-5 flex w-full flex-col text-start">
+    <div className="flex-col my-5 flex w-full text-start">
       <label>
         <span className="text-xl">Invite code</span>
       </label>
@@ -101,7 +101,7 @@ You can sign up with this link ${orgUrlWithJoinCode}`);
   }, [message, orgUrlWithJoinCode]);
 
   return (
-    <div className="my-8 flex w-full flex-col text-start">
+    <div className="flex-col my-8 flex w-full text-start">
       <label>
         <span className="text-xl">Invite code</span>
       </label>
