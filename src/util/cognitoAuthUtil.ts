@@ -24,7 +24,7 @@ function getCookieStorage() {
   if (isProd) {
     return {
       ...cookieStorageBase,
-      domain: 'labor-pool-frontend.vercel.app',
+      domain: 'communion.nyc',
       secure: true,
     };
   }
@@ -40,7 +40,7 @@ function getCookieStorage() {
     // eslint-disable-next-line
     return {
       ...cookieStorageBase,
-      domain: `.withcommunion.com`,
+      domain: 'labor-pool-frontend.vercel.app',
       secure: true,
     };
   }
