@@ -33,7 +33,6 @@ import {
 import FeedContainer from '@/shared_components/feed/feedContainer';
 import SocialContainer from '@/shared_components/socials/socialContainer';
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
-import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -47,8 +46,6 @@ interface Props {
 const UserPage = ({ userJwt }: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const { isMd } = useBreakpoint('md');
 
   const self = useAppSelector(selectSelf);
   const user = useAppSelector(selectUserById);
@@ -134,7 +131,7 @@ const UserPage = ({ userJwt }: Props) => {
                   </div>
                 </div>
 
-                {isMd && (
+                {
                   <div className="mx-auto sm:mx-10">
                     <WeekCalendar
                       showAddShiftBtn={self?.id === user?.id}
@@ -153,7 +150,7 @@ const UserPage = ({ userJwt }: Props) => {
                       }}
                     />
                   </div>
-                )}
+                }
               </article>
             </main>
           </div>

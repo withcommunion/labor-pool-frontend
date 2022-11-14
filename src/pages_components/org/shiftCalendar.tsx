@@ -108,7 +108,7 @@ export default function WeekCalendar({
   }, [shiftsInWeek, autoScroll]);
 
   return (
-    <>
+    <div className="hidden md:contents">
       <SimpleModal
         isOpen={isNewShiftModalOpen}
         toggleIsOpen={() => setIsNewShiftModalOpen(!isNewShiftModalOpen)}
@@ -195,7 +195,7 @@ export default function WeekCalendar({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

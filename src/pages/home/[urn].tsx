@@ -28,7 +28,6 @@ import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer
 import SocialContainer from '@/shared_components/socials/socialContainer';
 import Link from 'next/link';
 import { ShareIcon } from '@heroicons/react/24/outline';
-import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -42,7 +41,6 @@ const Index = ({ userJwt }: Props) => {
   const dispatch = useAppDispatch();
   useFetchSelf(userJwt);
   const self = useAppSelector(selectSelf);
-  const { isMd } = useBreakpoint('md');
 
   const allShifts = useAppSelector(selectAllShiftsOrderedByEarliestStartTime);
   const allShiftsInFuture = useAppSelector(selectAllShiftsInFuture);
@@ -137,7 +135,7 @@ const Index = ({ userJwt }: Props) => {
                 />
               </>
 
-              {isMd && (
+              {
                 <div className="my-10 w-full">
                   <WeekCalendar
                     autoScroll={false}
@@ -149,7 +147,7 @@ const Index = ({ userJwt }: Props) => {
                     }}
                   />
                 </div>
-              )}
+              }
             </div>
 
             <div className="">
