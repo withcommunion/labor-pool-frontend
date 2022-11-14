@@ -17,7 +17,7 @@ const InviteLink = ({ orgId, orgJoinCode, action, role }: Props) => {
 
   useEffect(() => {
     if (orgId && orgJoinCode && !orgUrlWithJoinCode) {
-      const prodUrl = 'https://communion.xyz';
+      const prodUrl = 'https://communion.nyc';
       const devUrl = 'https://labor-pool-frontend.vercel.app';
       const localUrl = 'http://localhost:3000';
       const urlQueryParams = `?inviteeOrgId=${orgId}&joinCode=${orgJoinCode}&action=${action}&role=${role}`;
@@ -79,7 +79,7 @@ You can sign up with this link ${orgUrlWithJoinCode}`);
 
   useEffect(() => {
     if (orgId && orgJoinCode && !orgUrlWithJoinCode) {
-      const prodUrl = 'https://labor-pool-frontend.vercel.app';
+      const prodUrl = 'https://communion.nyc';
       const devUrl = 'https://labor-pool-frontend.vercel.app';
       const localUrl = 'http://localhost:3000';
       const urlQueryParams = `?inviteeOrgId=${orgId}&joinCode=${orgJoinCode}&action=${action}`;
