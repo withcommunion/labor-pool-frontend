@@ -8,10 +8,8 @@ import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
-import { useBreakpoint } from '@/shared_hooks/useMediaQueryHook';
 import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
 import {
-  fetchPostOrgFriendlyOrgJoin,
   fetchPostOrgMemberJoin,
   selectFriendlyOrgJoinStatus,
   selectMemberJoinStatus,
@@ -42,8 +40,6 @@ const fallbackBgImage =
 const OrgIndex = ({ userJwt }: { userJwt: string }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const { isMd } = useBreakpoint('md');
 
   const org = useAppSelector(selectOrgById);
   const orgShifts = useAppSelector(selectOrgByIdShifts);
@@ -299,7 +295,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                     }}
                   />
                 </div>
-                {isMd && (
+                {
                   <div className="mx-5 sm:mx-10">
                     <WeekCalendar
                       showAddShiftBtn={isOnLeadershipTeam}
@@ -318,7 +314,7 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                       }}
                     />
                   </div>
-                )}
+                }
               </article>
             </main>
           </div>
@@ -362,33 +358,30 @@ function useHandleJoinOrg(userJwt: string) {
     const hasAllJoinComponents =
       self && orgId && joinCode && memberJoinStatus === 'idle';
 
-    const isFriendlyOrgJoinAction = action === 'friendlyOrgJoin';
-    const hasAllFriendlyJoinComponents =
-      orgId && joinCode && inviteeOrgId && friendlyOrgJoinStatus === 'idle';
+    const isMemberAlreadyInOrg = Boolean(
+      self?.orgRoles.some((orgRole) => orgRole.orgId === orgId)
+    );
 
-    if (isMemberJoinAction && hasAllJoinComponents) {
-      dispatch(
-        fetchPostOrgMemberJoin({
-          memberId: self.id,
-          orgId: inviteeOrgId,
-          jwtToken: userJwt,
-          role,
-        })
-      );
-    } else if (isFriendlyOrgJoinAction && hasAllFriendlyJoinComponents) {
-      dispatch(
-        fetchPostOrgFriendlyOrgJoin({
-          orgId,
-          friendlyOrgId: inviteeOrgId,
-          jwtToken: userJwt,
-        })
-      );
-    }
+    const joinOrg = async () => {
+      if (isMemberJoinAction && hasAllJoinComponents && !isMemberAlreadyInOrg) {
+        await dispatch(
+          fetchPostOrgMemberJoin({
+            memberId: self.id,
+            orgId: inviteeOrgId,
+            jwtToken: userJwt,
+            role,
+          })
+        );
+      }
+    };
+
+    joinOrg();
   }, [
     action,
     dispatch,
     friendlyOrgJoinStatus,
     joinCode,
+    router,
     memberJoinStatus,
     inviteeOrgId,
     orgId,
