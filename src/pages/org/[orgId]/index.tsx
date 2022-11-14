@@ -8,7 +8,11 @@ import { getUserOnServer, AMPLIFY_CONFIG } from '@/util/cognitoAuthUtil';
 
 import { useAppDispatch, useAppSelector } from '@/reduxHooks';
 import { useFetchSelf } from '@/shared_hooks/sharedHooks';
-import { selectIsOnOrgLeadershipTeam, selectSelf } from '@/features/selfSlice';
+import {
+  fetchSelf,
+  selectIsOnOrgLeadershipTeam,
+  selectSelf,
+} from '@/features/selfSlice';
 import {
   fetchPostOrgMemberJoin,
   selectFriendlyOrgJoinStatus,
@@ -366,12 +370,14 @@ function useHandleJoinOrg(userJwt: string) {
       if (isMemberJoinAction && hasAllJoinComponents && !isMemberAlreadyInOrg) {
         await dispatch(
           fetchPostOrgMemberJoin({
-            memberId: self.id,
+            memberId: self.id || '',
             orgId: inviteeOrgId,
             jwtToken: userJwt,
             role,
           })
         );
+
+        await dispatch(fetchSelf(userJwt));
       }
     };
 
