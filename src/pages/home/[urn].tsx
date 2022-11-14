@@ -99,7 +99,7 @@ const Index = ({ userJwt }: Props) => {
                   </p>
                   <Link
                     href={{
-                      pathname: `[orgId]/invite`,
+                      pathname: `/org/[orgId]/invite`,
                       query: { orgId: org?.id },
                     }}
                   >
