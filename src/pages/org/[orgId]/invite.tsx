@@ -34,7 +34,8 @@ const OrgInvite = ({ userJwt }: Props) => {
   ]);
   const org = useAppSelector(selectOrgById);
 
-  const steps = ['managers', 'employees', 'friendlyOrgs'];
+  // const steps = ['managers', 'employees', 'friendlyOrgs'];
+  const steps = ['managers'];
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
 
   const { orgId } = router.query;
@@ -76,7 +77,7 @@ const OrgInvite = ({ userJwt }: Props) => {
             </Link>
             <h2 className="text-2xl">{org?.name}</h2>
           </div>
-          <div className="flex flex-col   sm:mx-[20vw]">
+          <div className="flex-col flex   sm:mx-[20vw]">
             {steps[currentStepIdx] === 'managers' && (
               <InviteManagers queryOrgId={queryOrgId} orgJoinCode="1" />
             )}
