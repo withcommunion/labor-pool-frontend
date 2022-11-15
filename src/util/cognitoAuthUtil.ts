@@ -40,7 +40,7 @@ function getCookieStorage() {
     // eslint-disable-next-line
     return {
       ...cookieStorageBase,
-      domain: 'labor-pool-frontend.vercel.app',
+      domain: 'dev.communion.nyc',
       secure: true,
     };
   }
