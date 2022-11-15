@@ -113,7 +113,7 @@ const UserPage = ({ userJwt }: Props) => {
                   </div>
                   <div>
                     <ShiftListContainer
-                      headerText={`${self?.firstName || ''}'s Shifts`}
+                      headerText={`${user?.firstName || ''}'s Shifts`}
                       userJwt={userJwt}
                       showAddShiftBtn={self?.id === user?.id}
                       shifts={userShifts}
