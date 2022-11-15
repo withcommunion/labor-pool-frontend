@@ -169,10 +169,7 @@ export default function AddShiftFormContainer({
                 defaultValue={status}
                 value={status}
                 onChange={(e) => {
-                  const value = e.target.value as
-                    | 'open'
-                    | 'broadcasting'
-                    | 'filled';
+                  const value = e.target.value as 'broadcasting' | 'filled';
                   setStatus(value);
 
                   if (value === 'broadcasting') {
@@ -182,7 +179,6 @@ export default function AddShiftFormContainer({
                   }
                 }}
               >
-                <option value={'open'}>Open</option>
                 <option value={'broadcasting'}>Broadcasting</option>
                 <option value={'filled'}>Filled</option>
               </select>
@@ -200,7 +196,7 @@ export default function AddShiftFormContainer({
                     if (event === true) {
                       setStatus('broadcasting');
                     } else {
-                      setStatus('open');
+                      setStatus('filled');
                     }
                   }}
                   className={cx(
