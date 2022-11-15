@@ -27,7 +27,7 @@ import FeedContainer from '@/shared_components/feed/feedContainer';
 import ShiftListContainer from '@/shared_components/shiftList/shiftListContainer';
 import SocialContainer from '@/shared_components/socials/socialContainer';
 import Link from 'next/link';
-import { ShareIcon } from '@heroicons/react/24/outline';
+import { BuildingStorefrontIcon, ShareIcon } from '@heroicons/react/24/outline';
 
 // https://docs.amplify.aws/lib/client-configuration/configuring-amplify-categories/q/platform/js/#general-configuration
 Amplify.configure({ ...AMPLIFY_CONFIG, ssr: true });
@@ -86,9 +86,22 @@ const Index = ({ userJwt }: Props) => {
         <div className="my-0 w-full px-2 sm:px-6 ">
           <div className="flex-col flex px-10px">
             <div className="mx-4 sm:mx-auto lg:mx-60">
-              <h2 className="my-4 mb-1 text-lg font-semibold text-indigo-600">
-                Hey {org?.name},
-              </h2>
+              <div className="my-4 mb-1 flex space-x-2">
+                <h2 className="w-full text-lg font-semibold text-indigo-600">
+                  👋 Hey {org?.name},
+                </h2>
+                <Link
+                  href={{
+                    pathname: `/org/[orgId]`,
+                    query: { orgId: org?.id },
+                  }}
+                >
+                  <a className="inline-flex w-fit items-center whitespace-nowrap rounded-md border border-transparent bg-white text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <BuildingStorefrontIcon className="mr-2 h-5 w-5" /> View
+                    profile
+                  </a>
+                </Link>
+              </div>
 
               <>
                 <div>
