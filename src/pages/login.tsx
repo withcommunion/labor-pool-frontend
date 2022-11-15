@@ -81,13 +81,13 @@ const Index = () => {
       </Head>
 
       <main className="min-h-100vh">
-        <div className="container my-0 mx-auto w-full px-6 md:max-w-50vw">
-          <div className="flex flex-col items-center justify-center">
+        <div className="my-0 mx-auto w-full px-6 md:max-w-50vw">
+          <div className="flex-col flex items-center justify-center">
             <div>
               <WelcomeHeader />
               <AuthComponent />
             </div>
-            <div>
+            <div className="my-10">
               <Footer />
             </div>
           </div>
