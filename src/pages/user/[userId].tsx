@@ -344,7 +344,7 @@ function EditProfileHeader({
               )}
             </div>
             <div className="mt-6 sm:flex sm:min-w-0 sm:flex-1 sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
-              <div className="mt-6 min-w-0 flex-1 sm:hidden 2xl:block">
+              <div className="mt-6 min-w-0 flex-1 2xl:block">
                 <input
                   type="text"
                   name="firstName-info"
