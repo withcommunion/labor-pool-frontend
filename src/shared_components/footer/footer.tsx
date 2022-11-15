@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="mb-5 flex items-center justify-center">
       <Image
         src="/images/logo-black.svg"
         alt="communion logo"
