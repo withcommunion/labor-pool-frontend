@@ -144,7 +144,7 @@ const Index = () => {
                 <br />
                 <br />
                 You can think of Communion like an Indeed or Instawork that pays
-                you for being a user and for helping to build the network. .
+                you for being a user and for helping to build the network.
               </p>
             </div>
 
