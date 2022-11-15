@@ -72,10 +72,11 @@ const Index = ({ userJwt }: Props) => {
                       htmlFor="company-name"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Company name
+                      Company name (required)
                     </label>
                     <div className="mt-1">
                       <input
+                        required
                         type="text"
                         name="company-name"
                         id="company-name"
@@ -96,10 +97,11 @@ const Index = ({ userJwt }: Props) => {
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Email address
+                      Email address (required)
                     </label>
                     <div className="mt-1">
                       <input
+                        required
                         id="email"
                         name="email"
                         type="email"
@@ -120,10 +122,11 @@ const Index = ({ userJwt }: Props) => {
                       htmlFor="phoneNumber"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Phone Number
+                      Phone Number (required)
                     </label>
                     <div className="mt-1">
                       <input
+                        required
                         id="phoneNumber"
                         name="phoneNumber"
                         type="phoneNumber"
@@ -257,10 +260,11 @@ const Index = ({ userJwt }: Props) => {
                       htmlFor="street-address"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Street address
+                      Street address (required)
                     </label>
                     <div className="mt-1">
                       <input
+                        required
                         type="text"
                         name="street-address"
                         id="street-address"
@@ -307,10 +311,11 @@ const Index = ({ userJwt }: Props) => {
                       htmlFor="region"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      State / Province
+                      State / Province (required)
                     </label>
                     <div className="mt-1">
                       <input
+                        required
                         type="text"
                         name="region"
                         id="region"
@@ -331,10 +336,11 @@ const Index = ({ userJwt }: Props) => {
                       htmlFor="postal-code"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      ZIP / Postal code
+                      ZIP / Postal code (required)
                     </label>
                     <div className="mt-1">
                       <input
+                        required
                         type="text"
                         name="postal-code"
                         id="postal-code"
@@ -370,7 +376,32 @@ const Index = ({ userJwt }: Props) => {
                   className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   onClick={(e) => {
                     e.preventDefault();
-                    dispatch(fetchPostOrg({ orgToCreate, jwtToken: userJwt }));
+                    const {
+                      name,
+                      addressLine1,
+                      city,
+                      state,
+                      zip,
+                      country,
+                      email,
+                      phoneNumber,
+                    } = orgToCreate;
+                    if (
+                      !name ||
+                      !addressLine1 ||
+                      !city ||
+                      !state ||
+                      !zip ||
+                      !country ||
+                      !email ||
+                      !phoneNumber
+                    ) {
+                      alert('Please fill out all required fields');
+                    } else {
+                      dispatch(
+                        fetchPostOrg({ orgToCreate, jwtToken: userJwt })
+                      );
+                    }
                   }}
                 >
                   Save
