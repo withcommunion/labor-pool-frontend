@@ -119,7 +119,11 @@ export default function AddShiftFormContainer({
                   className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={shiftStart}
                   onChange={(e) => {
-                    setShiftStart(e.target.value);
+                    const newShiftStart = new Date(e.target.value);
+                    if (isBefore(newShiftStart, Date.now())) {
+                      setShiftStart(format(Date.now(), `yyyy-MM-dd'T'HH:mm`));
+                      return;
+                    }
                     if (
                       isBefore(new Date(shiftEnd), new Date(e.target.value))
                     ) {
@@ -130,6 +134,8 @@ export default function AddShiftFormContainer({
                         )
                       );
                     }
+
+                    setShiftStart(e.target.value);
                   }}
                 />
               </div>
@@ -150,7 +156,19 @@ export default function AddShiftFormContainer({
                   autoComplete="shift-end-date-time"
                   className="block w-full rounded-md border-2 border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   value={shiftEnd}
-                  onChange={(e) => setShiftEnd(e.target.value)}
+                  onChange={(e) => {
+                    const newShiftEnd = new Date(e.target.value);
+                    if (isBefore(newShiftEnd, new Date(shiftStart))) {
+                      setShiftEnd(
+                        format(
+                          addHours(new Date(shiftStart), 2),
+                          `yyyy-MM-dd'T'HH:mm`
+                        )
+                      );
+                      return;
+                    }
+                    setShiftEnd(e.target.value);
+                  }}
                 />
               </div>
             </div>
