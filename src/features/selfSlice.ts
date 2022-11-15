@@ -148,7 +148,11 @@ export const selectSelfUserId = createSelector(
 export const selectIsOnOrgLeadershipTeam = createSelector(
   [selectSelf, (state, orgId: string) => orgId],
   (self, orgId) =>
-    Boolean(self?.orgRoles.find((orgRole) => orgRole.orgId === orgId))
+    Boolean(
+      self?.orgRoles.find(
+        (orgRole) => orgRole.orgId === orgId && orgRole.role === 'manager'
+      )
+    )
 );
 
 export const selectSelfActingAsOrg = createSelector(

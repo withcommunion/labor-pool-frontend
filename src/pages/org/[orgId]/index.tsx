@@ -164,34 +164,38 @@ const OrgIndex = ({ userJwt }: { userJwt: string }) => {
                         >
                           Profile
                         </span>
-                        <Link
-                          href={{
-                            pathname: `[orgId]/schedule`,
-                            query: { orgId: org?.id },
-                          }}
-                        >
-                          <a
-                            className={classNames(
-                              'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium text-gray-900'
-                            )}
-                          >
-                            Schedule
-                          </a>
-                        </Link>
-                        <Link
-                          href={{
-                            pathname: `[orgId]/invite`,
-                            query: { orgId: org?.id },
-                          }}
-                        >
-                          <a
-                            className={classNames(
-                              'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium text-gray-900'
-                            )}
-                          >
-                            Invite Links
-                          </a>
-                        </Link>
+                        {isOnLeadershipTeam && (
+                          <>
+                            <Link
+                              href={{
+                                pathname: `[orgId]/schedule`,
+                                query: { orgId: org?.id },
+                              }}
+                            >
+                              <a
+                                className={classNames(
+                                  'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium text-gray-900'
+                                )}
+                              >
+                                Schedule
+                              </a>
+                            </Link>
+                            <Link
+                              href={{
+                                pathname: `[orgId]/invite`,
+                                query: { orgId: org?.id },
+                              }}
+                            >
+                              <a
+                                className={classNames(
+                                  'whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium text-gray-900'
+                                )}
+                              >
+                                Invite Links
+                              </a>
+                            </Link>
+                          </>
+                        )}
                       </nav>
                     </div>
                   </div>
