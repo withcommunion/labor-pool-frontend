@@ -17,7 +17,7 @@
     "@heroicons/react": "^2.0.12",
     "@reduxjs/toolkit": "^1.8.5",
     "autoprefixer": "^10.4.13",
-    "aws-amplify": "^4.3.22",
+    "aws-amplify": "^5.0.3",
     "axios": "^0.27.2",
     "classnames": "^2.3.2",
     "copy-to-clipboard": "^3.3.2",
